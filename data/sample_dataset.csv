@@ -1,0 +1,101 @@
+new_id,ticker,forecast_time,news_time,news_text,label
+1,AAPL,2025-03-12 09:00,2025-03-11 08:00,Apple reports stronger than expected iPhone demand in India,UP
+2,GOOGL,2025-03-12 09:00,2025-03-12 10:30,Google faces a new antitrust complaint over search distribution deals,DOWN
+3,AMZN,2025-03-12 09:00,2025-03-12 09:00,Amazon keeps full year guidance unchanged after a mixed retail update,HOLD
+4,META,2025-03-12 09:00,2025-03-10 14:20,Meta announces faster growth in Reels advertising engagement,UP
+5,AAPL,2025-03-13 09:00,2025-03-13 11:15,Apple supplier warns of softer iPhone component orders for next quarter,DOWN
+6,GOOGL,2025-03-13 09:00,2025-03-12 16:45,Google Cloud signs a large AI infrastructure contract with a bank,UP
+7,AMZN,2025-03-13 09:00,2025-03-12 07:50,Amazon Web Services launches new cost efficient AI chips for customers,UP
+8,META,2025-03-13 09:00,2025-03-13 09:00,Meta says ad pricing is stable while spending trends remain normal,HOLD
+9,AAPL,2025-03-14 09:00,2025-03-13 13:30,Apple receives approval to expand its services payment platform in Europe,UP
+10,GOOGL,2025-03-14 09:00,2025-03-14 15:00,Google reports slower YouTube ad growth in a preliminary industry survey,DOWN
+11,AMZN,2025-03-14 09:00,2025-03-13 18:10,Amazon warehouse workers in two states vote to authorize a strike,DOWN
+12,META,2025-03-14 09:00,2025-03-13 09:30,Meta opens a new data center but keeps capital expenditure outlook unchanged,HOLD
+13,AAPL,2025-03-17 09:00,2025-03-17 09:00,Apple unveils a minor software update with no revenue impact expected,HOLD
+14,GOOGL,2025-03-17 09:00,2025-03-15 12:00,Google expands Gemini features for enterprise productivity customers,UP
+15,AMZN,2025-03-17 09:00,2025-03-17 11:45,Amazon warns that international shipping costs rose faster than expected,DOWN
+16,META,2025-03-17 09:00,2025-03-16 20:10,Meta resolves a European privacy case with a smaller than feared penalty,UP
+17,AAPL,2025-03-18 09:00,2025-03-17 10:05,Apple delays production of a new headset model due to weak demand,DOWN
+18,GOOGL,2025-03-18 09:00,2025-03-18 09:00,Google schedules its developer conference without changing financial targets,HOLD
+19,AMZN,2025-03-18 09:00,2025-03-17 06:40,Amazon Prime signups accelerate during a seasonal shopping campaign,UP
+20,META,2025-03-18 09:00,2025-03-18 13:20,Meta lowers revenue guidance after softer advertising demand in Europe,DOWN
+21,AAPL,2025-03-19 09:00,2025-03-18 19:30,Apple services revenue reaches a record level in an internal briefing,UP
+22,GOOGL,2025-03-19 09:00,2025-03-18 08:25,Google loses a small cloud customer but says backlog remains steady,HOLD
+23,AMZN,2025-03-19 09:00,2025-03-19 09:00,Amazon announces a neutral update to delivery fees for marketplace sellers,HOLD
+24,META,2025-03-19 09:00,2025-03-18 07:55,Meta reports stronger advertiser retention among small businesses,UP
+25,AAPL,2025-03-20 09:00,2025-03-20 14:10,Apple faces a fresh lawsuit over App Store payment restrictions,DOWN
+26,GOOGL,2025-03-20 09:00,2025-03-19 21:00,Google search ad auctions show better conversion rates for retailers,UP
+27,AMZN,2025-03-20 09:00,2025-03-19 15:40,Amazon pauses a grocery expansion plan to review store profitability,DOWN
+28,META,2025-03-20 09:00,2025-03-20 09:00,Meta rolls out an interface redesign that analysts expect to be neutral,HOLD
+29,AAPL,2025-03-21 09:00,2025-03-20 06:15,Apple increases iPad production after education orders improve,UP
+30,GOOGL,2025-03-21 09:00,2025-03-21 10:20,Google is fined by a regulator for data retention practices,DOWN
+31,AMZN,2025-03-21 09:00,2025-03-20 11:35,Amazon reports faster AWS migration demand from healthcare clients,UP
+32,META,2025-03-21 09:00,2025-03-20 18:50,Meta pauses hiring in one AI hardware unit to control costs,HOLD
+33,AAPL,2025-03-24 09:00,2025-03-24 09:00,Apple confirms a routine supplier audit with no material findings,HOLD
+34,GOOGL,2025-03-24 09:00,2025-03-23 08:45,Google announces a cloud margin improvement program,UP
+35,AMZN,2025-03-24 09:00,2025-03-24 12:30,Amazon faces an FTC probe into marketplace seller ranking practices,DOWN
+36,META,2025-03-24 09:00,2025-03-23 15:20,Meta says Threads user growth accelerated during the weekend,UP
+37,AAPL,2025-03-25 09:00,2025-03-24 13:10,Apple cuts the price of older iPhone models to clear inventory,DOWN
+38,GOOGL,2025-03-25 09:00,2025-03-25 09:00,Google publishes a transparency report with no major business changes,HOLD
+39,AMZN,2025-03-25 09:00,2025-03-24 09:30,Amazon robotics upgrades reduce fulfillment center processing time,UP
+40,META,2025-03-25 09:00,2025-03-25 11:55,Meta reports that a key advertiser group reduced campaign spending,DOWN
+41,AAPL,2025-03-26 09:00,2025-03-25 22:05,Apple wins a patent dispute related to wearable health sensors,UP
+42,GOOGL,2025-03-26 09:00,2025-03-25 17:25,Google employees protest changes to AI review procedures,HOLD
+43,AMZN,2025-03-26 09:00,2025-03-26 09:00,Amazon opens a logistics hub and keeps cost savings forecast unchanged,HOLD
+44,META,2025-03-26 09:00,2025-03-25 06:30,Meta receives positive analyst commentary on ad targeting efficiency,UP
+45,AAPL,2025-03-27 09:00,2025-03-27 10:40,Apple reports weaker Mac shipments in a supply chain channel check,DOWN
+46,GOOGL,2025-03-27 09:00,2025-03-26 12:05,Google unveils new ad tools that improve campaign automation,UP
+47,AMZN,2025-03-27 09:00,2025-03-26 19:55,Amazon sellers complain about rising fulfillment fees before the holiday season,DOWN
+48,META,2025-03-27 09:00,2025-03-27 09:00,Meta announces a moderation policy update with limited revenue impact,HOLD
+49,AAPL,2025-03-28 09:00,2025-03-27 08:15,Apple adds a major carrier partnership for iPhone financing,UP
+50,GOOGL,2025-03-28 09:00,2025-03-28 14:30,Google warns that cloud capacity constraints may limit near term sales,DOWN
+51,AMZN,2025-03-28 09:00,2025-03-27 16:20,Amazon MGM signs a streaming content deal expected to lift engagement,UP
+52,META,2025-03-28 09:00,2025-03-27 05:45,Meta Reality Labs losses widen beyond analyst expectations,DOWN
+53,AAPL,2025-03-31 09:00,2025-03-31 09:00,Apple issues a regular security patch for iOS devices,HOLD
+54,GOOGL,2025-03-31 09:00,2025-03-30 18:30,Google wins a long term mapping contract with an automotive group,UP
+55,AMZN,2025-03-31 09:00,2025-03-31 10:10,Amazon reports a temporary outage in a major AWS region,DOWN
+56,META,2025-03-31 09:00,2025-03-30 10:25,Meta launches a new creator monetization tool with strong early adoption,UP
+57,AAPL,2025-04-01 09:00,2025-03-31 20:15,Apple supplier Foxlink raises shipment outlook for premium devices,UP
+58,GOOGL,2025-04-01 09:00,2025-03-31 07:35,Google faces criticism over AI search summaries from major publishers,DOWN
+59,AMZN,2025-04-01 09:00,2025-04-01 09:00,Amazon changes packaging rules in a way analysts view as neutral,HOLD
+60,META,2025-04-01 09:00,2025-04-01 12:45,Meta faces a new class action over youth privacy safeguards,DOWN
+61,AAPL,2025-04-02 09:00,2025-04-01 11:10,Apple announces stronger App Store developer revenue sharing trends,UP
+62,GOOGL,2025-04-02 09:00,2025-04-02 09:00,Google updates Workspace pricing with limited expected churn,HOLD
+63,AMZN,2025-04-02 09:00,2025-04-01 14:45,Amazon cuts corporate travel spending as part of a cost discipline plan,UP
+64,META,2025-04-02 09:00,2025-04-01 09:20,Meta ad dashboard shows slower conversion rates for gaming advertisers,DOWN
+65,AAPL,2025-04-03 09:00,2025-04-03 13:05,Apple reduces internal forecast for Vision headset sales,DOWN
+66,GOOGL,2025-04-03 09:00,2025-04-02 16:30,Google Cloud backlog expands after several enterprise AI deals,UP
+67,AMZN,2025-04-03 09:00,2025-04-02 08:55,Amazon opens preorders for a popular smart home device refresh,UP
+68,META,2025-04-03 09:00,2025-04-03 09:00,Meta hosts an investor education session without changing guidance,HOLD
+69,AAPL,2025-04-04 09:00,2025-04-03 12:40,Apple reports stable wearables demand after a quiet product cycle,HOLD
+70,GOOGL,2025-04-04 09:00,2025-04-04 10:25,Google ad buyers report budget cuts in travel and finance categories,DOWN
+71,AMZN,2025-04-04 09:00,2025-04-03 18:05,Amazon receives positive analyst coverage on advertising revenue growth,UP
+72,META,2025-04-04 09:00,2025-04-03 07:15,Meta launches improved AI translation for creators in emerging markets,UP
+73,AAPL,2025-04-07 09:00,2025-04-07 09:00,Apple hosts a developer workshop with no expected earnings effect,HOLD
+74,GOOGL,2025-04-07 09:00,2025-04-06 14:20,Google's Pixel sales improve after a promotional campaign,UP
+75,AMZN,2025-04-07 09:00,2025-04-07 12:50,Amazon faces delivery delays after severe weather disrupts a major hub,DOWN
+76,META,2025-04-07 09:00,2025-04-06 19:30,Meta is fined for content moderation failures in a key market,DOWN
+77,AAPL,2025-04-08 09:00,2025-04-07 08:45,Apple receives stronger enterprise Mac orders from a large retailer,UP
+78,GOOGL,2025-04-08 09:00,2025-04-07 21:15,Google says Android licensing revenue remains in line with plan,HOLD
+79,AMZN,2025-04-08 09:00,2025-04-08 09:00,Amazon Prime Video releases a schedule update with neutral subscriber impact,HOLD
+80,META,2025-04-08 09:00,2025-04-08 11:30,Meta warns that regulatory costs may rise in the next quarter,DOWN
+81,AAPL,2025-04-09 09:00,2025-04-08 15:05,Apple expands its buyback authorization in a board announcement,UP
+82,GOOGL,2025-04-09 09:00,2025-04-09 09:00,Google changes the layout of search results without clear monetization impact,HOLD
+83,AMZN,2025-04-09 09:00,2025-04-08 06:50,Amazon pharmacy service reports faster prescription delivery adoption,UP
+84,META,2025-04-09 09:00,2025-04-08 16:40,Meta advertisers praise improved measurement tools for small campaigns,UP
+85,AAPL,2025-04-10 09:00,2025-04-10 10:15,Apple is downgraded by analysts after concerns about smartphone replacement cycles,DOWN
+86,GOOGL,2025-04-10 09:00,2025-04-09 13:35,Google wins approval to expand a data center campus,UP
+87,AMZN,2025-04-10 09:00,2025-04-10 09:00,Amazon announces routine updates to seller documentation,HOLD
+88,META,2025-04-10 09:00,2025-04-09 05:25,Meta signs a partnership to bring AI assistants into business messaging,UP
+89,AAPL,2025-04-11 09:00,2025-04-10 19:40,Apple faces reports of overheating issues in a new laptop line,DOWN
+90,GOOGL,2025-04-11 09:00,2025-04-11 12:20,Google delays a planned cloud region because of permitting issues,DOWN
+91,AMZN,2025-04-11 09:00,2025-04-10 10:10,Amazon reports stronger grocery basket sizes after loyalty discounts,UP
+92,META,2025-04-11 09:00,2025-04-11 09:00,Meta updates community standards with no expected advertiser reaction,HOLD
+93,AAPL,2025-04-14 09:00,2025-04-13 11:55,Apple secures a supply agreement for advanced display panels,UP
+94,GOOGL,2025-04-14 09:00,2025-04-13 17:05,Google loses an appeal in a competition case involving app payments,DOWN
+95,AMZN,2025-04-14 09:00,2025-04-14 13:40,Amazon lowers second quarter operating income outlook on wage inflation,DOWN
+96,META,2025-04-14 09:00,2025-04-13 09:10,Meta reports steady daily active users with no surprise in engagement,HOLD
+97,AAPL,2025-04-15 09:00,2025-04-15 09:00,Apple announces a recycling initiative that analysts view as financially neutral,HOLD
+98,GOOGL,2025-04-15 09:00,2025-04-14 08:30,Google Cloud introduces discounted security bundles for enterprise customers,UP
+99,AMZN,2025-04-15 09:00,2025-04-14 20:25,Amazon advertising marketplace shows strong sponsored product demand,UP
+100,META,2025-04-15 09:00,2025-04-15 10:50,Meta discloses weaker than expected virtual reality headset shipments,DOWN
