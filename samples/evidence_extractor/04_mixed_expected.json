@@ -1,0 +1,39 @@
+{
+  "news_id": "N001",
+  "ticker": "GOOGL",
+  "forecast_time": "2025-03-12 09:00",
+  "news_time": "2025-03-11 15:30",
+  "evidence": [
+    {
+      "evidence_id": "N001_E001",
+      "news_id": "N001",
+      "evidence_text": "raises guidance",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "matched_keyword": "raises guidance",
+      "start_char": 7,
+      "end_char": 22,
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N001_E002",
+      "news_id": "N001",
+      "evidence_text": "lawsuit",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "matched_keyword": "lawsuit",
+      "start_char": 31,
+      "end_char": 38,
+      "support_score": 1.0
+    }
+  ],
+  "summary": {
+    "positive_count": 1,
+    "negative_count": 1,
+    "neutral_count": 0,
+    "total_evidence_count": 2,
+    "has_mixed_evidence": true
+  },
+  "extraction_method": "rule_based_keyword",
+  "primary_evidence_id": "N001_E002"
+}

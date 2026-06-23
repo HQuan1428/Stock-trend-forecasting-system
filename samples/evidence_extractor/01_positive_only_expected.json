@@ -1,0 +1,39 @@
+{
+  "news_id": "N010",
+  "ticker": "AMZN",
+  "forecast_time": "2025-04-02 09:00",
+  "news_time": "2025-04-01 16:00",
+  "evidence": [
+    {
+      "evidence_id": "N010_E001",
+      "news_id": "N010",
+      "evidence_text": "beats expectations",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "matched_keyword": "beats expectations",
+      "start_char": 7,
+      "end_char": 25,
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N010_E002",
+      "news_id": "N010",
+      "evidence_text": "strong sales",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "matched_keyword": "strong sales",
+      "start_char": 32,
+      "end_char": 44,
+      "support_score": 1.0
+    }
+  ],
+  "summary": {
+    "positive_count": 2,
+    "negative_count": 0,
+    "neutral_count": 0,
+    "total_evidence_count": 2,
+    "has_mixed_evidence": false
+  },
+  "extraction_method": "rule_based_keyword",
+  "primary_evidence_id": "N010_E001"
+}
