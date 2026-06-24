@@ -5,18 +5,19 @@ Financial forecasting models that consume news data are vulnerable to **temporal
 ## What Changes
 
 - Add a new module `src/retriever.py` exposing `retrieve_valid_news(forecast_time, news, ticker=None)` (or an equivalent pure function with the same contract).
+- When `ticker` is provided, apply a ticker filter BEFORE the time filter: keep only news items whose own `ticker` field equals the request `ticker` (case-sensitive string equality); items with a mismatched or missing `ticker` are routed to the `errors` list with a structured reason.
 - Define a deterministic, rule-based temporal filter that splits the input `news` list into `valid_news` and `invalid_future_news` based on `news_time <= forecast_time`.
 - Return a structured result object containing both groups plus counts (`valid_count`, `invalid_future_count`, `total_count`) and a derived `temporal_validity` ratio.
-- Preserve every input news item — including future news — in the output for auditability and dashboard warning; never silently drop items.
-- Define an explicit behavior for malformed or missing `news_time` (validation error vs. error list) and document it in `design.md`.
-- Add unit tests covering past, equal, future, mixed, empty, and malformed timestamp cases.
+- Preserve every input news item — including future news and ticker-mismatched news — in the output for auditability and dashboard warning; never silently drop items.
+- Define an explicit behavior for malformed or missing `news_time` and for ticker mismatch/missing (validation error vs. error list) and document it in `design.md`.
+- Add unit tests covering past, equal, future, mixed, empty, and malformed timestamp cases, plus ticker filter cases (match, mismatch, missing ticker, ticker=None skip).
 - Add a small sample dataset that includes rows with valid, equal, and future timestamps to make leakage scenarios reproducible.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `temporal-retriever`: Rule-based filtering of financial news by publication time. Splits input news into `valid_news` (news published at or before `forecast_time`) and `invalid_future_news` (news published strictly after `forecast_time`), reports counts, and preserves all input fields so downstream modules never see future news.
+- `temporal-retriever`: Rule-based filtering of financial news by ticker and publication time. When the request specifies a `ticker`, only news items whose own `ticker` field matches (case-sensitive string equality) are kept; mismatched and ticker-less items are routed to `errors`. The remaining items are split into `valid_news` (news published at or before `forecast_time`) and `invalid_future_news` (news published strictly after `forecast_time`). The service reports counts, preserves all input fields, and ensures every input item lands in exactly one of `valid_news`, `invalid_future_news`, or `errors` so downstream modules never see future news.
 
 ### Modified Capabilities
 

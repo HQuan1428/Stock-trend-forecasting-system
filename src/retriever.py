@@ -7,10 +7,20 @@ into two non-overlapping groups based on publication time:
 - ``valid_news``         — items whose ``news_time <= forecast_time``
 - ``invalid_future_news`` — items whose ``news_time >  forecast_time``
 
-Malformed ``news_time`` values are excluded from both groups and reported
-in a structured ``errors`` list. The service is a deterministic,
-side-effect-free, rule-based pure function. It has no ML, LLM, network,
-or external-service dependencies.
+When the request specifies a ``ticker`` (non-``None``, non-empty string),
+the retriever additionally filters by ticker BEFORE the time filter:
+only news items whose own ``ticker`` field equals the request ticker
+(case-sensitive string equality) are kept. Items with a mismatched or
+missing ``ticker`` are excluded from both time groups and reported in
+the structured ``errors`` list with ``reason = "ticker_mismatch"`` or
+``reason = "missing_ticker"``. When the request omits ``ticker`` (``None``
+or empty string), the ticker filter is skipped entirely and every news
+item is passed to the time filter (backward-compatible behavior).
+
+Malformed ``news_time`` values are likewise excluded from both groups
+and reported in ``errors`` with ``reason = "missing_or_malformed_news_time"``.
+The service is a deterministic, side-effect-free, rule-based pure
+function. It has no ML, LLM, network, or external-service dependencies.
 
 Project-local timezone: UTC.
     Naive timestamps (no offset) are interpreted as UTC. Timezone-aware
@@ -24,6 +34,12 @@ Field preservation:
     whichever the input uses is preserved verbatim in the response.
     Downstream consumers can read either via
     ``item.get("text") or item.get("news_text")``.
+
+Ticker filter semantics:
+    The retriever matches on the news item's ``ticker`` field (a single
+    string). Case-sensitive, exact-match. The request ``ticker`` is
+    echoed as-is in the response, regardless of whether it acted as a
+    filter.
 """
 
 from __future__ import annotations
@@ -141,19 +157,31 @@ def retrieve_valid_news(
 ) -> RetrievalResult:
     """Partition ``news`` into valid / invalid groups relative to ``forecast_time``.
 
+    When ``ticker`` is provided (non-``None``, non-empty string), the
+    retriever first keeps only news items whose own ``ticker`` field
+    equals ``ticker`` (case-sensitive string equality). Items with a
+    mismatched or missing ``ticker`` are routed to ``errors`` and do
+    NOT reach the time filter.
+
     Args:
         forecast_time: ISO 8601 timestamp string. Naive values are
             interpreted as UTC. Required.
         news: List of news dicts. Each dict must contain ``news_id`` and
             ``news_time``; the body must be under ``text`` or
-            ``news_text``. Extra fields are passed through unchanged.
-        ticker: Optional ticker symbol. Echoed in the response as-is; it
-            is NOT used as a filter.
+            ``news_text``. Each dict may carry a ``ticker`` field; if
+            the request specifies a ticker filter, items whose ``ticker``
+            does not match are excluded. Extra fields are passed
+            through unchanged.
+        ticker: Optional ticker symbol. When non-``None`` and non-empty,
+            it acts as a case-sensitive exact-match filter on each
+            news item's ``ticker`` field. When ``None`` or empty, the
+            ticker filter is skipped. Echoed as-is in the response.
 
     Returns:
         A :class:`RetrievalResult` with non-overlapping ``valid_news``
         and ``invalid_future_news`` groups, counts, ``temporal_validity``
-        ratio, and any structured ``errors`` for malformed items.
+        ratio, and any structured ``errors`` for ticker-mismatched,
+        ticker-missing, or malformed-time items.
 
     Raises:
         TemporalValidationError: if ``forecast_time`` is missing, null,
@@ -171,7 +199,12 @@ def retrieve_valid_news(
             f"forecast_time is not a parseable timestamp: {forecast_time!r}"
         ) from exc
 
-    # --- 2. Partition each news item -------------------------------------
+    # --- 2. Ticker filter (per Decision 7) -------------------------------
+    # ``ticker_filter_on`` is True only when the request specifies a
+    # non-empty ticker. ``None`` and "" both skip the filter.
+    ticker_filter_on = isinstance(ticker, str) and bool(ticker.strip())
+
+    # --- 3. Partition each news item -------------------------------------
     valid_news: List[Dict[str, Any]] = []
     invalid_future_news: List[Dict[str, Any]] = []
     errors: List[Dict[str, Any]] = []
@@ -179,9 +212,33 @@ def retrieve_valid_news(
     for item in news:
         # Copy without mutation; the copy preserves all original keys.
         item_copy: Dict[str, Any] = dict(item)
-
-        raw_news_time = item.get("news_time")
         news_id = item.get("news_id")
+
+        # --- 3a. Ticker filter (runs before the time filter) -------------
+        if ticker_filter_on:
+            item_ticker = item.get("ticker")
+            if not isinstance(item_ticker, str) or not item_ticker.strip():
+                # Missing ticker (None, empty string, or non-string).
+                errors.append(
+                    {
+                        "news_id": news_id,
+                        "reason": "missing_ticker",
+                    }
+                )
+                continue
+            if item_ticker != ticker:
+                # Ticker is present but does not match the request.
+                errors.append(
+                    {
+                        "news_id": news_id,
+                        "reason": "ticker_mismatch",
+                        "raw_value": item_ticker,
+                    }
+                )
+                continue
+
+        # --- 3b. Time filter ------------------------------------------
+        raw_news_time = item.get("news_time")
         if raw_news_time is None or not isinstance(raw_news_time, str) or not raw_news_time.strip():
             errors.append(
                 {
@@ -208,7 +265,7 @@ def retrieve_valid_news(
         else:
             invalid_future_news.append(item_copy)
 
-    # --- 3. Counts and temporal_validity --------------------------------
+    # --- 4. Counts and temporal_validity --------------------------------
     valid_count = len(valid_news)
     invalid_future_count = len(invalid_future_news)
     total_count = len(news)

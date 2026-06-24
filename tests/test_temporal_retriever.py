@@ -161,7 +161,7 @@ def test_news_text_input_is_preserved_as_is() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Ticker echo
+# Ticker filter (Decision 7)
 # ---------------------------------------------------------------------------
 
 
@@ -169,11 +169,16 @@ def test_ticker_is_echoed_when_provided() -> None:
     result = retrieve_valid_news(
         forecast_time="2025-03-12 09:00",
         ticker="AAPL",
-        news=[{"news_id": "n1", "news_time": "2025-03-11 08:00", "text": "x"}],
+        news=[
+            {
+                "news_id": "n1",
+                "news_time": "2025-03-11 08:00",
+                "text": "x",
+                "ticker": "AAPL",
+            }
+        ],
     )
     assert result.ticker == "AAPL"
-    # Ticker is NOT used as a filter.
-    assert result.valid_count == 1
 
 
 def test_ticker_defaults_to_none_when_absent() -> None:
@@ -189,6 +194,216 @@ def test_ticker_defaults_to_none_when_absent() -> None:
         news=[{"news_id": "n1", "news_time": "2025-03-11 08:00", "text": "x"}],
     )
     assert result2.ticker is None
+
+
+def test_ticker_filter_keeps_only_matching_items() -> None:
+    """When ticker is set, only items whose ticker matches reach the time filter."""
+    news = [
+        {
+            "news_id": "a1",
+            "news_time": "2025-03-11 08:00",
+            "text": "Apple past",
+            "ticker": "AAPL",
+        },
+        {
+            "news_id": "g1",
+            "news_time": "2025-03-11 08:30",
+            "text": "Google past",
+            "ticker": "GOOGL",
+        },
+        {
+            "news_id": "a2",
+            "news_time": "2025-03-11 09:00",
+            "text": "Apple past 2",
+            "ticker": "AAPL",
+        },
+    ]
+    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", ticker="AAPL", news=news)
+    # The two AAPL items are past the forecast -> valid.
+    assert result.valid_count == 2
+    assert result.invalid_future_count == 0
+    assert {n["news_id"] for n in result.valid_news} == {"a1", "a2"}
+    # The GOOGL item is excluded by the ticker filter, NOT silently dropped.
+    assert len(result.errors) == 1
+    err = result.errors[0]
+    assert err["news_id"] == "g1"
+    assert err["reason"] == "ticker_mismatch"
+    assert err["raw_value"] == "GOOGL"
+    # Partition invariant still holds.
+    assert (
+        len(result.valid_news)
+        + len(result.invalid_future_news)
+        + len(result.errors)
+        == result.total_count
+    )
+
+
+def test_ticker_filter_is_case_sensitive() -> None:
+    """Ticker match is case-sensitive: 'aapl' != 'AAPL'."""
+    result = retrieve_valid_news(
+        forecast_time="2025-03-12 09:00",
+        ticker="AAPL",
+        news=[
+            {
+                "news_id": "n1",
+                "news_time": "2025-03-11 08:00",
+                "text": "x",
+                "ticker": "aapl",
+            }
+        ],
+    )
+    assert result.valid_count == 0
+    assert result.invalid_future_count == 0
+    assert len(result.errors) == 1
+    err = result.errors[0]
+    assert err["reason"] == "ticker_mismatch"
+    assert err["raw_value"] == "aapl"
+
+
+def test_news_item_missing_ticker_is_excluded_with_missing_ticker_reason() -> None:
+    """When the request sets a ticker, items without a ticker go to errors."""
+    result = retrieve_valid_news(
+        forecast_time="2025-03-12 09:00",
+        ticker="AAPL",
+        news=[
+            {
+                "news_id": "n1",
+                "news_time": "2025-03-11 08:00",
+                "text": "x",
+                "ticker": "AAPL",
+            },
+            {
+                "news_id": "n2",
+                "news_time": "2025-03-11 08:30",
+                "text": "y",
+                # No ticker field at all.
+            },
+            {
+                "news_id": "n3",
+                "news_time": "2025-03-11 09:00",
+                "text": "z",
+                "ticker": None,
+            },
+            {
+                "news_id": "n4",
+                "news_time": "2025-03-11 09:30",
+                "text": "w",
+                "ticker": "",
+            },
+        ],
+    )
+    assert result.valid_count == 1
+    assert result.valid_news[0]["news_id"] == "n1"
+    assert len(result.errors) == 3
+    for err in result.errors:
+        assert err["reason"] == "missing_ticker"
+
+
+def test_ticker_none_skips_the_ticker_filter() -> None:
+    """When ticker=None, the ticker filter is skipped and all items reach the time filter."""
+    news = [
+        {
+            "news_id": "a1",
+            "news_time": "2025-03-11 08:00",
+            "text": "x",
+            "ticker": "AAPL",
+        },
+        {
+            "news_id": "g1",
+            "news_time": "2025-03-11 08:30",
+            "text": "y",
+            "ticker": "GOOGL",
+        },
+        {
+            "news_id": "n3",
+            "news_time": "2025-03-11 09:00",
+            "text": "z",
+            # No ticker.
+        },
+    ]
+    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", ticker=None, news=news)
+    # All three items are past the forecast -> all valid, no errors.
+    assert result.valid_count == 3
+    assert result.invalid_future_count == 0
+    assert result.errors == []
+
+
+def test_ticker_empty_string_is_treated_as_none() -> None:
+    """When ticker="", the filter is skipped and ticker is echoed as-is."""
+    news = [
+        {
+            "news_id": "a1",
+            "news_time": "2025-03-11 08:00",
+            "text": "x",
+            "ticker": "AAPL",
+        },
+        {
+            "news_id": "g1",
+            "news_time": "2025-03-11 08:30",
+            "text": "y",
+            "ticker": "GOOGL",
+        },
+    ]
+    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", ticker="", news=news)
+    # Filter skipped -> both items reach the time filter.
+    assert result.valid_count == 2
+    assert result.errors == []
+    # Echoed as-is.
+    assert result.ticker == ""
+
+
+def test_partition_invariant_holds_under_ticker_filtering() -> None:
+    """All three error reasons coexist; invariant still holds."""
+    news = [
+        {
+            "news_id": "n1",
+            "news_time": "2025-03-11 08:00",
+            "text": "valid",
+            "ticker": "AAPL",
+        },
+        {
+            "news_id": "n2",
+            "news_time": "2025-03-12 15:00",
+            "text": "future",
+            "ticker": "AAPL",
+        },
+        {
+            "news_id": "n3",
+            "news_time": "2025-03-12 08:00",
+            "text": "wrong ticker",
+            "ticker": "GOOGL",
+        },
+        {
+            "news_id": "n4",
+            "news_time": "2025-03-12 08:00",
+            "text": "no ticker",
+            # No ticker.
+        },
+        {
+            "news_id": "n5",
+            "news_time": "bad",
+            "text": "bad time",
+            "ticker": "AAPL",
+        },
+    ]
+    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", ticker="AAPL", news=news)
+    # n1 -> valid, n2 -> invalid_future, n3 -> ticker_mismatch, n4 -> missing_ticker,
+    # n5 -> missing_or_malformed_news_time
+    assert result.valid_count == 1
+    assert result.invalid_future_count == 1
+    assert len(result.errors) == 3
+    reasons = sorted(err["reason"] for err in result.errors)
+    assert reasons == [
+        "missing_or_malformed_news_time",
+        "missing_ticker",
+        "ticker_mismatch",
+    ]
+    assert (
+        len(result.valid_news)
+        + len(result.invalid_future_news)
+        + len(result.errors)
+        == result.total_count
+    )
 
 
 # ---------------------------------------------------------------------------

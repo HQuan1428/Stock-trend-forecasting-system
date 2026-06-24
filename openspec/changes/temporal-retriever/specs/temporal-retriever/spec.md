@@ -37,11 +37,12 @@ The system SHALL expose a Temporal Retriever service that accepts a `forecast_ti
 
 The Temporal Retriever SHALL accept a request payload with the following fields:
 
-- `ticker`: optional string; preserved in the response metadata if present, otherwise `None`.
+- `ticker`: optional string. When non-`None` and non-empty, the retriever SHALL treat it as a filter and keep only news items whose own `ticker` field equals this value (string-equality, case-sensitive). When `None` or empty, the ticker filter SHALL be skipped and every news item SHALL be passed through to the time filter. The value is echoed as-is in the response.
 - `forecast_time`: required timestamp string in ISO 8601 format (e.g. `"2025-03-12 09:00"` or `"2025-03-12T09:00:00"`); naive values are interpreted as UTC.
 - `news`: required array of news objects, where each news object contains:
   - `news_id`: required string (unique identifier of the news item).
   - `news_time`: required timestamp string in a supported format.
+  - `ticker`: optional string. Required only when the request specifies a `ticker` filter; if missing or non-matching, the item is routed to `errors`.
   - `title`: optional string.
   - `text` or `news_text`: required string (the body of the news item; either field name is accepted and preserved as-is in the response).
 
@@ -72,7 +73,10 @@ The Temporal Retriever SHALL return a response object with the following fields:
 - `invalid_future_count`: integer count of `invalid_future_news` items.
 - `total_count`: integer count of input news items (the request payload's `news` length, including items that land in `errors`).
 - `temporal_validity`: float equal to `valid_count / total_count` when `total_count > 0`; otherwise `0.0`.
-- `errors`: array of validation error objects; always present, empty array if every `news_time` parsed successfully. Each error has the shape `{"news_id": str, "reason": "missing_or_malformed_news_time", "raw_value": str | None}`.
+- `errors`: array of validation error objects; always present, empty array if every item parsed successfully AND matched the ticker filter. Each error has the shape `{"news_id": str, "reason": str, ...}` where `reason` is one of:
+  - `"missing_or_malformed_news_time"` — `news_time` was missing, `None`, or not a parseable timestamp; the entry also carries `raw_value: str | None` echoing the unparseable value.
+  - `"ticker_mismatch"` — the request specified a `ticker` filter and the news item had a `ticker` that did not match (case-sensitive string equality).
+  - `"missing_ticker"` — the request specified a `ticker` filter and the news item had no `ticker` field (missing, `None`, or empty string).
 
 #### Scenario: Counts and temporal_validity are reported correctly
 
@@ -100,13 +104,49 @@ The Temporal Retriever SHALL return a response object with the following fields:
 - **GIVEN** `ticker="AAPL"` and any non-empty news list
 - **WHEN** the Temporal Retriever runs
 - **THEN** the response `ticker` is `"AAPL"`
-- **AND** the retriever does NOT filter the news list by ticker
 
 #### Scenario: ticker defaults to None when absent
 
 - **GIVEN** the request omits `ticker` (or passes `ticker=None`) and any non-empty news list
 - **WHEN** the Temporal Retriever runs
 - **THEN** the response `ticker` is `None`
+- **AND** the ticker filter is skipped (every news item is passed to the time filter)
+
+#### Scenario: ticker filter keeps only matching items
+
+- **GIVEN** `ticker="AAPL"` and a news list with three items: one with `ticker="AAPL"`, one with `ticker="GOOGL"`, one with `ticker="AAPL"`
+- **WHEN** the Temporal Retriever runs
+- **THEN** the GOOGL item is excluded from `valid_news` and `invalid_future_news`
+- **AND** a structured error object with `reason = "ticker_mismatch"` and `news_id` of the GOOGL item is appended to `errors`
+- **AND** the two AAPL items are processed by the time filter normally
+
+#### Scenario: ticker filter is case-sensitive
+
+- **GIVEN** `ticker="AAPL"` and a news item with `ticker="aapl"`
+- **WHEN** the Temporal Retriever runs
+- **THEN** the item is NOT placed in `valid_news` or `invalid_future_news` based on ticker match
+- **AND** a structured error object with `reason = "ticker_mismatch"` is appended to `errors`
+
+#### Scenario: news item missing the ticker field is excluded when ticker filter is on
+
+- **GIVEN** `ticker="AAPL"` and a news item with no `ticker` field
+- **WHEN** the Temporal Retriever runs
+- **THEN** the item is excluded from `valid_news` and `invalid_future_news`
+- **AND** a structured error object with `reason = "missing_ticker"` is appended to `errors`
+
+#### Scenario: ticker=None skips the ticker filter
+
+- **GIVEN** `ticker=None` and a news list with mixed-ticker items (e.g. one `"AAPL"`, one `"GOOGL"`, one with no ticker)
+- **WHEN** the Temporal Retriever runs
+- **THEN** all three items are processed by the time filter (no ticker-based exclusion)
+- **AND** no `errors` entries are produced for ticker reasons
+
+#### Scenario: ticker="" (empty string) is treated the same as None
+
+- **GIVEN** `ticker=""` and a news list with mixed-ticker items
+- **WHEN** the Temporal Retriever runs
+- **THEN** the ticker filter is skipped
+- **AND** the response `ticker` is `""` (echoed as-is)
 
 ### Requirement: Datetime comparison rule
 
@@ -139,7 +179,9 @@ The Temporal Retriever SHALL handle the following edge cases deterministically:
 - All news valid → `invalid_future_news` is empty; `valid_count == total_count`; `temporal_validity == 1.0`.
 - All news invalid (all future) → `valid_news` is empty; `invalid_future_count == total_count`; `temporal_validity == 0.0`.
 - Mixed valid and future → both groups populated, counts correct.
-- Missing or malformed `news_time` → the item is excluded from both `valid_news` and `invalid_future_news`; a structured error object is appended to `errors`; the request continues processing other items.
+- Missing or malformed `news_time` → the item is excluded from both `valid_news` and `invalid_future_news`; a structured error object is appended to `errors` with `reason = "missing_or_malformed_news_time"`; the request continues processing other items.
+- Ticker filter specified and news item `ticker` does not match → the item is excluded from both `valid_news` and `invalid_future_news`; a structured error object is appended to `errors` with `reason = "ticker_mismatch"`; the request continues processing other items.
+- Ticker filter specified and news item has no `ticker` field → the item is excluded from both `valid_news` and `invalid_future_news`; a structured error object is appended to `errors` with `reason = "missing_ticker"`; the request continues processing other items.
 - Malformed `forecast_time` (missing, null, or not a parseable timestamp) → a `TemporalValidationError` is raised; no partial response is returned.
 - Timezone-aware timestamps → compared correctly when offsets match; both are first normalized to UTC.
 - Timezone-naive timestamps → interpreted as UTC (the project-local timezone).
@@ -165,7 +207,7 @@ The Temporal Retriever SHALL handle the following edge cases deterministically:
 - **GIVEN** a news list with one item whose `news_time` is `null`, missing, or not a parseable timestamp string
 - **WHEN** the Temporal Retriever runs
 - **THEN** the item is excluded from both `valid_news` and `invalid_future_news`
-- **AND** a structured error object is appended to `errors` with `reason = "missing_or_malformed_news_time"`
+- **AND** a structured error object is appended to `errors` with `reason = "missing_or_malformed_news_time"` and `raw_value` echoing the unparseable value
 - **AND** processing of the remaining items continues
 
 #### Scenario: Malformed forecast_time raises TemporalValidationError
@@ -200,7 +242,7 @@ The Temporal Retriever SHALL preserve every input news item in the response — 
 
 #### Scenario: Every input news item is preserved in the response
 
-- **GIVEN** a news list with 5 items (any mix of past, equal, future, or malformed)
+- **GIVEN** a news list with 5 items (any mix of past, equal, future, malformed, ticker-matched, or ticker-mismatched)
 - **WHEN** the Temporal Retriever runs
 - **THEN** the sum of `len(valid_news) + len(invalid_future_news) + len(errors)` equals `total_count`
 - **AND** every input item is present in exactly one of those three collections

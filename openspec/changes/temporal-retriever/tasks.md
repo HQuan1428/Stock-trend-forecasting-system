@@ -85,3 +85,14 @@
 
 - [x] 9.1 Confirm `src/__init__.py` re-exports `retrieve_valid_news` and `RetrievalResult` for ergonomic imports.
 - [x] 9.2 Confirm no future-dated news can leak by running the leakage regression test one final time.
+
+## 10. Ticker Filter (Decision 7 update)
+
+- [x] 10.1 Update `design.md` Decision 7: rename from "Filter by time only — ticker is metadata, not a filter" to "Ticker is a real filter — applied before the time filter", and add the new Chosen behavior / Rationale / Alternatives.
+- [x] 10.2 Update `specs/temporal-retriever/spec.md`: edit the "Temporal Retriever request schema" requirement to describe the ticker filter; replace the old "ticker is echoed when provided" scenario; add new scenarios: "ticker filter keeps only matching items", "ticker filter is case-sensitive", "news item missing the ticker field is excluded when ticker filter is on", "ticker=None skips the ticker filter", "ticker=\"\" (empty string) is treated the same as None"; update the `errors` schema description to list the three `reason` values (`missing_or_malformed_news_time`, `ticker_mismatch`, `missing_ticker`); update the "Edge cases" requirement and the "Every input news item is preserved" scenario to mention ticker filtering.
+- [x] 10.3 Update `proposal.md` capability description and `What Changes` list to mention the ticker filter and the new error reasons.
+- [x] 10.4 Update `src/retriever.py`: implement ticker filter that runs before the time filter; emit `errors` entries with `reason = "ticker_mismatch"` (when item has a `ticker` ≠ request ticker) or `reason = "missing_ticker"` (when item has no `ticker` / `None` / empty); treat `ticker=None` and `ticker=""` on the request as "skip filter"; update the module docstring and function docstring to describe the new behavior; ensure the partition invariant `len(valid_news) + len(invalid_future_news) + len(errors) == total_count` still holds when ticker filtering is active.
+- [x] 10.5 Add `tests/test_temporal_retriever.py` cases: (a) ticker filter keeps only matching items and routes mismatches to `errors`; (b) ticker filter is case-sensitive; (c) item missing the `ticker` field is excluded with `reason = "missing_ticker"`; (d) `ticker=None` skips the filter (mixed-ticker list all reaches the time filter); (e) `ticker=""` is treated like `None`; (f) partition invariant still holds under ticker filtering.
+- [x] 10.6 Update `README.md` usage example to demonstrate the ticker filter and clarify that `ticker` is now a real filter (not just metadata).
+- [x] 10.7 Run `pytest tests/ -v` and confirm a green run, including the leakage regression suite.
+- [x] 10.8 Run `openspec validate temporal-retriever` and resolve any reported issues.
