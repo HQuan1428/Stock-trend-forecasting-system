@@ -15,6 +15,21 @@ from src.evidence_extractor import (
     result_to_dict,
     select_primary_evidence_id,
 )
+from src.evidence_selector import (
+    CLASSIFICATION_TABLE,
+    DEFAULT_TOP_K,
+    EVIDENCE_SELECTOR_FIELDS,
+    EvidenceSelectorError,
+    OUTPUT_GROUPS,
+    REASON_TABLE,
+    REQUIRED_INPUT_FIELDS,
+    SELECTION_METHOD,
+    VALID_DIRECTIONS,
+    VALID_PREDICTIONS,
+    compute_coverage,
+    select_evidence,
+    select_evidence_batch,
+)
 from src.retriever import RetrievalResult, TemporalValidationError, retrieve_valid_news
 
 __all__ = [
@@ -36,4 +51,18 @@ __all__ = [
     "POLARITY_TO_DIRECTION",
     "SUPPORT_SCORES",
     "EXTRACTION_METHOD",
+    # evidence_selector
+    "select_evidence",
+    "select_evidence_batch",
+    "compute_coverage",
+    "EvidenceSelectorError",
+    "CLASSIFICATION_TABLE",
+    "REASON_TABLE",
+    "REQUIRED_INPUT_FIELDS",
+    "OUTPUT_GROUPS",
+    "DEFAULT_TOP_K",
+    "VALID_PREDICTIONS",
+    "VALID_DIRECTIONS",
+    "SELECTION_METHOD",
+    "EVIDENCE_SELECTOR_FIELDS",
 ]
