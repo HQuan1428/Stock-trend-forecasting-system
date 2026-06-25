@@ -1,4 +1,4 @@
-new_id,ticker,forecast_time,news_time,news_text,label
+news_id,ticker,forecast_time,news_time,news_text,label
 1,AAPL,2025-03-12 09:00,2025-03-11 08:00,Apple reports stronger than expected iPhone demand in India,UP
 2,GOOGL,2025-03-12 09:00,2025-03-12 10:30,Google faces a new antitrust complaint over search distribution deals,DOWN
 3,AMZN,2025-03-12 09:00,2025-03-12 09:00,Amazon keeps full year guidance unchanged after a mixed retail update,HOLD

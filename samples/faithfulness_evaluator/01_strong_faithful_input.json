@@ -1,0 +1,44 @@
+{
+  "sample_id": "S-FAITH-01",
+  "ticker": "AAPL",
+  "forecast_time": "2025-03-12 09:00",
+  "label": "UP",
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "news_id": "N-E001",
+      "news_time": "2025-03-11 08:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "E002",
+      "news_id": "N-E002",
+      "news_time": "2025-03-11 09:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "E003",
+      "news_id": "N-E003",
+      "news_time": "2025-03-11 10:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "E004",
+      "news_id": "N-E004",
+      "news_time": "2025-03-11 11:00",
+      "evidence_text": "...",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    }
+  ]
+}
