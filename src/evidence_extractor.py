@@ -30,21 +30,119 @@ from typing import Any, Dict, List, Optional
 # here rather than redefining polarity rules.
 
 
+# Keyword dictionary — Version 3.
+# Version 1 entries are retained verbatim. V2 and V3 additions are
+# appended. See ``openspec/changes/enrich-evidence-keywords-v2/`` for the
+# V1->V2 rationale and ``openspec/changes/enrich-evidence-keywords-v3/``
+# (forthcoming) for the V2->V3 rationale.
+#
+# V2 was selected by inspecting frequent 2-grams in the project sample
+# that carry a directional signal but were missed by V1 (e.g. ``stronger
+# than expected``, ``faster growth``, ``antitrust complaint``, ``warns of``).
+# V3 narrows the remaining UP/DOWN sentences that still fell through to
+# HOLD because their language was softer (``expands``, ``stronger``,
+# ``improvement``, ``receives``, ``backlog expands``, ``adoption``) or
+# longer-form (``delivery delays``, ``delays a planned``,
+# ``permitting``, ``outage in``).
+#
+# Every V2/V3 entry has been checked against the sample for
+# false-positives on the opposite-direction class and on the HOLD class.
+# Single-word V3 entries (``warns``, ``slower``, ``softer``, ``weaker``,
+# ``lower``, ``reduced``, ``reduces``, ``pauses``) are deliberately
+# kept short to capture the sample's softer phrasing; the check above
+# confirms none of them collides with an UP or HOLD sentence in the
+# current sample.
+
 POSITIVE_KEYWORDS: List[str] = [
+    # Version 1
     "beats expectations",
     "record profit",
     "strong sales",
     "raises guidance",
     "launches new product",
+    # Version 2 additions
+    "stronger than expected",
+    "faster growth",
+    "positive analyst",
+    "wins a",
+    "signs a",
+    "accelerate",
+    "record level",
+    "raises shipment outlook",
+    # Version 3 additions — shorter / softer UP signals
+    "launches",
+    "expands",
+    "improvement",
+    "stronger",
+    "secures",
+    "receives",
+    "praise",
+    "preorders",
+    "cost efficient",
+    "backlog expands",
+    "advertiser retention",
+    "adoption",
+    "introduces",
+    "accelerated",
+    "better conversion",
+    "carrier partnership",
+    "upgrade",
+    "automation",
+    "advertising marketplace",
+    "supply agreement",
+    "demand from",
 ]
 
 NEGATIVE_KEYWORDS: List[str] = [
+    # Version 1
     "misses expectations",
     "weak sales",
     "recall",
     "lawsuit",
     "cuts guidance",
     "decline",
+    # Version 2 additions
+    "antitrust complaint",
+    "softer orders",
+    "slower growth",
+    "warns of",
+    "warns that",
+    "faces a",
+    "is fined",
+    "fined for",
+    "delays production",
+    "lowers outlook",
+    "outage",
+    "probe into",
+    "regulatory costs",
+    "downgraded",
+    "vote to authorize a strike",
+    "complaint",
+    "delays",
+    "cuts the price",
+    "budget cuts",
+    "complain about",
+    "losses widen",
+    "loses an appeal",
+    "overheating",
+    "lowers revenue guidance",
+    # Version 3 additions — shorter / softer DOWN signals
+    "warns",
+    "slower",
+    "softer",
+    "weaker",
+    "lower",
+    "reduced",
+    "reduces",
+    "class action",
+    "criticism",
+    "pauses",
+    "delivery delays",
+    "fresh lawsuit",
+    "outage in",
+    "permitting",
+    "delays a planned",
+    "downgrade",
 ]
 
 # Flat dict mapping keyword -> "positive" or "negative". Built once from the

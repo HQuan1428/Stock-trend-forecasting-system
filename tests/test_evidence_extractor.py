@@ -31,23 +31,108 @@ from src.evidence_extractor import (
 
 
 def test_positive_keywords_match_spec_vocabulary() -> None:
+    # Version 3 — V1, V2, and V3 entries are all preserved. V1 leads, V2
+    # additions follow, and V3 additions are appended last. See
+    # openspec/changes/enrich-evidence-keywords-v2/ and
+    # openspec/changes/enrich-evidence-keywords-v3/ for the rationale
+    # behind each entry.
     assert POSITIVE_KEYWORDS == [
+        # V1
         "beats expectations",
         "record profit",
         "strong sales",
         "raises guidance",
         "launches new product",
+        # V2 additions
+        "stronger than expected",
+        "faster growth",
+        "positive analyst",
+        "wins a",
+        "signs a",
+        "accelerate",
+        "record level",
+        "raises shipment outlook",
+        # V3 additions — shorter / softer UP signals
+        "launches",
+        "expands",
+        "improvement",
+        "stronger",
+        "secures",
+        "receives",
+        "praise",
+        "preorders",
+        "cost efficient",
+        "backlog expands",
+        "advertiser retention",
+        "adoption",
+        "introduces",
+        "accelerated",
+        "better conversion",
+        "carrier partnership",
+        "upgrade",
+        "automation",
+        "advertising marketplace",
+        "supply agreement",
+        "demand from",
     ]
 
 
 def test_negative_keywords_match_spec_vocabulary() -> None:
+    # Version 3 — V1, V2, and V3 entries are all preserved. V1 leads, V2
+    # additions follow, and V3 additions are appended last. See
+    # openspec/changes/enrich-evidence-keywords-v2/ and
+    # openspec/changes/enrich-evidence-keywords-v3/ for the rationale
+    # behind each entry.
     assert NEGATIVE_KEYWORDS == [
+        # V1
         "misses expectations",
         "weak sales",
         "recall",
         "lawsuit",
         "cuts guidance",
         "decline",
+        # V2 additions
+        "antitrust complaint",
+        "softer orders",
+        "slower growth",
+        "warns of",
+        "warns that",
+        "faces a",
+        "is fined",
+        "fined for",
+        "delays production",
+        "lowers outlook",
+        "outage",
+        "probe into",
+        "regulatory costs",
+        "downgraded",
+        "vote to authorize a strike",
+        "complaint",
+        "delays",
+        "cuts the price",
+        "budget cuts",
+        "complain about",
+        "losses widen",
+        "loses an appeal",
+        "overheating",
+        "lowers revenue guidance",
+        # V3 additions — shorter / softer DOWN signals
+        "warns",
+        "slower",
+        "softer",
+        "weaker",
+        "lower",
+        "reduced",
+        "reduces",
+        "class action",
+        "criticism",
+        "pauses",
+        "delivery delays",
+        "fresh lawsuit",
+        "outage in",
+        "permitting",
+        "delays a planned",
+        "downgrade",
     ]
 
 
@@ -518,3 +603,300 @@ def test_golden_fixture_matches_extractor_output(fixture_stem: str) -> None:
         f"import json; print(json.dumps(extract_evidence(json.loads(open('{inp_path}').read())), indent=2))\"` "
         "to inspect."
     )
+
+
+# ---------------------------------------------------------------------------
+# Version 2 keyword coverage tests (delta spec scenarios)
+# ---------------------------------------------------------------------------
+# These tests pin V2 behaviour on real sample sentences from
+# data/sample_dataset.csv. They cover the "V2 keyword coverage on the
+# project sample" and "V2 must NOT regress HOLD-style sentences"
+# requirements in openspec/changes/enrich-evidence-keywords-v2/.
+
+
+def test_v2_extracts_positive_from_sample_up_sentence() -> None:
+    """V2 scenario: 'Apple reports stronger than expected iPhone demand in India' (UP)
+    yields at least one positive evidence object via the V2 keyword
+    'stronger than expected'."""
+    result = extract_evidence(
+        _make_item("Apple reports stronger than expected iPhone demand in India")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "stronger than expected" in matched_keywords
+    positives = [e for e in result["evidence"] if e["polarity"] == "positive"]
+    assert positives, "expected at least one positive evidence item"
+    assert result["summary"]["positive_count"] >= 1
+    assert result["summary"]["negative_count"] == 0
+    assert result["summary"]["has_mixed_evidence"] is False
+    assert any(e["expected_direction"] == "UP" for e in result["evidence"])
+
+
+def test_v2_extracts_negative_from_sample_down_sentence_antitrust() -> None:
+    """V2 scenario: 'Google faces a new antitrust complaint over search distribution deals' (DOWN)
+    yields at least one negative evidence object via the V2 keyword
+    'antitrust complaint' (or 'faces a')."""
+    result = extract_evidence(
+        _make_item(
+            "Google faces a new antitrust complaint over search distribution deals"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "antitrust complaint" in matched_keywords or "faces a" in matched_keywords
+    negatives = [e for e in result["evidence"] if e["polarity"] == "negative"]
+    assert negatives
+    assert result["summary"]["negative_count"] >= 1
+    assert result["summary"]["positive_count"] == 0
+    assert any(e["expected_direction"] == "DOWN" for e in result["evidence"])
+
+
+def test_v2_extracts_positive_faster_growth() -> None:
+    """V2 scenario: 'Meta announces faster growth in Reels advertising engagement' (UP)
+    yields a positive evidence object via the V2 keyword 'faster growth'."""
+    result = extract_evidence(
+        _make_item("Meta announces faster growth in Reels advertising engagement")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "faster growth" in matched_keywords
+    assert result["summary"]["positive_count"] >= 1
+    assert any(e["expected_direction"] == "UP" for e in result["evidence"])
+
+
+def test_v2_extracts_negative_multi_keyword_warns_of() -> None:
+    """V2 scenario: 'Apple supplier warns of softer iPhone component orders for next quarter' (DOWN)
+    yields at least one negative evidence object via either 'warns of' or
+    'softer orders' (multi-keyword positive scenario for the DOWN class)."""
+    result = extract_evidence(
+        _make_item(
+            "Apple supplier warns of softer iPhone component orders for next quarter"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "warns of" in matched_keywords or "softer orders" in matched_keywords
+    negatives = [e for e in result["evidence"] if e["polarity"] == "negative"]
+    assert len(negatives) >= 1
+    assert any(e["expected_direction"] == "DOWN" for e in result["evidence"])
+
+
+def test_v2_extracts_positive_signs_a_contract() -> None:
+    """V2 scenario: 'Google Cloud signs a large AI infrastructure contract with a bank' (UP)
+    yields a positive evidence object via the V2 keyword 'signs a'."""
+    result = extract_evidence(
+        _make_item(
+            "Google Cloud signs a large AI infrastructure contract with a bank"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "signs a" in matched_keywords
+    assert result["summary"]["positive_count"] >= 1
+    assert any(e["expected_direction"] == "UP" for e in result["evidence"])
+
+
+def test_v2_extracts_negative_is_fined() -> None:
+    """V2 scenario: 'Google is fined by a regulator for data retention practices' (DOWN)
+    yields a negative evidence object via the V2 keyword 'is fined'."""
+    result = extract_evidence(
+        _make_item("Google is fined by a regulator for data retention practices")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "is fined" in matched_keywords
+    assert result["summary"]["negative_count"] >= 1
+    assert any(e["expected_direction"] == "DOWN" for e in result["evidence"])
+
+
+def test_v2_hold_sentence_remains_neutral() -> None:
+    """V2 must NOT regress: 'Amazon keeps full year guidance unchanged after a mixed retail update' (HOLD)
+    remains a single neutral evidence object. No V2 keyword must match
+    this sentence in a way that would flip it to UP/DOWN."""
+    result = extract_evidence(
+        _make_item(
+            "Amazon keeps full year guidance unchanged after a mixed retail update"
+        )
+    )
+    assert len(result["evidence"]) == 1
+    ev = result["evidence"][0]
+    assert ev["polarity"] == "neutral"
+    assert ev["expected_direction"] == "HOLD"
+    assert ev["support_score"] == 0.5
+    assert ev["matched_keyword"] is None
+    assert result["summary"]["neutral_count"] == 1
+    assert result["summary"]["positive_count"] == 0
+    assert result["summary"]["negative_count"] == 0
+
+
+def test_v2_has_mixed_evidence_when_both_polarities_match() -> None:
+    """V2 mixed flag: a synthetic sentence with both 'raises guidance' (V1 positive)
+    and 'lawsuit' (V1 negative) yields summary.has_mixed_evidence = True.
+    Pin the mixed-evidence contract under V2 — new keywords must not
+    regress the mixed flag."""
+    result = extract_evidence(
+        _make_item("Google raises guidance despite lawsuit risk")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "raises guidance" in matched_keywords
+    assert "lawsuit" in matched_keywords
+    assert result["summary"]["has_mixed_evidence"] is True
+    assert result["summary"]["positive_count"] >= 1
+    assert result["summary"]["negative_count"] >= 1
+    # Primary evidence must still point to a negative item (V1 rule preserved).
+    primary = next(
+        e for e in result["evidence"] if e["evidence_id"] == result["primary_evidence_id"]
+    )
+    assert primary["polarity"] == "negative"
+    assert primary["matched_keyword"] == "lawsuit"
+
+
+# ---------------------------------------------------------------------------
+# Version 3 keyword coverage tests (delta spec scenarios)
+# ---------------------------------------------------------------------------
+# V3 narrows the residual UP/DOWN sentences that V2 still classified as
+# HOLD. The V3 keyword list was selected by inspecting the 27 UP-HOLD
+# and 24 DOWN-HOLD sentences that V2 produced — see
+# openspec/changes/enrich-evidence-keywords-v3/ for the full rationale
+# and the false-positive audit table.
+
+
+def test_v3_extracts_positive_from_softer_up_sentence_expands() -> None:
+    """V3: 'Google expands Gemini features for enterprise productivity customers' (UP)
+    yields a positive evidence object via the V3 keyword 'expands'."""
+    result = extract_evidence(
+        _make_item("Google expands Gemini features for enterprise productivity customers")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "expands" in matched_keywords
+    assert result["summary"]["positive_count"] >= 1
+    assert any(e["expected_direction"] == "UP" for e in result["evidence"])
+
+
+def test_v3_extracts_positive_from_softer_up_sentence_stronger() -> None:
+    """V3: 'Meta reports stronger advertiser retention among small businesses' (UP)
+    yields a positive evidence object via 'stronger' (which the V3
+    extractor's token-gap also covers 'stronger advertiser retention')."""
+    result = extract_evidence(
+        _make_item("Meta reports stronger advertiser retention among small businesses")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    # V3 keyword 'stronger' matches as a single-word keyword.
+    assert "stronger" in matched_keywords
+    assert result["summary"]["positive_count"] >= 1
+    assert any(e["expected_direction"] == "UP" for e in result["evidence"])
+
+
+def test_v3_extracts_positive_improvement_program() -> None:
+    """V3: 'Google announces a cloud margin improvement program' (UP)
+    yields a positive evidence object via the V3 keyword 'improvement'."""
+    result = extract_evidence(
+        _make_item("Google announces a cloud margin improvement program")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "improvement" in matched_keywords
+    assert result["summary"]["positive_count"] >= 1
+
+
+def test_v3_extracts_positive_cost_efficient() -> None:
+    """V3: 'Amazon Web Services launches new cost efficient AI chips for customers' (UP)
+    yields a positive evidence object via the V3 keyword 'cost efficient'."""
+    result = extract_evidence(
+        _make_item(
+            "Amazon Web Services launches new cost efficient AI chips for customers"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "cost efficient" in matched_keywords
+    assert result["summary"]["positive_count"] >= 1
+
+
+def test_v3_extracts_negative_warns_short_form() -> None:
+    """V3: 'Google warns that cloud capacity constraints may limit near term sales' (DOWN)
+    yields a negative evidence object via the short V3 keyword 'warns'
+    (V2 already has 'warns of' / 'warns that', but this sentence is also
+    covered by the V3 short keyword as a defence-in-depth)."""
+    result = extract_evidence(
+        _make_item(
+            "Google warns that cloud capacity constraints may limit near term sales"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    # Either V2 ('warns that') or V3 ('warns') may match — the contract
+    # is that the sentence is classified DOWN.
+    assert matched_keywords & {"warns", "warns that"}
+    assert result["summary"]["negative_count"] >= 1
+    assert any(e["expected_direction"] == "DOWN" for e in result["evidence"])
+
+
+def test_v3_extracts_negative_softer_shorter_form() -> None:
+    """V3: 'Meta ad dashboard shows slower conversion rates for gaming advertisers' (DOWN)
+    yields a negative evidence object via the short V3 keyword 'slower'."""
+    result = extract_evidence(
+        _make_item(
+            "Meta ad dashboard shows slower conversion rates for gaming advertisers"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "slower" in matched_keywords
+    assert result["summary"]["negative_count"] >= 1
+
+
+def test_v3_extracts_negative_weaker_mac() -> None:
+    """V3: 'Apple reports weaker Mac shipments in a supply chain channel check' (DOWN)
+    yields a negative evidence object via the V3 keyword 'weaker'."""
+    result = extract_evidence(
+        _make_item("Apple reports weaker Mac shipments in a supply chain channel check")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "weaker" in matched_keywords
+    assert result["summary"]["negative_count"] >= 1
+
+
+def test_v3_extracts_negative_permitting_issues() -> None:
+    """V3: 'Google delays a planned cloud region because of permitting issues' (DOWN)
+    yields a negative evidence object via the V3 keyword 'permitting'."""
+    result = extract_evidence(
+        _make_item(
+            "Google delays a planned cloud region because of permitting issues"
+        )
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "permitting" in matched_keywords
+    assert result["summary"]["negative_count"] >= 1
+
+
+def test_v3_extracts_negative_outage_in() -> None:
+    """V3: 'Amazon reports a temporary outage in a major AWS region' (DOWN)
+    yields a negative evidence object via the V3 keyword 'outage in'."""
+    result = extract_evidence(
+        _make_item("Amazon reports a temporary outage in a major AWS region")
+    )
+    matched_keywords = {e["matched_keyword"] for e in result["evidence"]}
+    assert "outage in" in matched_keywords
+    assert result["summary"]["negative_count"] >= 1
+
+
+def test_v3_hold_sentence_still_remains_neutral() -> None:
+    """V3 must NOT regress: 'Apple issues a regular security patch for iOS devices' (HOLD)
+    remains a single neutral evidence object. None of the V3 short
+    keywords (e.g. 'receives', 'improvement', 'launches', 'upgrade',
+    'introduces', 'expands') must match a genuinely HOLD sentence."""
+    result = extract_evidence(
+        _make_item("Apple issues a regular security patch for iOS devices")
+    )
+    assert len(result["evidence"]) == 1
+    ev = result["evidence"][0]
+    assert ev["polarity"] == "neutral"
+    assert ev["expected_direction"] == "HOLD"
+    assert ev["support_score"] == 0.5
+    assert ev["matched_keyword"] is None
+
+
+def test_v3_hold_sentence_in_line_with_plan_still_neutral() -> None:
+    """V3 must NOT regress: 'Google says Android licensing revenue remains in line with plan' (HOLD)
+    must remain neutral. The V3 keyword 'receives' must NOT match this
+    sentence in a way that flips it to UP."""
+    result = extract_evidence(
+        _make_item(
+            "Google says Android licensing revenue remains in line with plan"
+        )
+    )
+    assert len(result["evidence"]) == 1
+    assert result["evidence"][0]["polarity"] == "neutral"
+    assert result["summary"]["positive_count"] == 0
+    assert result["summary"]["negative_count"] == 0

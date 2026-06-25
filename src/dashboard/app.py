@@ -104,7 +104,7 @@ def main(output_dir: Optional[str] = None) -> None:
     with tabs[0]:
         render_overview_tab(data, fp, fe, ff, fl)
     with tabs[1]:
-        render_evidence_tab(fe)
+        render_evidence_tab(fe, fp)
     with tabs[2]:
         render_confidence_drop_tab(ff)
     with tabs[3]:

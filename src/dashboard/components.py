@@ -244,14 +244,38 @@ def render_overview_tab(
 # ---------------------------------------------------------------------------
 
 
-def render_evidence_tab(filtered_evidence: pd.DataFrame) -> None:
-    """Render the Evidence tab content."""
+def render_evidence_tab(
+    filtered_evidence: pd.DataFrame,
+    filtered_predictions: Optional[pd.DataFrame] = None,
+) -> None:
+    """Render the Evidence tab content.
+
+    ``filtered_predictions`` is used to look up the per-group
+    ``prediction`` value so the evidence table can show which prediction
+    each evidence item is tied to. The join is by ``sample_id``.
+    """
     st.subheader("Evidence")
     if filtered_evidence is None or filtered_evidence.empty:
         st.info("No evidence rows match the current filters.")
         return
 
     view = filtered_evidence.copy()
+    if (
+        filtered_predictions is not None
+        and not filtered_predictions.empty
+        and "sample_id" in filtered_predictions.columns
+        and "prediction" in filtered_predictions.columns
+        and "sample_id" in view.columns
+    ):
+        view = view.merge(
+            filtered_predictions[["sample_id", "prediction"]].drop_duplicates(
+                subset=["sample_id"]
+            ),
+            on="sample_id",
+            how="left",
+        )
+    if "prediction" not in view.columns:
+        view["prediction"] = ""
     view["is_cited_display"] = view["is_cited"].apply(
         lambda v: "✓ cited" if bool(v) else "—"
     )

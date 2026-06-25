@@ -66,6 +66,13 @@ from src.forecast_model import (
     predict_without_evidence,
 )
 from src.retriever import RetrievalResult, TemporalValidationError, retrieve_valid_news
+from src.schema import (
+    EvidenceItem,
+    FaithfulnessResult,
+    ForecastResult,
+    NewsRecord,
+    PipelineResult,
+)
 from src.dashboard import (  # noqa: E402 — placed after retriever for grouping
     COLOR_ACCENT,
     COLOR_CRITICAL,
@@ -197,4 +204,10 @@ __all__ = [
     "COLOR_WARNING",
     "COLOR_CRITICAL",
     "COLOR_ACCENT",
+    # shared data contracts
+    "NewsRecord",
+    "EvidenceItem",
+    "ForecastResult",
+    "FaithfulnessResult",
+    "PipelineResult",
 ]
