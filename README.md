@@ -437,6 +437,165 @@ coverage table.
   documented as future work and would change the algorithm but not the
   public API contract (`model_version` becomes the filter key).
 
+## Faithfulness Evaluator
+
+The Faithfulness Evaluator is the fifth stage. Given a `ForecastResult`
+from the Forecast Model and the input envelope that produced it, it
+answers the central research question: **"When the model cites evidence
+for its prediction, does that evidence actually influence the
+prediction?"**
+
+Version 1 is **deterministic, rule-based, and side-effect-free in
+single-evaluation mode**. It does NOT use any LLM, FinBERT, transformer
+model, logistic regression, deep-learning model, or external API. It
+does NOT re-extract or re-classify evidence. It re-invokes
+`src.forecast_model.predict_without_evidence` for the ablation pass and
+otherwise operates on the result it is given.
+
+### Three required metrics
+
+| Metric               | Formula                                                                                                                                       |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `temporal_validity`  | `1.0` if every cited evidence item has `news_time <= forecast_time`; `0.0` if any item has `news_time > forecast_time`; `1.0` for empty list. |
+| `evidence_support`   | Mean of per-item support scores (`1.0` exact match, `0.5` HOLD vs. UP/DOWN, `0.0` opposite). `1.0` for empty list.                          |
+| `confidence_drop`    | `original_confidence - confidence_after_removal`. Signed; may be negative. A `confidence_increased_after_removal` warning is added when negative. |
+
+### Optional composite score (V1 heuristic)
+
+```
+normalized_drop = min(max(confidence_drop, 0.0) / 0.30, 1.0)
+faithfulness_score = 0.35 * temporal_validity
+                   + 0.30 * evidence_support
+                   + 0.35 * normalized_drop
+```
+
+`faithfulness_score` is in `[0.0, 1.0]`. Negative `confidence_drop` is
+clamped to `0.0` for the composite; the signed drop is preserved in the
+report. **The composite is documented as a V1 dashboard heuristic, not
+a scientifically validated metric.** `confidence_drop` is the primary
+signal.
+
+### Verdict cascade
+
+```
+temporal_validity < 1.0          → invalid_temporal_leakage
+evidence_support  < 0.5           → unsupported_evidence
+cited_evidence is empty           → decorative_explanation_risk
+prediction_after_removal != prediction → strong_faithful_candidate
+confidence_drop >= 0.20           → strong_faithful_candidate
+confidence_drop >= 0.10           → moderate_faithful_candidate
+confidence_drop >= 0.05           → weak_faithful_candidate
+otherwise                         → decorative_explanation_risk
+```
+
+The six labels are exposed as the `VERDICTS` constant
+(`frozenset`).
+
+### Ablation strategies
+
+| Strategy                    | Description                                                                                                |
+|-----------------------------|------------------------------------------------------------------------------------------------------------|
+| `remove_cited_pro_evidence` | Default. Removes every evidence item whose `evidence_id` is in `pro_evidence` (the supporting evidence).    |
+| `remove_all_cited_evidence` | Removes every evidence item whose `evidence_id` is in `pro_evidence` OR `counter_evidence`.                |
+
+When the Forecast Model only accepts news-level input, the
+`evidence_id` set is collapsed to a `news_id` set and the expansion is
+recorded in `ablation_warnings` as
+`"COLLAPSED_BY_NEWS_ID: <news_id> (expanded from <evidence_id_list>)"`.
+
+### Single evaluation
+
+```python
+from src import FaithfulnessEvaluator, predict
+
+request = {
+    "sample_id": "S0001",
+    "ticker": "AAPL",
+    "forecast_time": "2025-03-12 09:00",
+    "label": "UP",
+    "evidence": [
+        {
+            "evidence_id": "N001_E001",
+            "news_id": "N001",
+            "news_time": "2025-03-11 08:30",
+            "evidence_text": "strong sales",
+            "polarity": "positive",
+            "expected_direction": "UP",
+            "support_score": 1.0,
+        },
+        # ... more evidence items
+    ],
+}
+result = predict(request)
+report = FaithfulnessEvaluator().evaluate(request, result)
+# report["temporal_validity"], report["evidence_support"],
+# report["confidence_drop"], report["faithfulness_score"],
+# report["verdict"], report["per_evidence_results"],
+# report["temporal_warnings"], report["support_warnings"],
+# report["ablation_warnings"]
+```
+
+### Batch evaluation and CSV/JSON export
+
+```python
+from src import predict, predict_batch, evaluate_batch
+
+records = [request1, request2, request3]
+results = predict_batch(records, output_csv_path=None)
+reports = evaluate_batch(
+    list(zip(records, results)),
+    output_csv_path="outputs/faithfulness_results.csv",
+    output_json_path="outputs/faithfulness_results.json",
+)
+```
+
+The CSV header is the `CSV_COLUMNS` constant from `src.faithfulness_evaluator`:
+
+```
+ticker, forecast_time, prediction, original_confidence,
+prediction_after_removal, confidence_after_removal, confidence_drop,
+temporal_validity, evidence_support, faithfulness_score,
+verdict, warnings
+```
+
+The `warnings` column is the JSON encoding of the concatenated
+`temporal_warnings + support_warnings + ablation_warnings` lists.
+
+### Sample fixtures
+
+Golden fixtures live in `samples/faithfulness_evaluator/` and cover the
+four archetypes:
+
+| File                              | Scenario               | Verdict                       |
+|-----------------------------------|------------------------|-------------------------------|
+| `01_strong_faithful_*.json`       | UP flips to DOWN       | `strong_faithful_candidate`   |
+| `02_decorative_*.json`            | HOLD stays HOLD        | `decorative_explanation_risk` |
+| `03_temporal_leakage_*.json`      | Future-dated evidence  | `invalid_temporal_leakage`    |
+| `04_unsupported_*.json`           | UP with DOWN evidence  | `unsupported_evidence`        |
+
+A parametrized regression test in
+`tests/test_faithfulness_evaluator.py` asserts byte-equality on every
+fixture pair.
+
+### Limitations
+
+- **Composite is a heuristic**: the V1 `faithfulness_score` is a
+  weighted blend of three sub-metrics; the `confidence_drop` is the
+  primary signal and the composite is for at-a-glance dashboard
+  display.
+- **Verdict cascade is fixed**: thresholds (`0.05`, `0.10`, `0.20`) are
+  pinned in the spec and not configurable in V1. A future change can
+  expose them as parameters without breaking the existing verdicts.
+- **Single-ticker, single-ablation**: each `evaluate(...)` call is
+  independent and uses a single ablation strategy. Leave-one-out
+  per-evidence ablation is documented as a V2 extension point.
+- **Re-invokes the Forecast Model**: the evaluator doubles the runtime
+  per evaluation (one call to `predict`, one to
+  `predict_without_evidence`). For a 100-row batch this is acceptable.
+- **V1 is not a calibration**: the evaluator is a deterministic function
+  of the result and the model; it is not a probabilistic faithfulness
+  estimator.
+
 ## Disclaimer
 
 This project is for research and learning. It is not a trading system and does

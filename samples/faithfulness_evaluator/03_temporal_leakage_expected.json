@@ -1,0 +1,57 @@
+{
+  "sample_id": "S-FAITH-03",
+  "ticker": "MSFT",
+  "forecast_time": "2025-03-12 09:00",
+  "prediction": "UP",
+  "original_confidence": 0.8,
+  "temporal_validity": 0.0,
+  "evidence_support": 1.0,
+  "confidence_drop": 0.8,
+  "confidence_after_removal": 0.0,
+  "prediction_after_removal": "HOLD",
+  "faithfulness_score": 0.6499999999999999,
+  "verdict": "invalid_temporal_leakage",
+  "temporal_warnings": [
+    "TEMPORAL_LEAKAGE: evidence_id=E204, news_time=2025-03-13T09:00:00+00:00, forecast_time=2025-03-12T09:00:00+00:00"
+  ],
+  "support_warnings": [],
+  "ablation_warnings": [],
+  "per_evidence_results": [
+    {
+      "evidence_id": "E201",
+      "news_id": "N-E201",
+      "news_time": "2025-03-11 08:00",
+      "expected_direction": "UP",
+      "support_score": 1.0,
+      "is_cited": true,
+      "temporal_warning": ""
+    },
+    {
+      "evidence_id": "E202",
+      "news_id": "N-E202",
+      "news_time": "2025-03-11 09:00",
+      "expected_direction": "UP",
+      "support_score": 1.0,
+      "is_cited": true,
+      "temporal_warning": ""
+    },
+    {
+      "evidence_id": "E203",
+      "news_id": "N-E203",
+      "news_time": "2025-03-11 10:00",
+      "expected_direction": "UP",
+      "support_score": 1.0,
+      "is_cited": true,
+      "temporal_warning": ""
+    },
+    {
+      "evidence_id": "E204",
+      "news_id": "N-E204",
+      "news_time": "2025-03-13 09:00",
+      "expected_direction": "UP",
+      "support_score": 1.0,
+      "is_cited": true,
+      "temporal_warning": "TEMPORAL_LEAKAGE: evidence_id=E204"
+    }
+  ]
+}

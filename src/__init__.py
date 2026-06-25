@@ -1,5 +1,26 @@
 """Faithful evidence-centric financial news forecasting prototype."""
 
+from src.faithfulness_evaluator import (
+    ABLATION_STRATEGIES,
+    CSV_COLUMNS as FAITHFULNESS_CSV_COLUMNS,
+    CSV_DEFAULT_PATH as FAITHFULNESS_CSV_DEFAULT_PATH,
+    FaithfulnessEvaluator,
+    FaithfulnessEvaluatorError,
+    JSON_DEFAULT_PATH as FAITHFULNESS_JSON_DEFAULT_PATH,
+    VALID_PREDICTIONS as FAITHFULNESS_VALID_PREDICTIONS,
+    evaluate_batch,
+)
+from src.faithfulness_metrics import (
+    VERDICTS,
+    calculate_confidence_drop,
+    calculate_dataset_temporal_validity,
+    calculate_evidence_support,
+    calculate_faithfulness_score,
+    calculate_prediction_temporal_validity,
+    classify_faithfulness,
+    confidence_after_removal_for_original_class,
+    evidence_support_score,
+)
 from src.evidence_extractor import (
     EXTRACTION_METHOD,
     KEYWORDS,
@@ -92,4 +113,22 @@ __all__ = [
     "JSON_DEFAULT_PATH",
     "RATIONALE_TEMPLATES",
     "WARNING_CODES",
+    # faithfulness_evaluator / faithfulness_metrics
+    "FaithfulnessEvaluator",
+    "FaithfulnessEvaluatorError",
+    "evaluate_batch",
+    "calculate_prediction_temporal_validity",
+    "calculate_dataset_temporal_validity",
+    "evidence_support_score",
+    "calculate_evidence_support",
+    "confidence_after_removal_for_original_class",
+    "calculate_confidence_drop",
+    "calculate_faithfulness_score",
+    "classify_faithfulness",
+    "VERDICTS",
+    "ABLATION_STRATEGIES",
+    "FAITHFULNESS_CSV_COLUMNS",
+    "FAITHFULNESS_CSV_DEFAULT_PATH",
+    "FAITHFULNESS_JSON_DEFAULT_PATH",
+    "FAITHFULNESS_VALID_PREDICTIONS",
 ]

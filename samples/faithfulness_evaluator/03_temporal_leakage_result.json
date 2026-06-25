@@ -1,0 +1,48 @@
+{
+  "sample_id": "S-FAITH-03",
+  "ticker": "MSFT",
+  "forecast_time": "2025-03-12 09:00",
+  "prediction": "UP",
+  "confidence": 0.8,
+  "pro_evidence": [
+    {
+      "evidence_id": "E201",
+      "news_id": "N-E201",
+      "news_time": "2025-03-11 08:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "E202",
+      "news_id": "N-E202",
+      "news_time": "2025-03-11 09:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "E203",
+      "news_id": "N-E203",
+      "news_time": "2025-03-11 10:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "E204",
+      "news_id": "N-E204",
+      "news_time": "2025-03-13 09:00",
+      "evidence_text": "...",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    }
+  ],
+  "counter_evidence": [],
+  "warnings": [],
+  "model_version": "rule_based_v1"
+}
