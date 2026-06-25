@@ -1,0 +1,44 @@
+{
+  "sample_id": "S0001",
+  "ticker": "AAPL",
+  "forecast_time": "2025-03-12 09:00",
+  "label": "UP",
+  "evidence": [
+    {
+      "evidence_id": "N001_E001",
+      "news_id": "N001",
+      "news_time": "2025-03-11 08:30",
+      "evidence_text": "strong sales",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N002_E001",
+      "news_id": "N002",
+      "news_time": "2025-03-11 10:00",
+      "evidence_text": "raised guidance",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N003_E001",
+      "news_id": "N003",
+      "news_time": "2025-03-11 11:00",
+      "evidence_text": "new product launch",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N004_E001",
+      "news_id": "N004",
+      "news_time": "2025-03-11 12:00",
+      "evidence_text": "lawsuit risk",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    }
+  ]
+}

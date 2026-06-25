@@ -1,0 +1,62 @@
+{
+  "sample_id": "S0003",
+  "ticker": "GOOGL",
+  "forecast_time": "2025-04-15 09:00",
+  "prediction": "HOLD",
+  "confidence": 0.5,
+  "score": 0,
+  "positive_count": 2,
+  "negative_count": 2,
+  "neutral_count": 0,
+  "total_evidence": 4,
+  "directional_evidence_count": 4,
+  "evidence_strength": 0.0,
+  "conflict_ratio": 0.5,
+  "pro_evidence": [],
+  "counter_evidence": [],
+  "up_evidence": [
+    {
+      "evidence_id": "N020_E001",
+      "news_id": "N020",
+      "news_time": "2025-04-14 08:00",
+      "evidence_text": "strong revenue",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N021_E001",
+      "news_id": "N021",
+      "news_time": "2025-04-14 09:00",
+      "evidence_text": "raised dividend",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    }
+  ],
+  "down_evidence": [
+    {
+      "evidence_id": "N022_E001",
+      "news_id": "N022",
+      "news_time": "2025-04-14 10:00",
+      "evidence_text": "weak margins",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N023_E001",
+      "news_id": "N023",
+      "news_time": "2025-04-14 11:00",
+      "evidence_text": "cost pressure",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    }
+  ],
+  "neutral_evidence": [],
+  "rationale": "Prediction HOLD because positive and negative evidence are balanced.",
+  "warnings": [],
+  "model_version": "rule_based_v1",
+  "label": "HOLD"
+}

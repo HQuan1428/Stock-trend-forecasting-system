@@ -1,0 +1,44 @@
+{
+  "sample_id": "S0002",
+  "ticker": "MSFT",
+  "forecast_time": "2025-04-01 09:00",
+  "label": "DOWN",
+  "evidence": [
+    {
+      "evidence_id": "N010_E001",
+      "news_id": "N010",
+      "news_time": "2025-03-30 08:30",
+      "evidence_text": "weak sales",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N011_E001",
+      "news_id": "N011",
+      "news_time": "2025-03-30 09:30",
+      "evidence_text": "regulatory probe",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N012_E001",
+      "news_id": "N012",
+      "news_time": "2025-03-30 10:30",
+      "evidence_text": "guidance cut",
+      "polarity": "negative",
+      "expected_direction": "DOWN",
+      "support_score": 1.0
+    },
+    {
+      "evidence_id": "N013_E001",
+      "news_id": "N013",
+      "news_time": "2025-03-30 11:30",
+      "evidence_text": "new contract",
+      "polarity": "positive",
+      "expected_direction": "UP",
+      "support_score": 1.0
+    }
+  ]
+}

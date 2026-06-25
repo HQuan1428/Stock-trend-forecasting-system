@@ -11,6 +11,8 @@ is added through OpenSpec-driven changes:
 
 - `temporal-retriever` — news-time filter (first stage).
 - `evidence-extractor` — keyword-based evidence extractor (second stage).
+- `evidence-selector` — pro / counter / neutral classifier (third stage).
+- `forecast-model-basic` — rule-based UP / DOWN / HOLD predictor (fourth stage).
 
 ## Setup
 
@@ -247,6 +249,193 @@ UP fixture exercises every output list — pro, counter, neutral, and
   `summary.pro_count` / `counter_count` / `neutral_count`.
 - The selector does not validate the `confidence` field. It is preserved
   verbatim in the output for the Faithfulness Evaluator to use.
+
+## Forecast Model
+
+The Forecast Model is the fourth stage. It receives a single forecast
+request (one per `sample_id`) and a list of **selected, valid evidence**
+already filtered by the Temporal Retriever and classified by the Evidence
+Selector, and emits a deterministic `UP` / `DOWN` / `HOLD` prediction
+with a stable confidence, evidence counts, pro and counter evidence
+lists, a template-based rationale, and a structured warnings list.
+
+Version 1 is **rule-based, deterministic, and traceable**. It does NOT
+use any LLM, FinBERT, transformer model, logistic regression,
+deep-learning model, external API, or price features. Rationale is
+selected from a small fixed set of string templates.
+
+### Algorithm
+
+```
+positive_count = |{ e : e.expected_direction == "UP" }|
+negative_count = |{ e : e.expected_direction == "DOWN" }|
+neutral_count  = |{ e : e.expected_direction == "HOLD" }|
+score          = positive_count - negative_count
+
+if score  > 0: prediction = "UP"
+elif score < 0: prediction = "DOWN"
+else:           prediction = "HOLD"
+
+confidence         = 0.5 + min(abs(score) * 0.1, 0.45)   clamped to [0.5, 0.95]
+evidence_strength  = abs(score) / (positive_count + negative_count)  (0 when denom is 0)
+conflict_ratio     = min(positive_count, negative_count) / max(positive_count + negative_count, 1)
+```
+
+Neutral evidence (`expected_direction = "HOLD"`) does not move the score
+but is preserved in `neutral_evidence` for traceability.
+
+### Input schema
+
+| Field           | Type   | Required | Description |
+|-----------------|--------|----------|-------------|
+| `sample_id`     | string | yes      | Stable identifier; echoed in output. |
+| `ticker`        | string | yes      | Stock ticker; echoed in output. Not used as a filter. |
+| `forecast_time` | string | yes      | Naive ISO timestamp (interpreted as UTC). Compared to each `evidence[].news_time`. |
+| `evidence`      | list   | yes      | List of selected evidence items. May be empty. |
+| `label`         | string | no       | Ground-truth label (`UP` / `DOWN` / `HOLD`) for evaluation. **MUST NOT** be read by `predict`. |
+
+Each evidence item requires `evidence_id`, `news_id`, `news_time`,
+`evidence_text`, `polarity`, and `expected_direction`. `support_score` is
+optional (defaulted to `0.0` in the output).
+
+### Output schema
+
+The result is a `ForecastResult` dict with `sample_id`, `ticker`,
+`forecast_time`, `prediction`, `confidence`, `score`, the four
+counts (`positive_count`, `negative_count`, `neutral_count`,
+`total_evidence`, `directional_evidence_count`), the two derived metrics
+(`evidence_strength`, `conflict_ratio`), the five evidence lists
+(`pro_evidence`, `counter_evidence`, `up_evidence`, `down_evidence`,
+`neutral_evidence`), `rationale`, `warnings`, and `model_version` (the
+literal string `"rule_based_v1"`).
+
+All five evidence lists are always lists (never `null`), sorted by
+`evidence_id` ascending. `warnings` is always present and may be empty.
+
+### Rationale templates
+
+| Branch | Template |
+|--------|----------|
+| `prediction = UP`   | `"Prediction UP because positive evidence count ({positive_count}) is greater than negative evidence count ({negative_count})."` |
+| `prediction = DOWN` | `"Prediction DOWN because negative evidence count ({negative_count}) is greater than positive evidence count ({positive_count})."` |
+| `prediction = HOLD`, `directional_evidence_count > 0` | `"Prediction HOLD because positive and negative evidence are balanced."` |
+| `prediction = HOLD`, `directional_evidence_count == 0` | `"Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available."` |
+
+The same templates are exposed as the `RATIONALE_TEMPLATES` constant in
+`src.forecast_model` so downstream modules import them rather than
+redefining the literal strings.
+
+### Single prediction
+
+```python
+from src import predict
+
+request = {
+    "sample_id": "S0001",
+    "ticker": "AAPL",
+    "forecast_time": "2025-03-12 09:00",
+    "label": "UP",
+    "evidence": [
+        {
+            "evidence_id": "N001_E001",
+            "news_id": "N001",
+            "news_time": "2025-03-11 08:30",
+            "evidence_text": "strong sales",
+            "polarity": "positive",
+            "expected_direction": "UP",
+            "support_score": 1.0,
+        },
+        # ... more evidence items
+    ],
+}
+
+result = predict(request)
+# result["prediction"], result["confidence"], result["score"],
+# result["pro_evidence"], result["counter_evidence"],
+# result["rationale"], result["warnings"], result["model_version"]
+```
+
+### Faithfulness support
+
+```python
+from src import predict_without_evidence
+
+# Re-run the forecast after removing cited evidence. Used by the
+# Faithfulness Evaluator to compute confidence_drop.
+reduced = predict_without_evidence(request, ["N001_E001", "N002_E001"])
+
+confidence_drop = original["confidence"] - reduced["confidence"]
+```
+
+### Batch and CSV
+
+```python
+from src import predict_batch, compute_accuracy_and_confusion
+
+results = predict_batch([r1, r2, r3])
+# One result per input, in input order.
+# By default a CSV is written to outputs/prediction_results.csv and
+# a JSON sibling to outputs/prediction_results.json. Pass
+# output_csv_path=None / output_json_path=None to disable either.
+
+metrics = compute_accuracy_and_confusion(results)
+# metrics["accuracy"], metrics["confusion_matrix"], metrics["per_class"], metrics["n_samples"]
+```
+
+The CSV header is fixed and matches `CSV_COLUMNS` in `src.forecast_model`:
+`sample_id`, `ticker`, `forecast_time`, `prediction`, `confidence`,
+`score`, `positive_count`, `negative_count`, `neutral_count`,
+`total_evidence`, `directional_evidence_count`, `evidence_strength`,
+`conflict_ratio`, `label`, `model_version`.
+
+### Contract notes for downstream modules
+
+- **No raw news**: the model MUST NOT read `news_text`, `title`, or any
+  other raw-news field. It consumes evidence already validated by the
+  upstream pipeline.
+- **No `label` during prediction**: `predict` echoes `label` to the
+  result for the evaluation helper; it never reads it for scoring.
+- **Defense in depth**: every evidence item's `news_time` is compared to
+  `forecast_time`. Future items are excluded and reported as
+  `TEMPORAL_LEAKAGE_BLOCKED` warnings. This is intentionally redundant
+  with the Temporal Retriever.
+- **Defensive defaults**: bad evidence items (`INVALID_EVIDENCE`,
+  `DUPLICATE_EVIDENCE_ID`, `MALFORMED_NEWS_TIME`) are skipped with
+  warnings; `predict_batch` catches `ForecastModelError` per record and
+  substitutes a default `HOLD` result with an `INPUT_ERROR` warning.
+  Use `strict=True` to raise on invalid `expected_direction`.
+- **Determinism**: identical inputs produce byte-equal outputs
+  (`json.dumps(result, sort_keys=True)` is stable). The order of items
+  within each evidence list is `evidence_id` ascending.
+
+### Sample I/O
+
+Five golden fixtures live under `samples/forecast_model/` (one
+`_input.json` and one `_expected.json` per scenario). A parametrized
+regression test in `tests/test_forecast_model.py` asserts byte-equality
+on every pair. See `samples/forecast_model/README.md` for the full
+coverage table.
+
+### Limitations
+
+- **Integer-only score**: there is no `support_score` weighting, no
+  keyword weighting, and no recency weighting. Five weak positive items
+  look the same as one strong positive. The `evidence_strength` and
+  `conflict_ratio` fields expose the same information at a glance.
+- **Confidence saturation**: confidence saturates at `abs(score) = 5`
+  (`0.95`). Beyond that, additional evidence does not change
+  confidence.
+- **Templated rationale**: the rationale is intentionally templated (no
+  nuance, no LLM). A non-technical reader may interpret "positive
+  evidence count (1) is greater than negative evidence count (0)" as
+  stronger than a single match warrants.
+- **V1 is not a trading system**: the model is intentionally weak. Its
+  purpose is to be faithful to its cited evidence (every prediction
+  derivable from the evidence it cites, every cited evidence removable
+  via `predict_without_evidence`), not to be accurate.
+- **V2 extension point**: keyword strength and recency weighting are
+  documented as future work and would change the algorithm but not the
+  public API contract (`model_version` becomes the filter key).
 
 ## Disclaimer
 
