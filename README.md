@@ -22,6 +22,48 @@ is added through OpenSpec-driven changes:
 pip install -r requirements.txt
 ```
 
+## Run the pipeline
+
+The pipeline orchestrates the six existing stages in order: Temporal
+Retriever → Evidence Extractor → Evidence Selector → Forecast Model →
+Faithfulness Evaluator → CSV writer. It reads a news CSV, runs every
+stage, and writes the four dashboard-ready output files under
+`outputs/`.
+
+```bash
+python -m src.pipeline --input data/sample_dataset.csv --output-dir outputs
+```
+
+Defaults: `--input data/sample_dataset.csv`, `--output-dir outputs`,
+`--ticker-column ticker`, `--news-time-column news_time`,
+`--forecast-time-column forecast_time`, `--label-column label`. The
+pipeline never uses an LLM, FinBERT, transformer, GPU, or external API.
+
+### Output files
+
+| File | Purpose |
+|------|---------|
+| `outputs/prediction_results.csv` | One row per `(ticker, forecast_time)` group with `prediction`, `confidence`, `score`, `label`, `is_correct`, `rationale`, `cited_evidence_count`, `valid_news_count`, `invalid_future_news_count`. |
+| `outputs/evidence_results.csv` | One row per extracted evidence item with `evidence_role` (`pro` / `counter` / `neutral`) and `is_cited` flag. |
+| `outputs/faithfulness_results.csv` | One row per group with `original_confidence`, `confidence_without_cited_evidence`, `confidence_drop`, `temporal_validity`, `evidence_support`, `faithfulness_label` (`HIGH` / `MEDIUM` / `LOW`). |
+| `outputs/temporal_leakage_results.csv` | One row per news item with `news_time > forecast_time`; `leakage_type = future_news`. |
+
+### End-to-end flow
+
+Raw news rows in `data/sample_dataset.csv` are partitioned by
+`(ticker, forecast_time)`. For each group, the pipeline filters out
+future-dated news with the Temporal Retriever, runs the rule-based
+Evidence Extractor on the valid news, classifies each piece of evidence
+with the Evidence Selector, runs the rule-based Forecast Model, then
+runs the Faithfulness Evaluator (which re-runs the forecaster without
+the cited evidence to compute the confidence drop). The result is
+written as four CSVs that the Streamlit dashboard consumes directly:
+
+```bash
+python -m src.pipeline   # produce the four CSVs
+streamlit run src/dashboard/app.py   # visualize them
+```
+
 ## Tests
 
 ```bash
