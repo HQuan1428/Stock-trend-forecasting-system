@@ -13,6 +13,8 @@ is added through OpenSpec-driven changes:
 - `evidence-extractor` — keyword-based evidence extractor (second stage).
 - `evidence-selector` — pro / counter / neutral classifier (third stage).
 - `forecast-model-basic` — rule-based UP / DOWN / HOLD predictor (fourth stage).
+- `faithfulness-evaluator` — temporal / support / drop metrics (fifth stage).
+- `visualization-dashboard` — Streamlit read-only visualization (final stage).
 
 ## Setup
 
@@ -595,6 +597,94 @@ fixture pair.
 - **V1 is not a calibration**: the evaluator is a deterministic function
   of the result and the model; it is not a probabilistic faithfulness
   estimator.
+
+## Visualization Dashboard
+
+The dashboard is the **final read-only visualization layer** of the
+pipeline. It consumes the four upstream CSV outputs and renders a
+5-tab Streamlit dashboard:
+
+1. **Overview** — prediction distribution, accuracy, average
+   confidence / drop / temporal validity, accuracy-by-ticker table.
+2. **Evidence** — every evidence row with cited / non-cited and
+   temporal-leakage badges.
+3. **Confidence Drop** — per-sample drop scatter, color-coded by
+   faithfulness level (high / medium / low).
+4. **Temporal Leakage** — severity banner (OK / Warning / Critical)
+   and the leakage table sorted by `leakage_minutes` descending.
+5. **Case Detail** — pick a `sample_id` and see ticker, prediction,
+   confidence, cited evidence, drop, and a template-based
+   interpretation.
+
+Sidebar filters (applied to every tab consistently):
+
+- Ticker (multi-select)
+- Prediction (multi-select: UP / DOWN / HOLD)
+- Faithfulness level (multi-select: high / medium / low)
+- Forecast date range
+- Cited-only (Evidence tab)
+- Leakage-only (Temporal Leakage tab)
+
+### Run
+
+```bash
+streamlit run src/dashboard/app.py
+```
+
+The dashboard defaults to reading `outputs/`. A different directory
+can be passed by editing `DEFAULT_OUTPUT_DIR` in
+`src/dashboard/app.py`.
+
+### Adapter layer
+
+The proposal-specified CSV contracts do not exactly match what the
+upstream pipeline emits:
+
+| Proposal column | Current source | Adapter |
+|---|---|---|
+| `prediction_results.csv: valid_news_count` | not emitted | Computed from evidence grouped by `sample_id`. |
+| `prediction_results.csv: invalid_future_news_count` | not emitted | Computed from evidence where `is_temporally_valid == False`. |
+| `faithfulness_results.csv: confidence_without_cited_evidence` | `confidence_after_removal` | Renamed in the loader. |
+| `faithfulness_results.csv: faithfulness_label` | `verdict` | Derived from `confidence_drop` thresholds. |
+| `evidence_results.csv` | not a single file | Synthesized from `prediction_results.json`. |
+| `temporal_leakage_results.csv` | not a separate file | Synthesized from `TEMPORAL_LEAKAGE_BLOCKED` warnings. |
+
+The adapter is the single source of truth for the dashboard's column
+contract; downstream code (charts, components) consumes only the
+proposal-shape tables. If the upstream output shape changes, only
+`src/dashboard/data_loader.py` needs to change.
+
+### Limitations
+
+- Streamlit is heavyweight for a static visualization; we trade
+  runtime weight for demo-ability.
+- The adapter layer must be updated if the upstream output shape
+  changes.
+- The dashboard does not auto-refresh on file change; users can hit
+  the "Rerun" button or refresh the browser.
+- Academic / demo use only — NOT a trading recommendation tool.
+
+### Figure generation
+
+To capture screenshots for the final report:
+
+1. Open the dashboard in a browser.
+2. Navigate to each tab.
+3. Take a screenshot at 1280×800 and name them `fig_overview.png`,
+   `fig_evidence.png`, `fig_confidence_drop.png`,
+   `fig_temporal_leakage.png`, `fig_case_detail.png`.
+
+Alternative: right-click any Plotly chart → "Download plot as PNG".
+
+### Sample fixtures
+
+Three pre-generated fixture sets live under `samples/dashboard/`:
+
+- `healthy/` — five predictions, no leakage.
+- `leakage/` — five predictions, one leakage row.
+- `faithfulness_levels/` — three predictions, one per faithfulness level.
+
+Regenerate with `python3 samples/dashboard/_generate_fixtures.py`.
 
 ## Disclaimer
 

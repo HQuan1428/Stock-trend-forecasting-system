@@ -1,0 +1,18 @@
+sample_id,news_id,ticker,forecast_time,news_time,news_text,evidence_text,polarity,expected_direction,evidence_role,support_score,is_cited,is_temporally_valid
+DSH-01,N100,AAPL,2025-03-12 09:00,2025-03-11 08:00,strong sales,strong sales,positive,UP,pro_evidence,1.0,True,True
+DSH-01,N101,AAPL,2025-03-12 09:00,2025-03-11 09:00,raised guidance,raised guidance,positive,UP,pro_evidence,1.0,True,True
+DSH-01,N102,AAPL,2025-03-12 09:00,2025-03-11 10:00,analyst upgrade,analyst upgrade,positive,UP,pro_evidence,1.0,True,True
+DSH-01,N100,AAPL,2025-03-12 09:00,2025-03-11 08:00,strong sales,strong sales,positive,UP,up_evidence,1.0,False,True
+DSH-01,N101,AAPL,2025-03-12 09:00,2025-03-11 09:00,raised guidance,raised guidance,positive,UP,up_evidence,1.0,False,True
+DSH-01,N102,AAPL,2025-03-12 09:00,2025-03-11 10:00,analyst upgrade,analyst upgrade,positive,UP,up_evidence,1.0,False,True
+DSH-02,N110,AAPL,2025-03-13 09:00,2025-03-12 08:00,profit warning,profit warning,negative,DOWN,pro_evidence,1.0,True,True
+DSH-02,N111,AAPL,2025-03-13 09:00,2025-03-12 09:00,guidance cut,guidance cut,negative,DOWN,pro_evidence,1.0,True,True
+DSH-02,N110,AAPL,2025-03-13 09:00,2025-03-12 08:00,profit warning,profit warning,negative,DOWN,down_evidence,1.0,False,True
+DSH-02,N111,AAPL,2025-03-13 09:00,2025-03-12 09:00,guidance cut,guidance cut,negative,DOWN,down_evidence,1.0,False,True
+DSH-03,N121,GOOGL,2025-03-14 09:00,2025-03-13 09:00,in line with estimates,in line with estimates,neutral,HOLD,neutral_evidence,1.0,False,True
+DSH-04,N130,GOOGL,2025-03-15 09:00,2025-03-14 08:00,earnings beat,earnings beat,positive,UP,pro_evidence,1.0,True,True
+DSH-04,N131,GOOGL,2025-03-15 09:00,2025-03-14 09:00,raised guidance,raised guidance,positive,UP,pro_evidence,1.0,True,True
+DSH-04,N130,GOOGL,2025-03-15 09:00,2025-03-14 08:00,earnings beat,earnings beat,positive,UP,up_evidence,1.0,False,True
+DSH-04,N131,GOOGL,2025-03-15 09:00,2025-03-14 09:00,raised guidance,raised guidance,positive,UP,up_evidence,1.0,False,True
+DSH-05,N140,META,2025-03-16 09:00,2025-03-15 08:00,regulator probe,regulator probe,negative,DOWN,pro_evidence,1.0,True,True
+DSH-05,N140,META,2025-03-16 09:00,2025-03-15 08:00,regulator probe,regulator probe,negative,DOWN,down_evidence,1.0,False,True

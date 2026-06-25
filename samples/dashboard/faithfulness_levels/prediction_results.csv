@@ -1,0 +1,4 @@
+sample_id,ticker,forecast_time,prediction,confidence,score,rationale,label,valid_news_count,invalid_future_news_count
+DSH-HIGH,AAPL,2025-03-12 09:00,UP,0.8,3,Prediction UP because positive evidence count (3) is greater than negative evidence count (0).,UP,0,0
+DSH-LOW,META,2025-03-13 09:00,HOLD,0.5,0,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,HOLD,0,0
+DSH-MED,GOOGL,2025-03-14 09:00,UP,0.7,2,Prediction UP because positive evidence count (2) is greater than negative evidence count (0).,UP,0,0

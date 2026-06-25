@@ -1,0 +1,4 @@
+sample_id,ticker,forecast_time,prediction,original_confidence,confidence_without_cited_evidence,confidence_drop,evidence_support,temporal_validity,faithfulness_label
+DSH-HIGH,AAPL,2025-03-12 09:00,UP,0.8,0.0,0.8,1.0,1.0,high
+DSH-LOW,META,2025-03-13 09:00,HOLD,0.5,0.5,0.0,1.0,1.0,low
+DSH-MED,GOOGL,2025-03-14 09:00,UP,0.65,0.55,0.1,1.0,1.0,medium
