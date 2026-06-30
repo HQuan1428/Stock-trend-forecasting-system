@@ -330,10 +330,19 @@ def render_confidence_drop_tab(filtered_faithfulness: pd.DataFrame) -> None:
             level = classify_faithfulness_level(row.get("confidence_drop", 0.0))
             bucket_counts[level] = bucket_counts.get(level, 0) + 1
 
-    cols = st.columns(3)
+    avg_coverage = 0.0
+    if "counterevidence_coverage" in filtered_faithfulness.columns:
+        avg_coverage = float(
+            pd.to_numeric(filtered_faithfulness["counterevidence_coverage"], errors="coerce")
+            .fillna(0.0)
+            .mean()
+        )
+
+    cols = st.columns(4)
     cols[0].metric("High faithfulness", bucket_counts.get("high", 0))
     cols[1].metric("Medium faithfulness", bucket_counts.get("medium", 0))
     cols[2].metric("Low faithfulness", bucket_counts.get("low", 0))
+    cols[3].metric("Avg Counterevidence Coverage", f"{avg_coverage:.0%}")
 
     st.dataframe(
         filtered_faithfulness[
@@ -493,6 +502,162 @@ def render_case_detail_tab(
         )
 
 
+def render_agentic_sdlc_tab(agent_trace: list) -> None:
+    """Render the Agentic SDLC tab.
+
+    Displays quality gate pass rate, human acceptance rate, per-role counts,
+    a trace log table, and a static reflection section.
+    Gracefully handles an empty trace without raising.
+    """
+    from src.agent_trace import summarize_trace
+
+    if not agent_trace:
+        st.info(
+            "No agent trace log found. "
+            "Expected at outputs/run_log.json — seed it by running the pipeline once."
+        )
+        return
+
+    summary = summarize_trace(agent_trace)
+    total = summary["total"]
+    pass_rate = summary["pass_rate"]
+    acceptance_rate = summary["human_accepted"] / total if total > 0 else 0.0
+
+    cols = st.columns(3)
+    cols[0].metric("Total Agent Runs", total)
+    cols[1].metric("Quality Gate Pass Rate", f"{pass_rate:.0%}")
+    cols[2].metric("Human Acceptance Rate", f"{acceptance_rate:.0%}")
+
+    st.subheader("Runs by Agent Role")
+    roles_df = pd.DataFrame(
+        [{"agent_role": role, "count": cnt} for role, cnt in summary["roles"].items()]
+    )
+    st.dataframe(roles_df, use_container_width=True)
+
+    st.subheader("Full Trace Log")
+    display_cols = ["run_id", "agent_role", "task", "human_review", "quality_gate"]
+    trace_df = pd.DataFrame(agent_trace)
+    show_cols = [c for c in display_cols if c in trace_df.columns]
+    st.dataframe(trace_df[show_cols], use_container_width=True)
+
+    with st.expander("Reflection: Human-AI Collaboration Model", expanded=False):
+        st.markdown(
+            """
+**3 Agent Roles trong dự án:**
+
+1. **Research Agent** — Phân tích gap, viết OpenSpec (proposal + design + spec) trước mỗi change.
+2. **Coding Agent** — Implement module theo spec đã được human approve; không code trước khi có spec.
+3. **Testing/Review Agent** — Viết test từ spec scenarios, verify output, báo cáo edge cases.
+
+**Human Control Points:**
+- User review proposal.md + design.md → approve trước khi `/opsx:apply`
+- `pytest` gate: toàn bộ test suite phải green sau mỗi change (483 → 497 → 535 tests)
+- Pipeline gate: `python -m src.pipeline` không lỗi, output CSV đúng schema
+- User inspect output CSV để confirm giá trị hợp lệ
+
+**Bài học:**
+Spec trước, code sau — decisions về threshold (±0.005, ±0.02) nằm trong design.md,
+không bị baked vào code mà không có lý do. Human-in-the-loop tại spec level hiệu quả
+hơn review code sau khi đã viết xong.
+"""
+        )
+
+
+def render_market_tab(market_df: Optional[pd.DataFrame]) -> None:
+    """Render the Market Consistency tab.
+
+    Shows overall consistency rate and per-regime breakdown as metric cards,
+    then a full table of per-sample results.
+    Gracefully handles ``None`` or empty input without raising.
+    """
+    if market_df is None or (hasattr(market_df, "empty") and market_df.empty):
+        st.info(
+            "Market consistency results not available. "
+            "Run the pipeline first to generate market_consistency_results.csv. "
+            "(Note: market data is synthetic / simulated.)"
+        )
+        return
+
+    overall_rate = 0.0
+    n_samples = len(market_df)
+    if "market_consistent" in market_df.columns:
+        overall_rate = float(
+            pd.to_numeric(market_df["market_consistent"], errors="coerce")
+            .fillna(0.0)
+            .mean()
+        )
+
+    cols = st.columns(2)
+    cols[0].metric("Market Consistency Rate", f"{overall_rate:.0%}")
+    cols[1].metric("Samples", n_samples)
+
+    if "regime" in market_df.columns and "market_consistency_score" in market_df.columns:
+        st.subheader("Accuracy by Regime")
+        regime_stats = (
+            market_df.groupby("regime")["market_consistency_score"]
+            .agg(["mean", "count"])
+            .rename(columns={"mean": "consistency_rate", "count": "n"})
+            .reset_index()
+        )
+        regime_stats["consistency_rate"] = regime_stats["consistency_rate"].map(
+            lambda x: f"{x:.0%}"
+        )
+        st.dataframe(regime_stats, use_container_width=True)
+
+    display_cols = [
+        c for c in (
+            "sample_id", "ticker", "forecast_time", "prediction",
+            "next_day_return", "market_consistent", "regime",
+            "market_consistency_score",
+        )
+        if c in market_df.columns
+    ]
+    st.subheader("Per-Sample Results (synthetic market data)")
+    st.dataframe(market_df[display_cols], use_container_width=True)
+
+
+def render_sufficiency_tab(sufficiency_df: Optional[pd.DataFrame]) -> None:
+    """Render the Sufficiency & Counterfactual tab.
+
+    Shows avg sufficiency_score and avg counterfactual_delta as metric
+    cards, then a full table of per-sample results.
+    Gracefully handles ``None`` or empty input without raising.
+    """
+    if sufficiency_df is None or (hasattr(sufficiency_df, "empty") and sufficiency_df.empty):
+        st.info("Sufficiency results not available. Run the pipeline first to generate sufficiency_results.csv.")
+        return
+
+    avg_suff = 0.0
+    avg_cf = 0.0
+    if "sufficiency_score" in sufficiency_df.columns:
+        avg_suff = float(
+            pd.to_numeric(sufficiency_df["sufficiency_score"], errors="coerce")
+            .fillna(0.0)
+            .mean()
+        )
+    if "counterfactual_delta" in sufficiency_df.columns:
+        avg_cf = float(
+            pd.to_numeric(sufficiency_df["counterfactual_delta"], errors="coerce")
+            .fillna(0.0)
+            .mean()
+        )
+
+    cols = st.columns(2)
+    cols[0].metric("Avg Sufficiency Score", f"{avg_suff:.0%}")
+    cols[1].metric("Avg Counterfactual Delta", f"{avg_cf:.2f}")
+
+    display_cols = [
+        c for c in (
+            "sample_id", "ticker", "prediction", "original_confidence",
+            "sufficiency_confidence", "sufficiency_score",
+            "prediction_on_only_cited", "counterfactual_confidence",
+            "counterfactual_delta",
+        )
+        if c in sufficiency_df.columns
+    ]
+    st.dataframe(sufficiency_df[display_cols], use_container_width=True)
+
+
 __all__ = [
     "CASE_DETAIL_TEMPLATE",
     "render_sidebar",
@@ -501,4 +666,7 @@ __all__ = [
     "render_confidence_drop_tab",
     "render_temporal_leakage_tab",
     "render_case_detail_tab",
+    "render_sufficiency_tab",
+    "render_market_tab",
+    "render_agentic_sdlc_tab",
 ]

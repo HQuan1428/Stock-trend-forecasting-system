@@ -41,10 +41,12 @@ from typing import Any, Dict, List, Optional, Tuple
 import pandas as pd
 
 from src.evidence_extractor import extract_evidence_batch
-from src.evidence_selector import select_evidence_batch
+from src.evidence_selector import CLASSIFICATION_TABLE, compute_coverage, select_evidence_batch
 from src.faithfulness_evaluator import FaithfulnessEvaluator
 from src.forecast_model import predict, predict_without_evidence
+from src.market_analyzer import MarketAnalyzer
 from src.retriever import retrieve_valid_news
+from src.sufficiency_evaluator import SufficiencyEvaluator
 
 
 # ---------------------------------------------------------------------------
@@ -216,6 +218,16 @@ def _run_group(
         | {e["news_id"] for e in selector_result["counterevidence"]}
     )
 
+    # --- 4b. Counterevidence Coverage (B2) ----------------------------
+    _prediction = forecast["prediction"]
+    expected_labels = {
+        cand["news_id"]: CLASSIFICATION_TABLE.get(
+            (_prediction, cand.get("expected_direction", "HOLD")), "neutral"
+        )
+        for cand in selector_request["evidence_candidates"]
+    }
+    coverage_result = compute_coverage(selector_result, expected_labels)
+
     # --- 5. Faithfulness Evaluator --------------------------------------
     # Defensive: pass only evidence whose news_time <= forecast_time to
     # the Faithfulness Evaluator (already filtered by the retriever,
@@ -293,6 +305,49 @@ def _run_group(
         "temporal_validity": temporal_validity,
         "evidence_support": evidence_support,
         "faithfulness_label": label_faith,
+        "counterevidence_coverage": float(coverage_result["counterevidence_coverage"]),
+        "counterevidence_detected": bool(coverage_result["counterevidence_detected_rate"] == 1.0),
+    }
+
+    # --- 6b. Sufficiency + Counterfactual (B1) --------------------------
+    suff_evaluator = SufficiencyEvaluator()
+    suff_result = suff_evaluator.evaluate(request, forecast, cited_ids)
+    sufficiency_row = {
+        "sample_id": sample_id,
+        "ticker": ticker,
+        "forecast_time": forecast_time,
+        "prediction": forecast["prediction"],
+        "original_confidence": float(forecast["confidence"]),
+        "sufficiency_confidence": float(suff_result["sufficiency_confidence"]),
+        "sufficiency_score": float(suff_result["sufficiency_score"]),
+        "prediction_on_only_cited": suff_result["prediction_on_only_cited"],
+        "counterfactual_confidence": float(suff_result["counterfactual_confidence"]),
+        "counterfactual_delta": float(suff_result["counterfactual_delta"]),
+    }
+
+    # --- 6c. Market Consistency + Regime (B3) ---------------------------
+    _first_row = group_rows[0]
+    try:
+        _next_day_return = float(_first_row.get("next_day_return", 0.0) or 0.0)
+    except (TypeError, ValueError):
+        _next_day_return = 0.0
+    try:
+        _price_5d_return = float(_first_row.get("price_5d_return", 0.0) or 0.0)
+    except (TypeError, ValueError):
+        _price_5d_return = 0.0
+    market_result = MarketAnalyzer().analyze(
+        forecast["prediction"], _next_day_return, _price_5d_return
+    )
+    market_row = {
+        "sample_id": sample_id,
+        "ticker": ticker,
+        "forecast_time": forecast_time,
+        "prediction": forecast["prediction"],
+        "next_day_return": market_result["next_day_return"],
+        "price_5d_return": market_result["price_5d_return"],
+        "market_consistent": bool(market_result["market_consistent"]),
+        "regime": market_result["regime"],
+        "market_consistency_score": float(market_result["market_consistency_score"]),
     }
 
     leakage_rows: List[Dict[str, Any]] = []
@@ -318,6 +373,8 @@ def _run_group(
         "prediction_row": prediction_row,
         "evidence_rows": evidence_rows,
         "faithfulness_row": faithfulness_row,
+        "sufficiency_row": sufficiency_row,
+        "market_row": market_row,
         "leakage_rows": leakage_rows,
         "forecast": forecast,
         "report": report,
@@ -371,6 +428,33 @@ FAITHFULNESS_COLUMNS: Tuple[str, ...] = (
     "temporal_validity",
     "evidence_support",
     "faithfulness_label",
+    "counterevidence_coverage",
+    "counterevidence_detected",
+)
+
+SUFFICIENCY_COLUMNS: Tuple[str, ...] = (
+    "sample_id",
+    "ticker",
+    "forecast_time",
+    "prediction",
+    "original_confidence",
+    "sufficiency_confidence",
+    "sufficiency_score",
+    "prediction_on_only_cited",
+    "counterfactual_confidence",
+    "counterfactual_delta",
+)
+
+MARKET_COLUMNS: Tuple[str, ...] = (
+    "sample_id",
+    "ticker",
+    "forecast_time",
+    "prediction",
+    "next_day_return",
+    "price_5d_return",
+    "market_consistent",
+    "regime",
+    "market_consistency_score",
 )
 
 LEAKAGE_COLUMNS: Tuple[str, ...] = (
@@ -453,6 +537,8 @@ def run_pipeline(
     prediction_rows: List[Dict[str, Any]] = []
     evidence_rows: List[Dict[str, Any]] = []
     faithfulness_rows: List[Dict[str, Any]] = []
+    sufficiency_rows: List[Dict[str, Any]] = []
+    market_rows: List[Dict[str, Any]] = []
     leakage_rows: List[Dict[str, Any]] = []
 
     for ticker, forecast_time in group_keys:
@@ -465,6 +551,8 @@ def run_pipeline(
         prediction_rows.append(result["prediction_row"])
         evidence_rows.extend(result["evidence_rows"])
         faithfulness_rows.append(result["faithfulness_row"])
+        sufficiency_rows.append(result["sufficiency_row"])
+        market_rows.append(result["market_row"])
         leakage_rows.extend(result["leakage_rows"])
 
     output_dir_obj = Path(output_dir)
@@ -473,11 +561,15 @@ def run_pipeline(
     pred_path = output_dir_obj / "prediction_results.csv"
     evid_path = output_dir_obj / "evidence_results.csv"
     faith_path = output_dir_obj / "faithfulness_results.csv"
+    suff_path = output_dir_obj / "sufficiency_results.csv"
+    market_path = output_dir_obj / "market_consistency_results.csv"
     leak_path = output_dir_obj / "temporal_leakage_results.csv"
 
     _write_csv(prediction_rows, PREDICTION_COLUMNS, pred_path)
     _write_csv(evidence_rows, EVIDENCE_COLUMNS, evid_path)
     _write_csv(faithfulness_rows, FAITHFULNESS_COLUMNS, faith_path)
+    _write_csv(sufficiency_rows, SUFFICIENCY_COLUMNS, suff_path)
+    _write_csv(market_rows, MARKET_COLUMNS, market_path)
     _write_csv(leakage_rows, LEAKAGE_COLUMNS, leak_path)
 
     return {
@@ -488,6 +580,8 @@ def run_pipeline(
         "prediction_results_csv": str(pred_path),
         "evidence_results_csv": str(evid_path),
         "faithfulness_results_csv": str(faith_path),
+        "sufficiency_results_csv": str(suff_path),
+        "market_consistency_results_csv": str(market_path),
         "temporal_leakage_results_csv": str(leak_path),
     }
 
@@ -558,6 +652,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         "prediction_results_csv",
         "evidence_results_csv",
         "faithfulness_results_csv",
+        "sufficiency_results_csv",
+        "market_consistency_results_csv",
         "temporal_leakage_results_csv",
     ):
         print(f"  {key}: {summary[key]}")
