@@ -76,6 +76,20 @@ PREDICTION_COLOR_MAP: Dict[str, str] = {
 
 
 # ---------------------------------------------------------------------------
+# Shared layout style (transparent backgrounds so charts blend into the
+# rounded-card CSS theme injected by app.py, consistent font)
+# ---------------------------------------------------------------------------
+
+
+_PLOT_STYLE: Dict[str, Any] = {
+    "paper_bgcolor": "rgba(0,0,0,0)",
+    "plot_bgcolor": "rgba(0,0,0,0)",
+    "font": {"family": "Inter, -apple-system, Segoe UI, sans-serif", "size": 13},
+    "hoverlabel": {"bgcolor": "white", "font_size": 13, "bordercolor": "#ddd"},
+}
+
+
+# ---------------------------------------------------------------------------
 # Builders
 # ---------------------------------------------------------------------------
 
@@ -98,7 +112,10 @@ def build_prediction_distribution_chart(df: pd.DataFrame) -> go.Figure:
             go.Bar(
                 x=list(VALID_PREDICTIONS),
                 y=[counts[label] for label in VALID_PREDICTIONS],
-                marker_color=[PREDICTION_COLOR_MAP[label] for label in VALID_PREDICTIONS],
+                marker=dict(
+                    color=[PREDICTION_COLOR_MAP[label] for label in VALID_PREDICTIONS],
+                    cornerradius=8,
+                ),
                 text=[counts[label] for label in VALID_PREDICTIONS],
                 textposition="outside",
                 hovertemplate="%{x}: %{y}<extra></extra>",
@@ -112,6 +129,7 @@ def build_prediction_distribution_chart(df: pd.DataFrame) -> go.Figure:
         showlegend=False,
         margin={"l": 40, "r": 20, "t": 40, "b": 40},
         height=320,
+        **_PLOT_STYLE,
     )
     return fig
 
@@ -131,6 +149,7 @@ def build_confidence_drop_chart(df: pd.DataFrame) -> go.Figure:
             yaxis_title="Confidence drop",
             showlegend=False,
             height=320,
+            **_PLOT_STYLE,
         )
         return fig
 
@@ -151,8 +170,9 @@ def build_confidence_drop_chart(df: pd.DataFrame) -> go.Figure:
                 mode="markers",
                 marker=dict(
                     color=work["_color"],
-                    size=12,
-                    line=dict(color="#333", width=1),
+                    size=13,
+                    line=dict(color="white", width=1.5),
+                    opacity=0.9,
                 ),
                 text=work["_level"],
                 hovertemplate="sample_id=%{x}<br>drop=%{y:.3f}<br>level=%{text}<extra></extra>",
@@ -166,6 +186,7 @@ def build_confidence_drop_chart(df: pd.DataFrame) -> go.Figure:
         showlegend=False,
         height=320,
         margin={"l": 40, "r": 20, "t": 40, "b": 80},
+        **_PLOT_STYLE,
     )
     fig.update_xaxes(tickangle=-45)
     return fig
@@ -181,6 +202,7 @@ def build_temporal_leakage_chart(df: pd.DataFrame) -> go.Figure:
             yaxis_title="Leakage rows",
             showlegend=False,
             height=320,
+            **_PLOT_STYLE,
         )
         return fig
     grouped = df.groupby("ticker", dropna=False).size().reset_index(name="count")
@@ -190,7 +212,7 @@ def build_temporal_leakage_chart(df: pd.DataFrame) -> go.Figure:
             go.Bar(
                 x=grouped["ticker"].astype(str),
                 y=grouped["count"],
-                marker_color=COLOR_WARNING,
+                marker=dict(color=COLOR_WARNING, cornerradius=8),
                 text=grouped["count"],
                 textposition="outside",
                 hovertemplate="%{x}: %{y}<extra></extra>",
@@ -204,6 +226,7 @@ def build_temporal_leakage_chart(df: pd.DataFrame) -> go.Figure:
         showlegend=False,
         height=320,
         margin={"l": 40, "r": 20, "t": 40, "b": 40},
+        **_PLOT_STYLE,
     )
     return fig
 
@@ -224,6 +247,7 @@ def build_accuracy_by_ticker_chart(accuracy_df: pd.DataFrame) -> go.Figure:
             yaxis_title="Accuracy",
             showlegend=False,
             height=320,
+            **_PLOT_STYLE,
         )
         return fig
     work = accuracy_df.copy()
@@ -236,7 +260,7 @@ def build_accuracy_by_ticker_chart(accuracy_df: pd.DataFrame) -> go.Figure:
             go.Bar(
                 x=work.index.astype(str),
                 y=work["accuracy_display"],
-                marker_color=COLOR_ACCENT,
+                marker=dict(color=COLOR_ACCENT, cornerradius=8),
                 text=work["accuracy_text"],
                 textposition="outside",
                 hovertemplate="%{x}: %{text}<extra></extra>",
@@ -251,6 +275,7 @@ def build_accuracy_by_ticker_chart(accuracy_df: pd.DataFrame) -> go.Figure:
         showlegend=False,
         height=320,
         margin={"l": 40, "r": 20, "t": 40, "b": 40},
+        **_PLOT_STYLE,
     )
     return fig
 
