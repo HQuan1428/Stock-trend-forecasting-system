@@ -31,10 +31,13 @@ if str(_PROJECT_ROOT) not in sys.path:
 import streamlit as st
 
 from src.dashboard.components import (
+    render_agentic_sdlc_tab,
     render_case_detail_tab,
     render_confidence_drop_tab,
     render_evidence_tab,
+    render_market_tab,
     render_overview_tab,
+    render_sufficiency_tab,
     render_temporal_leakage_tab,
     render_sidebar,
 )
@@ -99,7 +102,7 @@ def main(output_dir: Optional[str] = None) -> None:
     fl = apply_filters(data.leakage, filters, frame_kind="leakage")
 
     tabs = st.tabs(
-        ["Overview", "Evidence", "Confidence Drop", "Temporal Leakage", "Case Detail"]
+        ["Overview", "Evidence", "Confidence Drop", "Temporal Leakage", "Case Detail", "Sufficiency", "Market", "Agentic SDLC"]
     )
     with tabs[0]:
         render_overview_tab(data, fp, fe, ff, fl)
@@ -111,6 +114,12 @@ def main(output_dir: Optional[str] = None) -> None:
         render_temporal_leakage_tab(fl)
     with tabs[4]:
         render_case_detail_tab(data, filters)
+    with tabs[5]:
+        render_sufficiency_tab(data.sufficiency)
+    with tabs[6]:
+        render_market_tab(data.market)
+    with tabs[7]:
+        render_agentic_sdlc_tab(data.agent_trace)
 
 
 if __name__ == "__main__":

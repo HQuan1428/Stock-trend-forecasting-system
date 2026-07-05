@@ -40,3 +40,18 @@ _None._ This change introduces a new capability. The existing `temporal-retrieve
 - Dependencies: no new packages. `pandas` (CSV I/O), `numpy` (used transitively by existing modules) are already required.
 - Downstream consumers: the dashboard (`src/dashboard/app.py`) is the only documented consumer of the four `outputs/*.csv` files. The pipeline guarantees those four files always exist after a run, removing the dashboard's missing-file warning in the happy path.
 - Side-effects on existing tests: none. The pipeline reuses existing module APIs; existing tests for the retriever, extractor, selector, forecaster, faithfulness evaluator, and dashboard stay green.
+
+## Agentic SDLC — AI Agent tham gia ở bước nào
+
+Dự án sử dụng AI agent trong toàn bộ SDLC theo mô hình có kiểm soát:
+
+| Bước SDLC | AI Agent hỗ trợ | Con người kiểm soát |
+|-----------|----------------|---------------------|
+| **Requirement** | Research Agent phân tích bài toán, đề xuất acceptance criteria, tạo `proposal.md` | Review proposal, xác nhận scope, reject nếu scope không hợp lý |
+| **Design** | Research Agent đề xuất kiến trúc module, schema dữ liệu, viết `design.md` | Chọn thiết kế phù hợp, điều chỉnh API contract |
+| **Implementation** | Coding Agent sinh code theo spec (`tasks.md`), implement từng task | Đọc hiểu code, chạy test thủ công, chỉnh sửa nếu cần |
+| **Testing** | Testing/Review Agent sinh test case, chạy `pytest`, kiểm tra output CSV | Review test coverage, thêm edge case nếu thiếu |
+| **Evaluation** | Review Agent phân tích kết quả, gợi ý metric, viết `reflection.md` | Không overclaim, ghi rõ limitation |
+| **Operation** | Agent ghi trace log vào `outputs/run_log.json` | Xem trace log trên dashboard Agentic SDLC tab |
+
+Ba agent role bắt buộc: **Research Agent**, **Coding Agent**, **Testing/Review Agent**. Mỗi run được ghi vào `outputs/run_log.json` với `quality_gate` và `human_review` status. Xem `openspec/changes/phase-b4-agentic-sdlc-maturity/reflection.md` để biết chi tiết.
