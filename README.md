@@ -6,15 +6,23 @@ faithful to each prediction.
 
 ## Project status
 
-The repository is currently at the initial scaffold stage. Application logic
-is added through OpenSpec-driven changes:
+Pipeline hoàn chỉnh với 6 giai đoạn, 6 output CSV, dashboard 8 tab, và các metric nâng cao (B1–B4). Toàn bộ logic là deterministic, rule-based, không dùng LLM/ML/GPU. 546 unit tests pass.
 
-- `temporal-retriever` — news-time filter (first stage).
-- `evidence-extractor` — keyword-based evidence extractor (second stage).
-- `evidence-selector` — pro / counter / neutral classifier (third stage).
-- `forecast-model-basic` — rule-based UP / DOWN / HOLD predictor (fourth stage).
-- `faithfulness-evaluator` — temporal / support / drop metrics (fifth stage).
-- `visualization-dashboard` — Streamlit read-only visualization (final stage).
+**Baseline (A1–A7):**
+
+- `temporal-retriever` — lọc tin theo thời gian, đảm bảo không dùng tin tương lai.
+- `evidence-extractor` — trích xuất evidence bằng keyword matching (V1/V2/V3 dictionary).
+- `evidence-selector` — phân loại pro / counter / neutral evidence theo prediction.
+- `forecast-model-basic` — rule-based voting: UP/DOWN/HOLD với confidence và rationale.
+- `faithfulness-evaluator` — 3 metric: temporal_validity, evidence_support, confidence_drop.
+- `visualization-dashboard` — Streamlit read-only, 8 tab.
+
+**Nâng cao (B1–B4):**
+
+- `phase-b2-counterevidence-coverage` — tính counterevidence_coverage và counterevidence_detected.
+- `phase-b1-sufficiency-counterfactual` — sufficiency score (chỉ dùng cited evidence) và counterfactual delta (thay cited bằng neutral placeholder).
+- `phase-b3-market-consistency-regime` — so sánh prediction với next_day_return, phân tích regime bull/bear/sideways.
+- `phase-b4-agentic-sdlc-maturity` — trace log (run_log.json), 3 agent role, quality gate, reflection.
 
 ## Setup
 
@@ -27,8 +35,7 @@ pip install -r requirements.txt
 The pipeline orchestrates the six existing stages in order: Temporal
 Retriever → Evidence Extractor → Evidence Selector → Forecast Model →
 Faithfulness Evaluator → CSV writer. It reads a news CSV, runs every
-stage, and writes the four dashboard-ready output files under
-`outputs/`.
+stage, and writes six dashboard-ready output files under `outputs/`.
 
 ```bash
 python -m src.pipeline --input data/sample_dataset.csv --output-dir outputs
@@ -45,8 +52,10 @@ pipeline never uses an LLM, FinBERT, transformer, GPU, or external API.
 |------|---------|
 | `outputs/prediction_results.csv` | One row per `(ticker, forecast_time)` group with `prediction`, `confidence`, `score`, `label`, `is_correct`, `rationale`, `cited_evidence_count`, `valid_news_count`, `invalid_future_news_count`. |
 | `outputs/evidence_results.csv` | One row per extracted evidence item with `evidence_role` (`pro` / `counter` / `neutral`) and `is_cited` flag. |
-| `outputs/faithfulness_results.csv` | One row per group with `original_confidence`, `confidence_without_cited_evidence`, `confidence_drop`, `temporal_validity`, `evidence_support`, `faithfulness_label` (`HIGH` / `MEDIUM` / `LOW`). |
+| `outputs/faithfulness_results.csv` | One row per group with `original_confidence`, `confidence_without_cited_evidence`, `confidence_drop`, `temporal_validity`, `evidence_support`, `faithfulness_label` (`HIGH` / `MEDIUM` / `LOW`), `counterevidence_coverage`, `counterevidence_detected`. |
 | `outputs/temporal_leakage_results.csv` | One row per news item with `news_time > forecast_time`; `leakage_type = future_news`. |
+| `outputs/sufficiency_results.csv` | One row per group với `sufficiency_score` (chỉ dùng cited evidence), `prediction_on_only_cited`, `counterfactual_confidence`, `counterfactual_delta`. |
+| `outputs/market_consistency_results.csv` | One row per group với `market_consistent`, `market_consistency_score`, `regime` (`bull` / `bear` / `sideways`), `next_day_return`, `price_5d_return`. |
 
 ### End-to-end flow
 
@@ -57,10 +66,10 @@ Evidence Extractor on the valid news, classifies each piece of evidence
 with the Evidence Selector, runs the rule-based Forecast Model, then
 runs the Faithfulness Evaluator (which re-runs the forecaster without
 the cited evidence to compute the confidence drop). The result is
-written as four CSVs that the Streamlit dashboard consumes directly:
+written as six CSVs that the Streamlit dashboard consumes directly:
 
 ```bash
-python -m src.pipeline   # produce the four CSVs
+python -m src.pipeline   # produce the six CSVs
 streamlit run src/dashboard/app.py   # visualize them
 ```
 
@@ -643,20 +652,22 @@ fixture pair.
 ## Visualization Dashboard
 
 The dashboard is the **final read-only visualization layer** of the
-pipeline. It consumes the four upstream CSV outputs and renders a
-5-tab Streamlit dashboard:
+pipeline. It consumes the six upstream CSV outputs and renders an
+8-tab Streamlit dashboard:
 
 1. **Overview** — prediction distribution, accuracy, average
    confidence / drop / temporal validity, accuracy-by-ticker table.
 2. **Evidence** — every evidence row with cited / non-cited and
    temporal-leakage badges.
 3. **Confidence Drop** — per-sample drop scatter, color-coded by
-   faithfulness level (high / medium / low).
+   faithfulness level (high / medium / low); avg counterevidence coverage card.
 4. **Temporal Leakage** — severity banner (OK / Warning / Critical)
    and the leakage table sorted by `leakage_minutes` descending.
 5. **Case Detail** — pick a `sample_id` and see ticker, prediction,
-   confidence, cited evidence, drop, and a template-based
-   interpretation.
+   confidence, cited evidence, drop, and a template-based interpretation.
+6. **Sufficiency** — avg sufficiency score and counterfactual delta; per-sample table (B1).
+7. **Market** — avg market consistency score, regime breakdown, per-sample market table (B3).
+8. **Agentic SDLC** — agent trace log, quality gate pass rate, human acceptance rate, reflection (B4).
 
 Sidebar filters (applied to every tab consistently):
 
@@ -727,6 +738,35 @@ Three pre-generated fixture sets live under `samples/dashboard/`:
 - `faithfulness_levels/` — three predictions, one per faithfulness level.
 
 Regenerate with `python3 samples/dashboard/_generate_fixtures.py`.
+
+## Agentic SDLC
+
+Dự án áp dụng mô hình **Agentic AI trong SDLC**: AI agent hỗ trợ từng bước của vòng đời phát triển phần mềm, nhưng con người luôn kiểm soát và review trước khi accept.
+
+### Ba agent role
+
+| Role | Nhiệm vụ | Bước SDLC |
+|------|----------|-----------|
+| **Research Agent** | Phân tích bài toán, xác định metric gap, viết `proposal.md` cho từng change (B1–B4) | Requirement, Design |
+| **Coding Agent** | Implement module theo spec (`sufficiency_evaluator.py`, `market_analyzer.py`, `agent_trace.py`, cập nhật pipeline/dashboard) | Implementation |
+| **Testing/Review Agent** | Sinh test case, chạy pytest, verify output CSV, review code | Testing, Evaluation |
+
+### Quality gates
+
+Mỗi change trong `openspec/changes/` phải qua các gate trước khi được merge:
+
+1. **Spec review** — proposal.md và design.md phải được con người đọc và approve.
+2. **pytest pass** — toàn bộ `pytest tests/` phải green (546 tests hiện tại).
+3. **Pipeline smoke test** — `python -m src.pipeline --input data/sample_dataset.csv --output-dir outputs` không lỗi.
+4. **Output review** — output CSV được kiểm tra cột, kiểu dữ liệu, và giá trị mẫu.
+
+### Minh chứng
+
+- `outputs/run_log.json` — trace log 12 entry bao phủ 3 role và 4 phase (B1–B4).
+- `openspec/changes/phase-b4-agentic-sdlc-maturity/reflection.md` — phân tích lessons learned từ Agentic SDLC.
+- `openspec/changes/` — mỗi thư mục có `proposal.md`, `design.md`, `tasks.md` là bằng chứng spec-driven workflow.
+
+Con người không để AI tự quyết định kiến trúc hay merge code — mỗi bước đều có checkpoint review rõ ràng.
 
 ## Disclaimer
 

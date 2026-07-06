@@ -30,7 +30,9 @@ from src.pipeline import (
     EVIDENCE_COLUMNS,
     FAITHFULNESS_COLUMNS,
     LEAKAGE_COLUMNS,
+    MARKET_COLUMNS,
     PREDICTION_COLUMNS,
+    SUFFICIENCY_COLUMNS,
     run_pipeline,
 )
 
@@ -275,3 +277,124 @@ def test_pipeline_tolerates_missing_label_column(tmp_path: Path) -> None:
     assert len(pred) == 1
     # label column is present but empty.
     assert "label" in pred.columns
+
+
+# ---------------------------------------------------------------------------
+# B2: Counterevidence Coverage
+# ---------------------------------------------------------------------------
+
+
+def test_faithfulness_results_has_counterevidence_columns(sample_output_dir: Path) -> None:
+    """Task 4.1: faithfulness_results.csv must have coverage columns after pipeline run."""
+    df = _read_csv(sample_output_dir / "faithfulness_results.csv")
+    assert "counterevidence_coverage" in df.columns, (
+        "faithfulness_results.csv missing column: counterevidence_coverage"
+    )
+    assert "counterevidence_detected" in df.columns, (
+        "faithfulness_results.csv missing column: counterevidence_detected"
+    )
+    coverages = pd.to_numeric(df["counterevidence_coverage"], errors="coerce")
+    assert coverages.between(0.0, 1.0).all(), (
+        "counterevidence_coverage values must be in [0.0, 1.0]"
+    )
+
+
+def test_counterevidence_detected_true_for_mixed_evidence(tmp_path: Path) -> None:
+    """Task 4.2: sample with UP and DOWN evidence → counterevidence_detected=True."""
+    csv = tmp_path / "mixed.csv"
+    csv.write_text(
+        "news_id,ticker,forecast_time,news_time,news_text,label\n"
+        # positive signal → should give UP prediction
+        "1,TSLA,2025-03-12 09:00,2025-03-11 08:00,"
+        "Tesla beats expectations and raises guidance for next quarter,UP\n"
+        # negative signal → counterevidence for UP prediction
+        "2,TSLA,2025-03-12 09:00,2025-03-11 09:00,"
+        "Tesla faces a recall of Model Y vehicles due to brake defect,UP\n"
+    )
+    out = tmp_path / "out"
+    run_pipeline(str(csv), str(out))
+    faith = _read_csv(out / "faithfulness_results.csv")
+    tsla_row = faith[faith["ticker"].astype(str) == "TSLA"].iloc[0]
+    assert bool(tsla_row["counterevidence_detected"]) is True, (
+        "TSLA group has both UP and DOWN evidence — counterevidence_detected must be True"
+    )
+
+
+def test_counterevidence_detected_false_for_single_direction(tmp_path: Path) -> None:
+    """Task 4.3: sample with only positive evidence → counterevidence_detected=False."""
+    csv = tmp_path / "single_dir.csv"
+    csv.write_text(
+        "news_id,ticker,forecast_time,news_time,news_text,label\n"
+        "1,AMZN,2025-03-12 09:00,2025-03-11 08:00,"
+        "Amazon beats expectations and launches new product lineup,UP\n"
+        "2,AMZN,2025-03-12 09:00,2025-03-11 09:00,"
+        "Amazon signs a major supply agreement with logistics partners,UP\n"
+    )
+    out = tmp_path / "out"
+    run_pipeline(str(csv), str(out))
+    faith = _read_csv(out / "faithfulness_results.csv")
+    amzn_row = faith[faith["ticker"].astype(str) == "AMZN"].iloc[0]
+    assert bool(amzn_row["counterevidence_detected"]) is False, (
+        "AMZN group has only positive evidence — counterevidence_detected must be False"
+    )
+
+
+# ---------------------------------------------------------------------------
+# B1: Sufficiency tests
+# ---------------------------------------------------------------------------
+
+
+def test_sufficiency_results_csv_has_required_columns(sample_output_dir: Path) -> None:
+    """Task 5.2: pipeline produces sufficiency_results.csv with the 10 required columns."""
+    suff = _read_csv(sample_output_dir / "sufficiency_results.csv")
+    missing = [c for c in SUFFICIENCY_COLUMNS if c not in suff.columns]
+    assert not missing, f"sufficiency_results.csv missing columns: {missing}"
+
+
+def test_sufficiency_results_row_count_equals_groups(sample_output_dir: Path) -> None:
+    """Task 5.3: sufficiency_results.csv has exactly one row per (ticker, forecast_time) group."""
+    preds = _read_csv(sample_output_dir / "prediction_results.csv")
+    suff = _read_csv(sample_output_dir / "sufficiency_results.csv")
+    n_groups = len(preds)
+    assert len(suff) == n_groups, (
+        f"expected {n_groups} rows in sufficiency_results.csv (one per group), got {len(suff)}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# B3: Market Consistency tests
+# ---------------------------------------------------------------------------
+
+
+def test_market_consistency_results_csv_has_required_columns(sample_output_dir: Path) -> None:
+    """Task 6.2: pipeline produces market_consistency_results.csv with 9 required columns."""
+    market = _read_csv(sample_output_dir / "market_consistency_results.csv")
+    missing = [c for c in MARKET_COLUMNS if c not in market.columns]
+    assert not missing, f"market_consistency_results.csv missing columns: {missing}"
+
+
+def test_market_consistency_results_row_count_equals_groups(sample_output_dir: Path) -> None:
+    """Task 6.3: market_consistency_results.csv has exactly one row per (ticker, forecast_time) group."""
+    preds = _read_csv(sample_output_dir / "prediction_results.csv")
+    market = _read_csv(sample_output_dir / "market_consistency_results.csv")
+    assert len(market) == len(preds), (
+        f"expected {len(preds)} rows in market_consistency_results.csv, got {len(market)}"
+    )
+
+
+def test_pipeline_does_not_crash_without_market_columns(tmp_path: Path) -> None:
+    """Task 6.4: pipeline with no next_day_return/price_5d_return columns → no crash, defaults to 0.0."""
+    csv = tmp_path / "no_market.csv"
+    csv.write_text(
+        "news_id,ticker,forecast_time,news_time,news_text,label\n"
+        "1,TSLA,2025-04-01 09:00,2025-03-31 08:00,"
+        "Tesla reports record deliveries in Q1 2025,UP\n"
+    )
+    out = tmp_path / "out"
+    summary = run_pipeline(str(csv), str(out))
+    assert "market_consistency_results_csv" in summary
+    market = _read_csv(out / "market_consistency_results.csv")
+    assert len(market) == 1
+    assert float(market.iloc[0]["next_day_return"]) == 0.0
+    assert float(market.iloc[0]["price_5d_return"]) == 0.0
+    assert str(market.iloc[0]["regime"]) == "sideways"

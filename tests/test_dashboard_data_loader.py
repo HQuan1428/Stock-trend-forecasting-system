@@ -595,3 +595,38 @@ def _rm_tree(path: Path) -> None:
     import shutil
 
     shutil.rmtree(path, ignore_errors=True)
+
+
+# ---------------------------------------------------------------------------
+# B2: Counterevidence Coverage — backward compat with old CSV files
+# ---------------------------------------------------------------------------
+
+
+def test_faithfulness_missing_coverage_columns_gets_defaults(tmp_path: Path) -> None:
+    """Task 4.4: old faithfulness CSV without coverage columns must not crash.
+    The loader fills counterevidence_coverage=0.0 and counterevidence_detected=False.
+    """
+    faith_csv = tmp_path / "faithfulness_results.csv"
+    faith_csv.write_text(
+        "sample_id,ticker,forecast_time,prediction,"
+        "original_confidence,confidence_without_cited_evidence,"
+        "confidence_drop,temporal_validity,evidence_support,faithfulness_label\n"
+        "AAPL_2025-03-12_0900,AAPL,2025-03-12 09:00,UP,"
+        "0.6,0.0,0.6,1.0,1.0,HIGH\n"
+    )
+    # Also write a minimal prediction CSV so the loader doesn't mark it missing.
+    pred_csv = tmp_path / "prediction_results.csv"
+    pred_csv.write_text(
+        "sample_id,ticker,forecast_time,prediction,confidence,label,score,rationale\n"
+        "AAPL_2025-03-12_0900,AAPL,2025-03-12 09:00,UP,0.6,UP,1,reason\n"
+    )
+    data = load_dashboard_data(str(tmp_path))
+    assert data.faithfulness is not None, "faithfulness should load without crashing"
+    assert "counterevidence_coverage" in data.faithfulness.columns, (
+        "missing coverage column should be backfilled"
+    )
+    assert "counterevidence_detected" in data.faithfulness.columns, (
+        "missing detected column should be backfilled"
+    )
+    assert float(data.faithfulness["counterevidence_coverage"].iloc[0]) == 0.0
+    assert bool(data.faithfulness["counterevidence_detected"].iloc[0]) is False

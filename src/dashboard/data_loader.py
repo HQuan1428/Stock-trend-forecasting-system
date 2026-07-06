@@ -85,6 +85,35 @@ FAITHFULNESS_COLUMNS: Tuple[str, ...] = (
     "evidence_support",
     "temporal_validity",
     "faithfulness_label",
+    "counterevidence_coverage",
+    "counterevidence_detected",
+)
+
+#: Required columns for ``market_consistency_results.csv``.
+MARKET_COLUMNS: Tuple[str, ...] = (
+    "sample_id",
+    "ticker",
+    "forecast_time",
+    "prediction",
+    "next_day_return",
+    "price_5d_return",
+    "market_consistent",
+    "regime",
+    "market_consistency_score",
+)
+
+#: Required columns for ``sufficiency_results.csv``.
+SUFFICIENCY_COLUMNS: Tuple[str, ...] = (
+    "sample_id",
+    "ticker",
+    "forecast_time",
+    "prediction",
+    "original_confidence",
+    "sufficiency_confidence",
+    "sufficiency_score",
+    "prediction_on_only_cited",
+    "counterfactual_confidence",
+    "counterfactual_delta",
 )
 
 #: Required columns for ``temporal_leakage_results.csv`` (synthesized).
@@ -118,6 +147,9 @@ class DashboardData:
     evidence: Optional[pd.DataFrame] = None
     faithfulness: Optional[pd.DataFrame] = None
     leakage: Optional[pd.DataFrame] = None
+    sufficiency: Optional[pd.DataFrame] = None
+    market: Optional[pd.DataFrame] = None
+    agent_trace: List[Dict[str, Any]] = field(default_factory=list)
     missing_files: List[str] = field(default_factory=list)
     empty_files: List[str] = field(default_factory=list)
 
@@ -387,7 +419,34 @@ def _normalize_faithfulness(faithfulness_df: pd.DataFrame) -> pd.DataFrame:
             .fillna(0.0)
             .apply(classify_faithfulness_level)
         )
+    if "counterevidence_coverage" not in out.columns:
+        out["counterevidence_coverage"] = 0.0
+    if "counterevidence_detected" not in out.columns:
+        out["counterevidence_detected"] = False
     return out
+
+
+# ---------------------------------------------------------------------------
+# Agent trace loader
+# ---------------------------------------------------------------------------
+
+
+def load_agent_trace(output_dir: str = "outputs") -> List[Dict[str, Any]]:
+    """Load the agent trace log from ``output_dir/run_log.json``.
+
+    Returns an empty list when the file is missing or unreadable — never raises.
+    """
+    path = Path(output_dir) / "run_log.json"
+    if not path.exists():
+        return []
+    try:
+        with path.open("r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return []
+    if not isinstance(payload, list):
+        return []
+    return [e for e in payload if isinstance(e, dict)]
 
 
 # ---------------------------------------------------------------------------
@@ -489,6 +548,30 @@ def load_dashboard_data(
     else:
         data.missing_files.append("faithfulness_results.csv")
 
+    # --- sufficiency ---
+    suff_df, suff_empty = _read_csv_or_none(
+        base / "sufficiency_results.csv", file_label="sufficiency_results.csv"
+    )
+    if suff_df is not None:
+        if suff_empty:
+            data.empty_files.append("sufficiency_results.csv")
+        data.sufficiency = suff_df
+    # Missing sufficiency file is non-fatal — data.sufficiency stays None.
+
+    # --- market consistency ---
+    market_df, market_empty = _read_csv_or_none(
+        base / "market_consistency_results.csv",
+        file_label="market_consistency_results.csv",
+    )
+    if market_df is not None:
+        if market_empty:
+            data.empty_files.append("market_consistency_results.csv")
+        data.market = market_df
+    # Missing market file is non-fatal — data.market stays None.
+
+    # --- agent trace ---
+    data.agent_trace = load_agent_trace(output_dir)
+
     return data
 
 
@@ -497,6 +580,9 @@ __all__ = [
     "PREDICTION_COLUMNS",
     "EVIDENCE_COLUMNS",
     "FAITHFULNESS_COLUMNS",
+    "SUFFICIENCY_COLUMNS",
+    "MARKET_COLUMNS",
     "LEAKAGE_COLUMNS",
     "load_dashboard_data",
+    "load_agent_trace",
 ]
