@@ -26,15 +26,15 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from src.pipeline import (
-    EVIDENCE_COLUMNS,
-    FAITHFULNESS_COLUMNS,
-    LEAKAGE_COLUMNS,
-    MARKET_COLUMNS,
-    PREDICTION_COLUMNS,
-    SUFFICIENCY_COLUMNS,
-    run_pipeline,
-)
+from src.pipeline import PipelineRunner
+
+EVIDENCE_COLUMNS = PipelineRunner.EVIDENCE_COLUMNS
+FAITHFULNESS_COLUMNS = PipelineRunner.FAITHFULNESS_COLUMNS
+LEAKAGE_COLUMNS = PipelineRunner.LEAKAGE_COLUMNS
+MARKET_COLUMNS = PipelineRunner.MARKET_COLUMNS
+PREDICTION_COLUMNS = PipelineRunner.PREDICTION_COLUMNS
+SUFFICIENCY_COLUMNS = PipelineRunner.SUFFICIENCY_COLUMNS
+run_pipeline = PipelineRunner().run
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

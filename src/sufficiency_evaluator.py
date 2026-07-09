@@ -1,6 +1,6 @@
 """Sufficiency + Counterfactual Perturbation Evaluator (B1).
 
-Given the original forecast request and result, this module answers two
+Given the original forecast request and result, this class answers two
 questions:
 
 1. **Sufficiency**: If we run the forecast with *only* the cited evidence,
@@ -12,79 +12,22 @@ questions:
    the confidence drop?
    ``counterfactual_delta = original_confidence - counterfactual_confidence``
 
-Both use ``src.forecast_model.predict`` — no ML, LLM, or external API.
+Both use :class:`src.forecast_model.ForecastModel` — no ML, LLM, or
+external API.
 """
 
 from __future__ import annotations
 
 from typing import Any, Dict, List, Set
 
-from src.forecast_model import predict
-
-
-# ---------------------------------------------------------------------------
-# Private helpers
-# ---------------------------------------------------------------------------
-
-
-def _only_cited_evidence(
-    evidence: List[Dict[str, Any]],
-    cited_ids: Set[str],
-) -> List[Dict[str, Any]]:
-    """Return only the evidence items whose ``news_id`` is in ``cited_ids``."""
-    return [ev for ev in evidence if ev.get("news_id") in cited_ids]
-
-
-def _perturb_to_neutral(
-    evidence: List[Dict[str, Any]],
-    cited_ids: Set[str],
-) -> List[Dict[str, Any]]:
-    """Return evidence with cited items replaced by neutral placeholders.
-
-    Uncited items are kept as-is. Each cited item is replaced with a
-    placeholder carrying ``expected_direction=HOLD`` and ``support_score=0.5``
-    so it contributes zero directional votes to the forecast.
-    """
-    result: List[Dict[str, Any]] = []
-    for ev in evidence:
-        news_id = ev.get("news_id", "")
-        if news_id in cited_ids:
-            result.append(
-                {
-                    "evidence_id": f"{news_id}_NEUTRAL",
-                    "news_id": news_id,
-                    "news_time": ev.get("news_time", ""),
-                    "evidence_text": "",
-                    "polarity": "neutral",
-                    "expected_direction": "HOLD",
-                    "support_score": 0.5,
-                }
-            )
-        else:
-            result.append(ev)
-    return result
-
-
-def _compute_sufficiency_score(
-    sufficiency_confidence: float,
-    original_confidence: float,
-) -> float:
-    """Return ``min(sufficiency_confidence / original_confidence, 1.0)``.
-
-    Returns ``0.0`` when ``original_confidence`` is zero or negative.
-    """
-    if original_confidence <= 0.0:
-        return 0.0
-    return min(sufficiency_confidence / original_confidence, 1.0)
-
-
-# ---------------------------------------------------------------------------
-# Public evaluator
-# ---------------------------------------------------------------------------
+from src.forecast_model import ForecastModel
 
 
 class SufficiencyEvaluator:
     """Compute sufficiency and counterfactual metrics for a single forecast."""
+
+    def __init__(self) -> None:
+        self._forecast_model = ForecastModel()
 
     def evaluate(
         self,
@@ -115,23 +58,23 @@ class SufficiencyEvaluator:
         evidence = list(original_input.get("evidence", []))
 
         # --- Sufficiency: run predict with only cited evidence ----------
-        cited_only = _only_cited_evidence(evidence, cited_evidence_ids)
+        cited_only = self._only_cited_evidence(evidence, cited_evidence_ids)
         suff_input = {**original_input, "evidence": cited_only}
-        suff_result = predict(suff_input)
+        suff_result = self._forecast_model.predict(suff_input)
         sufficiency_confidence = float(suff_result["confidence"])
         prediction_on_only_cited: str = str(suff_result["prediction"])
         # When no evidence is cited there is nothing to assess — score is 0.
         if not cited_evidence_ids:
             sufficiency_score = 0.0
         else:
-            sufficiency_score = _compute_sufficiency_score(
+            sufficiency_score = self._compute_sufficiency_score(
                 sufficiency_confidence, original_confidence
             )
 
         # --- Counterfactual: replace cited evidence with neutral ---------
-        perturbed = _perturb_to_neutral(evidence, cited_evidence_ids)
+        perturbed = self._perturb_to_neutral(evidence, cited_evidence_ids)
         cf_input = {**original_input, "evidence": perturbed}
-        cf_result = predict(cf_input)
+        cf_result = self._forecast_model.predict(cf_input)
         counterfactual_confidence = float(cf_result["confidence"])
         counterfactual_delta = original_confidence - counterfactual_confidence
 
@@ -142,3 +85,59 @@ class SufficiencyEvaluator:
             "counterfactual_confidence": counterfactual_confidence,
             "counterfactual_delta": counterfactual_delta,
         }
+
+    # -----------------------------------------------------------------
+    # Private helpers
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _only_cited_evidence(
+        evidence: List[Dict[str, Any]],
+        cited_ids: Set[str],
+    ) -> List[Dict[str, Any]]:
+        """Return only the evidence items whose ``news_id`` is in ``cited_ids``."""
+        return [ev for ev in evidence if ev.get("news_id") in cited_ids]
+
+    @staticmethod
+    def _perturb_to_neutral(
+        evidence: List[Dict[str, Any]],
+        cited_ids: Set[str],
+    ) -> List[Dict[str, Any]]:
+        """Return evidence with cited items replaced by neutral placeholders.
+
+        Uncited items are kept as-is. Each cited item is replaced with a
+        placeholder carrying ``expected_direction=HOLD`` and
+        ``support_score=0.5`` so it contributes zero directional votes to
+        the forecast.
+        """
+        result: List[Dict[str, Any]] = []
+        for ev in evidence:
+            news_id = ev.get("news_id", "")
+            if news_id in cited_ids:
+                result.append(
+                    {
+                        "evidence_id": f"{news_id}_NEUTRAL",
+                        "news_id": news_id,
+                        "news_time": ev.get("news_time", ""),
+                        "evidence_text": "",
+                        "polarity": "neutral",
+                        "expected_direction": "HOLD",
+                        "support_score": 0.5,
+                    }
+                )
+            else:
+                result.append(ev)
+        return result
+
+    @staticmethod
+    def _compute_sufficiency_score(
+        sufficiency_confidence: float,
+        original_confidence: float,
+    ) -> float:
+        """Return ``min(sufficiency_confidence / original_confidence, 1.0)``.
+
+        Returns ``0.0`` when ``original_confidence`` is zero or negative.
+        """
+        if original_confidence <= 0.0:
+            return 0.0
+        return min(sufficiency_confidence / original_confidence, 1.0)

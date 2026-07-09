@@ -1,11 +1,11 @@
 ## Context
 
-Phase A đã có `predict_without_evidence()` (xóa cited evidence) và `predict()` (full evidence). Faithfulness Evaluator dùng hai hàm này để tính `confidence_drop`. Phase B1 cần thêm 2 góc nhìn:
+Phase A đã có `ForecastModel.predict_without_evidence()` (xóa cited evidence) và `ForecastModel.predict()` (full evidence). Faithfulness Evaluator dùng hai hàm này để tính `confidence_drop`. Phase B1 cần thêm 2 góc nhìn:
 
 1. **Sufficiency**: Chỉ dùng cited evidence (không có uncited evidence) — liệu đó có đủ để ra prediction không?
 2. **Counterfactual**: Thay cited evidence bằng neutral placeholder — confidence thay đổi bao nhiêu?
 
-Cả hai đều reuse `predict()` từ `src.forecast_model` — không cần ML model mới.
+Cả hai đều reuse `ForecastModel.predict()` từ `src.forecast_model` — không cần ML model mới.
 
 ## Goals / Non-Goals
 
@@ -25,7 +25,7 @@ Cả hai đều reuse `predict()` từ `src.forecast_model` — không cần ML 
 
 `SufficiencyEvaluator.evaluate(original_input, original_result, cited_evidence_ids)` nhận:
 - `original_input`: forecast request dict (cùng dạng với FaithfulnessEvaluator)
-- `original_result`: kết quả từ `predict()` gốc
+- `original_result`: kết quả từ `ForecastModel.predict()` gốc
 - `cited_evidence_ids`: set[str] — news_id của cited evidence (từ pro + counter của Evidence Selector)
 
 **Lý do không nhận selector_result trực tiếp**: giữ SufficiencyEvaluator độc lập khỏi Evidence Selector, pipeline cung cấp `cited_ids` (đã tính sẵn trong `_run_group()`).
@@ -35,7 +35,7 @@ Cả hai đều reuse `predict()` từ `src.forecast_model` — không cần ML 
 ```python
 cited_only_evidence = [ev for ev in evidence if ev["news_id"] in cited_evidence_ids]
 ```
-Chạy `predict({..., "evidence": cited_only_evidence})` → `sufficiency_result`.
+Chạy `ForecastModel.predict({..., "evidence": cited_only_evidence})` → `sufficiency_result`.
 
 - `sufficiency_confidence` = `sufficiency_result["confidence"]`
 - `sufficiency_score` = `min(sufficiency_confidence / original_confidence, 1.0)` nếu `original_confidence > 0`, else `0.0`
@@ -55,7 +55,7 @@ Với mỗi cited evidence item, tạo neutral placeholder:
     "support_score": 0.5,
 }
 ```
-Evidence uncited được giữ nguyên. Chạy `predict({..., "evidence": perturbed_evidence})` → `counterfactual_result`.
+Evidence uncited được giữ nguyên. Chạy `ForecastModel.predict({..., "evidence": perturbed_evidence})` → `counterfactual_result`.
 
 - `counterfactual_confidence` = `counterfactual_result["confidence"]`
 - `counterfactual_delta` = `original_confidence - counterfactual_confidence` (positive = cited evidence quan trọng)

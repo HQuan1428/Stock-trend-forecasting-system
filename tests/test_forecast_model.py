@@ -8,34 +8,33 @@ from pathlib import Path
 
 import pytest
 
-from src import forecast_model as fm
-from src.forecast_model import (
-    CSV_COLUMNS,
-    CSV_DEFAULT_PATH,
-    ForecastModelError,
-    JSON_DEFAULT_PATH,
-    MODEL_VERSION,
-    OUTPUT_EVIDENCE_LISTS,
-    RATIONALE_TEMPLATES,
-    REQUIRED_INPUT_FIELDS,
-    VALID_DIRECTIONS,
-    VALID_PREDICTIONS,
-    _build_pro_and_counter,
-    _build_rationale,
-    _compute_confidence,
-    _compute_conflict_ratio,
-    _compute_evidence_strength,
-    _deduplicate,
-    _filter_temporal,
-    _is_future,
-    _partition_evidence,
-    _parse_news_time,
-    _vote,
-    compute_accuracy_and_confusion,
-    predict,
-    predict_batch,
-    predict_without_evidence,
-)
+from src.forecast_model import ForecastModel, ForecastModelError
+
+_model = ForecastModel()
+CSV_COLUMNS = ForecastModel.CSV_COLUMNS
+CSV_DEFAULT_PATH = ForecastModel.CSV_DEFAULT_PATH
+JSON_DEFAULT_PATH = ForecastModel.JSON_DEFAULT_PATH
+MODEL_VERSION = ForecastModel.MODEL_VERSION
+OUTPUT_EVIDENCE_LISTS = ForecastModel.OUTPUT_EVIDENCE_LISTS
+RATIONALE_TEMPLATES = ForecastModel.RATIONALE_TEMPLATES
+REQUIRED_INPUT_FIELDS = ForecastModel.REQUIRED_INPUT_FIELDS
+VALID_DIRECTIONS = ForecastModel.VALID_DIRECTIONS
+VALID_PREDICTIONS = ForecastModel.VALID_PREDICTIONS
+_build_pro_and_counter = _model._build_pro_and_counter
+_build_rationale = _model._build_rationale
+_compute_confidence = _model._compute_confidence
+_compute_conflict_ratio = _model._compute_conflict_ratio
+_compute_evidence_strength = _model._compute_evidence_strength
+_deduplicate = _model._deduplicate
+_filter_temporal = _model._filter_temporal
+_is_future = _model._is_future
+_partition_evidence = _model._partition_evidence
+_parse_news_time = _model._parse_news_time
+_vote = _model._vote
+compute_accuracy_and_confusion = _model.compute_accuracy_and_confusion
+predict = _model.predict
+predict_batch = _model.predict_batch
+predict_without_evidence = _model.predict_without_evidence
 
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent / "samples" / "forecast_model"
@@ -848,7 +847,7 @@ def test_compute_accuracy_and_confusion_accepts_input_record_pairs() -> None:
 
 def test_integration_end_to_end_through_extractor_and_selector(tmp_path: Path) -> None:
     """`extract_evidence` → mocked selector → `predict` → well-formed result."""
-    from src.evidence_extractor import extract_evidence
+    from src.evidence_extractor import EvidenceExtractor
 
     news_time = "2025-03-11 08:30"
     raw = {
@@ -858,7 +857,7 @@ def test_integration_end_to_end_through_extractor_and_selector(tmp_path: Path) -
         "news_time": news_time,
         "news_text": "Apple announces strong sales",
     }
-    extractor_result = extract_evidence(raw)
+    extractor_result = EvidenceExtractor().extract(raw)
     candidates = extractor_result["evidence"]
     # mock the selector: each candidate with positive polarity → UP, etc.
     selected = []

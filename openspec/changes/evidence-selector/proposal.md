@@ -4,7 +4,7 @@ The Faithful Evidence-Centric Financial News Forecasting pipeline produces a pre
 
 ## What Changes
 
-- Add a new module `src/evidence_selector.py` exposing `select_evidence(prediction, evidence_candidates, ...)` (and an equivalent batch helper) that classifies each evidence candidate into one of three groups: `pro_evidence`, `counterevidence`, `neutral_evidence`.
+- Add a new module `src/evidence_selector.py` exposing `EvidenceSelector.select(prediction, evidence_candidates, ...)` (and an equivalent batch helper) that classifies each evidence candidate into one of three groups: `pro_evidence`, `counterevidence`, `neutral_evidence`.
 - Define a deterministic, rule-based classification mapping keyed on `(prediction, expected_direction)`. Version 1 does **not** use LLM, FinBERT, or any learned model.
 - Define a ranking strategy that sorts each group by `selector_score` descending. For V1, `selector_score = extractor_score` (an extension point is documented for `extractor_score * keyword_strength * recency_weight`).
 - Define a per-prediction `summary` block with `pro_count`, `counter_count`, `neutral_count`, `has_counterevidence`, and `counterevidence_ratio`.

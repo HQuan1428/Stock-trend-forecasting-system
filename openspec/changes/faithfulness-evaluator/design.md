@@ -33,11 +33,11 @@ This change introduces three new source files (`src/faithfulness_metrics.py`, `s
   - `calculate_faithfulness_score(temporal_validity, evidence_support, confidence_drop) -> float`
   - `classify_faithfulness(temporal_validity, evidence_support, confidence_drop, prediction, prediction_after_removal) -> str`
 - Provide a `FaithfulnessEvaluator` class in `src/faithfulness_evaluator.py` with a single public method `evaluate(original_input, original_result, *, ablation_strategy="remove_cited_pro_evidence") -> FaithfulnessReport` and a `FaithfulnessEvaluatorError(ValueError)` exception class.
-- Re-use the existing `src.forecast_model.predict` and `src.forecast_model.predict_without_evidence` for ablation. The evaluator MUST NOT duplicate the prediction algorithm.
-- Export a small, fixed `VERDICTS` constant (six labels) and an `ABLATION_STRATEGIES` constant (two V1 strategies).
+- Re-use the existing `src.forecast_model.predict` and `src.forecast_model.ForecastModel.predict_without_evidence` for ablation. The evaluator MUST NOT duplicate the prediction algorithm.
+- Export a small, fixed `VERDICTS` constant (six labels) and an `FaithfulnessEvaluator.ABLATION_STRATEGIES` constant (two V1 strategies).
 - Export the public API from `src/__init__.py` so downstream consumers (Visualization Dashboard, `pipeline.py`) import a single stable surface.
-- Provide an `evaluate_batch(reports, *, output_csv_path="outputs/faithfulness_results.csv", output_json_path=None) -> List[dict]` helper that writes a per-row scalar CSV for the dashboard and a JSON sibling for full-fidelity inspection.
-- Export `CSV_COLUMNS` as a module-level constant (single source of truth for the dashboard) and `CSV_DEFAULT_PATH` / `JSON_DEFAULT_PATH` for the default file locations.
+- Provide an `FaithfulnessEvaluator.evaluate_batch(reports, *, output_csv_path="outputs/faithfulness_results.csv", output_json_path=None) -> List[dict]` helper that writes a per-row scalar CSV for the dashboard and a JSON sibling for full-fidelity inspection.
+- Export `FaithfulnessEvaluator.CSV_COLUMNS` as a module-level constant (single source of truth for the dashboard) and `FaithfulnessEvaluator.CSV_DEFAULT_PATH` / `FaithfulnessEvaluator.JSON_DEFAULT_PATH` for the default file locations.
 - Ship deterministic golden fixtures under `samples/faithfulness_evaluator/` covering the four canonical archetypes: strong-faithful, decorative-explanation-risk, temporal-leakage, and unsupported-evidence.
 - Be fully testable with `pytest`, including the eleven named test cases from the spec.
 
@@ -65,13 +65,13 @@ This change introduces three new source files (`src/faithfulness_metrics.py`, `s
 
 **Alternatives considered.** A single file would be shorter but mixes pure math with IO. Keeping everything inside the orchestrator class makes the pure functions hard to reuse from the dashboard's own tests. Two modules wins on testability and on the single-responsibility boundary.
 
-### D2. Ablation happens via `predict_without_evidence`, not by re-extracting evidence
+### D2. Ablation happens via `ForecastModel.predict_without_evidence`, not by re-extracting evidence
 
-**Choice.** The evaluator passes the original `input_data` envelope and a list of removed evidence IDs to `src.forecast_model.predict_without_evidence`. The evaluator itself never touches the raw `evidence` list in any way that could drift from the Forecast Model's scoring.
+**Choice.** The evaluator passes the original `input_data` envelope and a list of removed evidence IDs to `src.forecast_model.ForecastModel.predict_without_evidence`. The evaluator itself never touches the raw `evidence` list in any way that could drift from the Forecast Model's scoring.
 
-**Why.** The Forecast Model is the single source of truth for `score`, `confidence`, and `prediction`. If the evaluator re-implemented the voting math it could silently drift from the model and the `confidence_drop` signal would be meaningless. Calling `predict_without_evidence` guarantees that the only thing changing between the two runs is the evidence set.
+**Why.** The Forecast Model is the single source of truth for `score`, `confidence`, and `prediction`. If the evaluator re-implemented the voting math it could silently drift from the model and the `confidence_drop` signal would be meaningless. Calling `ForecastModel.predict_without_evidence` guarantees that the only thing changing between the two runs is the evidence set.
 
-**Alternatives considered.** A "shadow" implementation in the evaluator that re-runs the voting algorithm would avoid the second call but would be a maintenance hazard. A third-party library (e.g., a faithfulness library) would add a dependency. Reusing `predict_without_evidence` is the safest choice.
+**Alternatives considered.** A "shadow" implementation in the evaluator that re-runs the voting algorithm would avoid the second call but would be a maintenance hazard. A third-party library (e.g., a faithfulness library) would add a dependency. Reusing `ForecastModel.predict_without_evidence` is the safest choice.
 
 ### D3. Evidence removal is by `evidence_id`, with an explicit `news_id` collapse rule
 
@@ -133,11 +133,11 @@ The branches are evaluated top-to-bottom and stop at the first match. The `VERDI
 
 ### D9. CSV columns are a module-level constant
 
-**Choice.** `CSV_COLUMNS = ("ticker", "forecast_time", "prediction", "original_confidence", "prediction_after_removal", "confidence_after_removal", "confidence_drop", "temporal_validity", "evidence_support", "faithfulness_score", "verdict", "warnings")` is exported from `src/faithfulness_evaluator.py`. The `evaluate_batch` helper writes exactly these columns in this order.
+**Choice.** `FaithfulnessEvaluator.CSV_COLUMNS = ("ticker", "forecast_time", "prediction", "original_confidence", "prediction_after_removal", "confidence_after_removal", "confidence_drop", "temporal_validity", "evidence_support", "faithfulness_score", "verdict", "warnings")` is exported from `src/faithfulness_evaluator.py`. The `FaithfulnessEvaluator.evaluate_batch` helper writes exactly these columns in this order.
 
 **Why.** A single source of truth for the column list means the dashboard never has to guess the schema, and a future change can extend the list without breaking consumers that import it. The `warnings` column is the JSON-encoded list (empty `[]` when none), so each row is a single CSV line.
 
-**Alternatives considered.** Hardcoding the column list inside `evaluate_batch` would make it harder to extend. Letting the dashboard introspect the keys of the first row would produce unstable ordering. A module-level constant is the simplest durable contract.
+**Alternatives considered.** Hardcoding the column list inside `FaithfulnessEvaluator.evaluate_batch` would make it harder to extend. Letting the dashboard introspect the keys of the first row would produce unstable ordering. A module-level constant is the simplest durable contract.
 
 ### D10. Default ablation strategy is `remove_cited_pro_evidence`
 
@@ -216,9 +216,9 @@ The verdict cascade is the seven-branch ordered list documented in `D6`. Each br
 
 | Argument          | Type                  | Required | Description |
 |-------------------|-----------------------|----------|-------------|
-| `original_input`  | `dict`                | yes      | The same envelope passed to `predict(...)`. Carries `sample_id`, `ticker`, `forecast_time`, and `evidence`. The Forecast Model re-invokes on this exact envelope (with the relevant `evidence` items removed). |
-| `original_result` | `dict` (ForecastResult) | yes    | The result returned by `predict(...)` or `predict_batch(...)`. Carries `prediction`, `confidence`, `score`, `pro_evidence`, `counter_evidence`, `warnings`, etc. |
-| `ablation_strategy` | `str`               | no       | One of `ABLATION_STRATEGIES` (`remove_cited_pro_evidence`, `remove_all_cited_evidence`). Default `remove_cited_pro_evidence`. |
+| `original_input`  | `dict`                | yes      | The same envelope passed to `ForecastModel.predict(...)`. Carries `sample_id`, `ticker`, `forecast_time`, and `evidence`. The Forecast Model re-invokes on this exact envelope (with the relevant `evidence` items removed). |
+| `original_result` | `dict` (ForecastResult) | yes    | The result returned by `ForecastModel.predict(...)` or `ForecastModel.predict_batch(...)`. Carries `prediction`, `confidence`, `score`, `pro_evidence`, `counter_evidence`, `warnings`, etc. |
+| `ablation_strategy` | `str`               | no       | One of `FaithfulnessEvaluator.ABLATION_STRATEGIES` (`remove_cited_pro_evidence`, `remove_all_cited_evidence`). Default `remove_cited_pro_evidence`. |
 
 ### ForecastResult Shape (read by the evaluator)
 
@@ -263,7 +263,7 @@ The report is a dict with the following keys, all always present:
 
 ### CSV Row Schema
 
-`evaluate_batch(...)` writes one CSV row per report, using these columns in this order:
+`FaithfulnessEvaluator.evaluate_batch(...)` writes one CSV row per report, using these columns in this order:
 
 ```
 ticker, forecast_time, prediction, original_confidence,
@@ -282,14 +282,14 @@ The `warnings` column is the JSON-encoded concatenation of the three warning lis
 | `original_result` is not a dict                    | `FaithfulnessEvaluatorError`. Hard failure.                                               |
 | `original_result["prediction"]` not in `{UP,DOWN,HOLD}` | `FaithfulnessEvaluatorError`. Hard failure.                                          |
 | `original_result["confidence"]` is None or non-numeric | `FaithfulnessEvaluatorError`. Hard failure.                                              |
-| `ablation_strategy` not in `ABLATION_STRATEGIES`   | `FaithfulnessEvaluatorError`. Hard failure.                                               |
+| `ablation_strategy` not in `FaithfulnessEvaluator.ABLATION_STRATEGIES`   | `FaithfulnessEvaluatorError`. Hard failure.                                               |
 | `forecast_time` missing on both result and input   | `FaithfulnessEvaluatorError`. Hard failure (temporal validity is impossible).             |
-| `predict_without_evidence` raises `ForecastModelError` | Caught: appended to `ablation_warnings`; the post-removal prediction is forced to `HOLD` with confidence `0.5`; `confidence_drop` is computed against `0.5`. The report is still produced. |
+| `ForecastModel.predict_without_evidence` raises `ForecastModelError` | Caught: appended to `ablation_warnings`; the post-removal prediction is forced to `HOLD` with confidence `0.5`; `confidence_drop` is computed against `0.5`. The report is still produced. |
 | `cited_evidence` missing on the result and no `pro_evidence` / `counter_evidence` | `temporal_warnings` and `support_warnings` are populated, `temporal_validity = 1.0`, `evidence_support = 1.0`, `confidence_drop = 0.0`, `verdict = decorative_explanation_risk`. The report is still produced. |
 | Empty cited evidence list                          | `temporal_validity = 1.0`, `evidence_support = 1.0`, `confidence_drop = 0.0`, `verdict = decorative_explanation_risk`. `per_evidence_results = []`. |
 | `news_time` missing or unparseable on a cited item | Treated as not-future; added to `temporal_warnings` as `"MALFORMED_NEWS_TIME"`; included in the support aggregation. |
 
-The `evaluate_batch` helper never raises for a per-record error: a record that fails to evaluate is logged as a row with `verdict = "unsupported_evidence"` and an `ablation_warnings` entry of the form `EVALUATION_ERROR: <message>`. The CSV is always written with the same columns.
+The `FaithfulnessEvaluator.evaluate_batch` helper never raises for a per-record error: a record that fails to evaluate is logged as a row with `verdict = "unsupported_evidence"` and an `ablation_warnings` entry of the form `EVALUATION_ERROR: <message>`. The CSV is always written with the same columns.
 
 ## Edge Cases
 
@@ -305,7 +305,7 @@ The `evaluate_batch` helper never raises for a per-record error: a record that f
 | Confidence unchanged after ablation                        | `confidence_drop ≈ 0`; `verdict = decorative_explanation_risk`.                                                                                              |
 | Confidence increases after ablation                        | `confidence_drop < 0`; verdict branches back to faithful candidate (the cited evidence was actively undermining the prediction); `ablation_warnings` includes `confidence_increased_after_removal`. |
 | Prediction flips after ablation                            | `prediction_after_removal != prediction`; verdict `strong_faithful_candidate`.                                                                              |
-| Ablation removes every directional evidence                | `predict_without_evidence` returns `HOLD`, confidence `0.5`. `confidence_drop = original_confidence - 0.5`. Verdict branches accordingly.                       |
+| Ablation removes every directional evidence                | `ForecastModel.predict_without_evidence` returns `HOLD`, confidence `0.5`. `confidence_drop = original_confidence - 0.5`. Verdict branches accordingly.                       |
 | `news_id` collapse when multiple evidence snippets share the same article | Both snippets are removed together by the `remove_all_cited_evidence` strategy. Documented in the report's `ablation_warnings`.                |
 
 ## Test Strategy
@@ -343,12 +343,12 @@ Pure-function tests, one assertion per test, fixture data inline. The eleven nam
 4. Temporal-leakage scenario: cited item with `news_time > forecast_time`, `temporal_validity = 0.0`, verdict `invalid_temporal_leakage`.
 5. Unsupported-evidence scenario: prediction UP, cited evidence all DOWN, `evidence_support = 0.0`, verdict `unsupported_evidence`.
 6. Empty cited evidence: prediction UP, `cited_evidence = []`, verdict `decorative_explanation_risk`, no exceptions.
-7. Batch CSV export: 5-record batch, asserts CSV header is `CSV_COLUMNS` and one row per record.
+7. Batch CSV export: 5-record batch, asserts CSV header is `FaithfulnessEvaluator.CSV_COLUMNS` and one row per record.
 8. Golden fixtures: 4 `_input.json` / `_expected.json` pairs in `samples/faithfulness_evaluator/`, asserted byte-equal against `evaluate(...)` output.
 
 ## Dashboard / Export Requirements
 
-- `outputs/faithfulness_results.csv` is the dashboard's primary input. One row per evaluated prediction. Column order pinned by `CSV_COLUMNS`.
+- `outputs/faithfulness_results.csv` is the dashboard's primary input. One row per evaluated prediction. Column order pinned by `FaithfulnessEvaluator.CSV_COLUMNS`.
 - `outputs/faithfulness_results.json` is the full-fidelity sibling, written when `output_json_path` is provided. The dashboard prefers the JSON for per-evidence drill-down.
 - The `verdict` column drives the dashboard's color coding: red (`invalid_temporal_leakage`, `unsupported_evidence`), green (`strong_faithful_candidate`), yellow (moderate / weak), gray (`decorative_explanation_risk`).
 - The `warnings` column is parsed as JSON in the dashboard. Empty list → no badge.
@@ -358,7 +358,7 @@ Pure-function tests, one assertion per test, fixture data inline. The eleven nam
 ## Migration Plan
 
 1. **Land `src/faithfulness_metrics.py`** with the seven pure functions and unit tests. This module has no dependency on the Forecast Model and can be reviewed independently.
-2. **Land `src/faithfulness_evaluator.py`** with the `FaithfulnessEvaluator` class, the `evaluate_batch` helper, the `VERDICTS` and `ABLATION_STRATEGIES` constants, and the `CSV_COLUMNS` / `CSV_DEFAULT_PATH` / `JSON_DEFAULT_PATH` constants.
+2. **Land `src/faithfulness_evaluator.py`** with the `FaithfulnessEvaluator` class, the `FaithfulnessEvaluator.evaluate_batch` helper, the `VERDICTS` and `FaithfulnessEvaluator.ABLATION_STRATEGIES` constants, and the `FaithfulnessEvaluator.CSV_COLUMNS` / `FaithfulnessEvaluator.CSV_DEFAULT_PATH` / `FaithfulnessEvaluator.JSON_DEFAULT_PATH` constants.
 3. **Update `src/__init__.py`** to re-export the public surface.
 4. **Land the golden fixtures** under `samples/faithfulness_evaluator/`.
 5. **Land the integration tests** in `tests/test_faithfulness_evaluator.py`.
@@ -370,7 +370,7 @@ Rollback: removing the two new modules and the `__init__.py` re-export is a sing
 
 ## Open Questions
 
-- **Should `evaluate_batch` also produce a JSON sibling by default?** Current plan: only when `output_json_path` is provided. The Forecast Model writes its JSON sibling by default; the Faithfulness Evaluator could match that convention. Revisit when the dashboard mockups are in.
+- **Should `FaithfulnessEvaluator.evaluate_batch` also produce a JSON sibling by default?** Current plan: only when `output_json_path` is provided. The Forecast Model writes its JSON sibling by default; the Faithfulness Evaluator could match that convention. Revisit when the dashboard mockups are in.
 - **Should the `confidence_increased_after_removal` warning also be raised when `class_confidences` are provided and the original-class confidence went up?** Current plan: yes — the warning is about the signed `confidence_drop`, regardless of how it was computed.
 - **Should the per-evidence `temporal_warning` field carry the parsed timestamps or just the evidence_id?** Current plan: just `evidence_id` plus the parsed `news_time` / `forecast_time` ISO strings (verbose enough for the dashboard but not for raw logs).
 - **Should the verdict table be configurable?** Current plan: no — the verdict cascade is pinned in the spec. A future change can extend the table without breaking the existing verdicts.
@@ -379,10 +379,10 @@ Rollback: removing the two new modules and the `__init__.py` re-export is a sing
 
 - **[Risk] The composite `faithfulness_score` is a heuristic, not a scientific metric.** → Mitigation: documented prominently in the module docstring, the README, and the spec. The `confidence_drop` is the primary signal; the composite is for at-a-glance dashboard display only.
 - **[Risk] The verdict cascade can hide edge cases.** → Mitigation: every `evaluate` call produces a fully populated report; the dashboard can render the raw sub-metrics alongside the verdict. The verdict is a label, not a filter.
-- **[Risk] The evaluator depends on `predict_without_evidence` to compute `confidence_drop`. If the Forecast Model changes its confidence algorithm, the absolute `confidence_drop` values shift.** → Mitigation: the evaluator pins the `MODEL_VERSION` indirectly through the `pro_evidence` / `counter_evidence` shape; a future change that introduces a V2 model can gate `evaluate` on `model_version` if needed.
-- **[Risk] Calling `predict_without_evidence` doubles the runtime per evaluation.** → Mitigation: the dashboard evaluates a batch once at the end of the pipeline, not on every render. For a 100-row batch the doubling is acceptable. A future change could cache `predict_without_evidence` results if profiling shows it matters.
+- **[Risk] The evaluator depends on `ForecastModel.predict_without_evidence` to compute `confidence_drop`. If the Forecast Model changes its confidence algorithm, the absolute `confidence_drop` values shift.** → Mitigation: the evaluator pins the `MODEL_VERSION` indirectly through the `pro_evidence` / `counter_evidence` shape; a future change that introduces a V2 model can gate `evaluate` on `model_version` if needed.
+- **[Risk] Calling `ForecastModel.predict_without_evidence` doubles the runtime per evaluation.** → Mitigation: the dashboard evaluates a batch once at the end of the pipeline, not on every render. For a 100-row batch the doubling is acceptable. A future change could cache `ForecastModel.predict_without_evidence` results if profiling shows it matters.
 - **[Risk] `news_id` collapse removes every evidence snippet from the same article, which could be either more conservative (less ablation) or less conservative (more ablation) than the user expected.** → Mitigation: the report's `ablation_warnings` records exactly which `news_id`s were collapsed and which `evidence_id`s were removed as a result.
-- **[Risk] `evaluate_batch` swallows per-record errors.** → Mitigation: every error becomes a CSV row with `verdict = "unsupported_evidence"` and an `EVALUATION_ERROR` warning, so the dashboard sees the failure. The batch helper never raises.
+- **[Risk] `FaithfulnessEvaluator.evaluate_batch` swallows per-record errors.** → Mitigation: every error becomes a CSV row with `verdict = "unsupported_evidence"` and an `EVALUATION_ERROR` warning, so the dashboard sees the failure. The batch helper never raises.
 - **[Risk] The `original_input` argument shadows the input's own `evidence` list when the result's `pro_evidence` / `counter_evidence` are present.** → Mitigation: the design documents that the Forecast Model re-invocation always uses the `original_input["evidence"]` list (after removal), not the result's `pro_evidence` / `counter_evidence`. The result's lists are read-only for the metrics.
 
 ## Out-of-Scope (Explicit)
@@ -392,7 +392,7 @@ The following are explicitly out of scope for V1 and will require a future chang
 - LLM-as-judge for free-text rationale evaluation.
 - Learned attention-based or SHAP-based faithfulness signals.
 - Multi-ticker or multi-horizon evaluation.
-- Caching of `predict_without_evidence` results across batches.
+- Caching of `ForecastModel.predict_without_evidence` results across batches.
 - Configurable verdict thresholds.
 - Per-evidence contribution scores (e.g., leave-one-out per item).
 - Real-time streaming evaluation (the V1 is a batch evaluator).

@@ -8,7 +8,7 @@ movement prediction (``UP`` / ``DOWN`` / ``HOLD``) with a stable
 confidence score, evidence counts, pro and counter evidence lists, a
 template-based rationale, and a structured warnings list.
 
-Version 1 is a **deterministic, rule-based, side-effect-free** function
+Version 1 is a **deterministic, rule-based, side-effect-free** class
 with **no ML, LLM, FinBERT, transformer, logistic regression,
 deep-learning model, network, or external-service dependencies**. The
 algorithm is a transparent vote:
@@ -48,828 +48,801 @@ from __future__ import annotations
 
 import csv
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Sequence, Tuple
 
-from src.retriever import _normalize_to_utc, _parse_datetime
-
-
-# ---------------------------------------------------------------------------
-# Public exceptions
-# ---------------------------------------------------------------------------
+from src.retriever import TimeUtils
 
 
 class ForecastModelError(ValueError):
     """Raised for unrecoverable input problems (e.g. missing forecast_time)."""
 
 
-# ---------------------------------------------------------------------------
-# Field constants (introspectable by tests and downstream code)
-# ---------------------------------------------------------------------------
+class ForecastModel:
+    """Rule-based UP/DOWN/HOLD vote over evidence, with a stable confidence."""
 
+    #: Required top-level input fields for a forecast request.
+    REQUIRED_INPUT_FIELDS: Tuple[str, ...] = ("sample_id", "ticker", "forecast_time", "evidence")
 
-#: Required top-level input fields for a forecast request.
-REQUIRED_INPUT_FIELDS: Tuple[str, ...] = ("sample_id", "ticker", "forecast_time", "evidence")
+    #: Valid prediction labels.
+    VALID_PREDICTIONS: Tuple[str, ...] = ("UP", "DOWN", "HOLD")
 
-#: Valid prediction labels.
-VALID_PREDICTIONS: Tuple[str, ...] = ("UP", "DOWN", "HOLD")
+    #: Valid evidence ``expected_direction`` values.
+    VALID_DIRECTIONS: Tuple[str, ...] = ("UP", "DOWN", "HOLD")
 
-#: Valid evidence ``expected_direction`` values.
-VALID_DIRECTIONS: Tuple[str, ...] = ("UP", "DOWN", "HOLD")
+    #: This class's model version. Emitted on every result so downstream
+    #: consumers can filter by version.
+    MODEL_VERSION: str = "rule_based_v1"
 
-#: This module's model version. Emitted on every result so downstream
-#: consumers can filter by version.
-MODEL_VERSION: str = "rule_based_v1"
-
-#: Output evidence-list field names (always present, never ``null``).
-OUTPUT_EVIDENCE_LISTS: Tuple[str, ...] = (
-    "pro_evidence",
-    "counter_evidence",
-    "up_evidence",
-    "down_evidence",
-    "neutral_evidence",
-)
-
-#: Warning codes the model can emit. ``INPUT_ERROR`` is only emitted by
-#: ``predict_batch`` when a single record raises.
-WARNING_CODES: Tuple[str, ...] = (
-    "TEMPORAL_LEAKAGE_BLOCKED",
-    "INVALID_EVIDENCE",
-    "DUPLICATE_EVIDENCE_ID",
-    "MALFORMED_NEWS_TIME",
-    "INPUT_ERROR",
-)
-
-#: Per-row scalar columns for the CSV emitted by ``predict_batch``.
-CSV_COLUMNS: Tuple[str, ...] = (
-    "sample_id",
-    "ticker",
-    "forecast_time",
-    "prediction",
-    "confidence",
-    "score",
-    "positive_count",
-    "negative_count",
-    "neutral_count",
-    "total_evidence",
-    "directional_evidence_count",
-    "evidence_strength",
-    "conflict_ratio",
-    "label",
-    "model_version",
-)
-
-#: Default CSV output path.
-CSV_DEFAULT_PATH: str = "outputs/prediction_results.csv"
-
-#: Default JSON output path (sibling of the CSV).
-JSON_DEFAULT_PATH: str = "outputs/prediction_results.json"
-
-#: Rationale templates. Exposed as a single source of truth so
-#: downstream modules (Faithfulness Evaluator, Dashboard) can import
-#: the literal strings rather than redefine them.
-RATIONALE_TEMPLATES: Dict[str, str] = {
-    "UP": "Prediction UP because positive evidence count ({positive_count}) is greater than negative evidence count ({negative_count}).",
-    "DOWN": "Prediction DOWN because negative evidence count ({negative_count}) is greater than positive evidence count ({positive_count}).",
-    "HOLD_BALANCED": "Prediction HOLD because positive and negative evidence are balanced.",
-    "HOLD_NO_DIRECTIONAL": "Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.",
-}
-
-
-# ---------------------------------------------------------------------------
-# Datetime parsing helpers (reuse retriever semantics for UTC)
-# ---------------------------------------------------------------------------
-
-
-def _parse_news_time(value: Any) -> Optional[datetime]:
-    """Parse a ``news_time`` value defensively.
-
-    Returns ``None`` for missing, ``None``, empty, non-string, or
-    unparseable inputs. Tolerates both ``"T"`` and ``" "`` separators.
-    Naive timestamps are interpreted as UTC (per the Temporal Retriever
-    contract).
-    """
-    if value is None:
-        return None
-    if not isinstance(value, str) or not value.strip():
-        return None
-    try:
-        return _normalize_to_utc(_parse_datetime(value))
-    except (ValueError, TypeError):
-        return None
-
-
-def _is_future(news_dt: Optional[datetime], forecast_dt: datetime) -> bool:
-    """Return ``True`` only when ``news_dt`` is STRICTLY greater than ``forecast_dt``.
-
-    ``None`` news_dt (missing / unparseable) is treated as not-future
-    so the rest of the batch is not blocked.
-    """
-    if news_dt is None:
-        return False
-    return news_dt > forecast_dt
-
-
-# ---------------------------------------------------------------------------
-# Voting / confidence helpers (pure functions, easy to test)
-# ---------------------------------------------------------------------------
-
-
-def _vote(evidence_items: Sequence[Dict[str, Any]]) -> Tuple[int, int, int, int]:
-    """Compute ``(positive_count, negative_count, neutral_count, score)``.
-
-    Items with missing or unknown ``expected_direction`` are silently
-    skipped here (the strict-mode raise and the ``INVALID_EVIDENCE``
-    warning are handled in the public function). The caller is
-    responsible for routing skipped items to a ``warnings`` list.
-
-    ``score`` is an integer in V1.
-    """
-    positive_count = 0
-    negative_count = 0
-    neutral_count = 0
-    for item in evidence_items:
-        direction = item.get("expected_direction")
-        if direction == "UP":
-            positive_count += 1
-        elif direction == "DOWN":
-            negative_count += 1
-        elif direction == "HOLD":
-            neutral_count += 1
-        # else: ignored; the public function emits INVALID_EVIDENCE.
-    score = positive_count - negative_count
-    return positive_count, negative_count, neutral_count, score
-
-
-def _compute_confidence(score: int, directional_evidence_count: int) -> float:
-    """Compute confidence in ``[0.5, 0.95]``.
-
-    Formula: ``0.5 + min(abs(score) * 0.1, 0.45)`` when there is at
-    least one directional evidence item, else ``0.5``.
-    """
-    if directional_evidence_count == 0:
-        return 0.5
-    raw = 0.5 + min(abs(score) * 0.1, 0.45)
-    return max(0.5, min(0.95, raw))
-
-
-def _compute_evidence_strength(score: int, directional_evidence_count: int) -> float:
-    """``abs(score) / directional_evidence_count`` (0.0 when denom is 0)."""
-    if directional_evidence_count == 0:
-        return 0.0
-    return abs(score) / directional_evidence_count
-
-
-def _compute_conflict_ratio(positive_count: int, negative_count: int) -> float:
-    """``min(p, n) / max(p + n, 1)`` in ``[0.0, 0.5]``."""
-    directional = positive_count + negative_count
-    if directional == 0:
-        return 0.0
-    return min(positive_count, negative_count) / max(directional, 1)
-
-
-# ---------------------------------------------------------------------------
-# Pro / counter / raw evidence partition
-# ---------------------------------------------------------------------------
-
-
-def _safe_support_score(item: Dict[str, Any]) -> float:
-    """Return the ``support_score`` field if numeric, else ``0.0``."""
-    value = item.get("support_score")
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
-        return float(value)
-    return 0.0
-
-
-def _copy_evidence(item: Dict[str, Any]) -> Dict[str, Any]:
-    """Return an evidence item dict with only the preserved fields.
-
-    Strips any ``label`` / ``ground_truth_label`` to prevent label
-    leakage into the output.
-    """
-    return {
-        "evidence_id": item.get("evidence_id", ""),
-        "news_id": item.get("news_id", ""),
-        "news_time": item.get("news_time", ""),
-        "evidence_text": item.get("evidence_text", ""),
-        "polarity": item.get("polarity", ""),
-        "expected_direction": item.get("expected_direction", ""),
-        "support_score": _safe_support_score(item),
-    }
-
-
-def _partition_evidence(
-    evidence_items: Sequence[Dict[str, Any]],
-    warnings_out: List[Dict[str, Any]],
-) -> Dict[str, List[Dict[str, Any]]]:
-    """Split items into ``up_evidence``, ``down_evidence``, ``neutral_evidence``.
-
-    Items with missing or unknown ``expected_direction`` are skipped and
-    an ``INVALID_EVIDENCE`` warning is appended for each.
-
-    Each list is sorted by ``evidence_id`` ascending (stable,
-    deterministic).
-    """
-    up: List[Dict[str, Any]] = []
-    down: List[Dict[str, Any]] = []
-    neutral: List[Dict[str, Any]] = []
-    for item in evidence_items:
-        direction = item.get("expected_direction")
-        evidence_id = item.get("evidence_id", "")
-        if direction == "UP":
-            up.append(_copy_evidence(item))
-        elif direction == "DOWN":
-            down.append(_copy_evidence(item))
-        elif direction == "HOLD":
-            neutral.append(_copy_evidence(item))
-        else:
-            warnings_out.append(
-                {
-                    "code": "INVALID_EVIDENCE",
-                    "evidence_id": evidence_id,
-                    "message": (
-                        f"Evidence {evidence_id!r} has missing or invalid "
-                        f"expected_direction={direction!r}; ignored."
-                    ),
-                }
-            )
-    up.sort(key=lambda e: e["evidence_id"])
-    down.sort(key=lambda e: e["evidence_id"])
-    neutral.sort(key=lambda e: e["evidence_id"])
-    return {"up_evidence": up, "down_evidence": down, "neutral_evidence": neutral}
-
-
-def _build_pro_and_counter(
-    prediction: str,
-    up_evidence: List[Dict[str, Any]],
-    down_evidence: List[Dict[str, Any]],
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """Return ``(pro_evidence, counter_evidence)`` per the spec table."""
-    if prediction == "UP":
-        return list(up_evidence), list(down_evidence)
-    if prediction == "DOWN":
-        return list(down_evidence), list(up_evidence)
-    # HOLD: no winning direction.
-    return [], []
-
-
-# ---------------------------------------------------------------------------
-# Rationale builder (template-based, NOT LLM-generated)
-# ---------------------------------------------------------------------------
-
-
-def _build_rationale(
-    prediction: str,
-    positive_count: int,
-    negative_count: int,
-    directional_evidence_count: int,
-) -> str:
-    """Return the rationale string for the given prediction branch."""
-    if prediction == "UP":
-        return RATIONALE_TEMPLATES["UP"].format(
-            positive_count=positive_count, negative_count=negative_count
-        )
-    if prediction == "DOWN":
-        return RATIONALE_TEMPLATES["DOWN"].format(
-            negative_count=negative_count, positive_count=positive_count
-        )
-    # HOLD
-    if directional_evidence_count == 0:
-        return RATIONALE_TEMPLATES["HOLD_NO_DIRECTIONAL"].format(
-            positive_count=positive_count, negative_count=negative_count
-        )
-    return RATIONALE_TEMPLATES["HOLD_BALANCED"].format(
-        positive_count=positive_count, negative_count=negative_count
+    #: Output evidence-list field names (always present, never ``null``).
+    OUTPUT_EVIDENCE_LISTS: Tuple[str, ...] = (
+        "pro_evidence",
+        "counter_evidence",
+        "up_evidence",
+        "down_evidence",
+        "neutral_evidence",
     )
 
-
-# ---------------------------------------------------------------------------
-# Defensive helpers (deduplication and temporal filtering)
-# ---------------------------------------------------------------------------
-
-
-def _deduplicate(
-    evidence_items: Sequence[Dict[str, Any]],
-    warnings_out: List[Dict[str, Any]],
-) -> List[Dict[str, Any]]:
-    """Return items with duplicate ``evidence_id`` removed (first wins).
-
-    Subsequent occurrences are appended to ``warnings_out`` with code
-    ``DUPLICATE_EVIDENCE_ID``.
-    """
-    seen: Dict[str, Dict[str, Any]] = {}
-    output: List[Dict[str, Any]] = []
-    for item in evidence_items:
-        evidence_id = item.get("evidence_id", "")
-        if evidence_id in seen:
-            warnings_out.append(
-                {
-                    "code": "DUPLICATE_EVIDENCE_ID",
-                    "evidence_id": evidence_id,
-                    "message": (
-                        f"Evidence {evidence_id!r} appeared more than once; "
-                        f"keeping the first occurrence."
-                    ),
-                }
-            )
-            continue
-        seen[evidence_id] = item
-        output.append(item)
-    return output
-
-
-def _filter_temporal(
-    evidence_items: Sequence[Dict[str, Any]],
-    forecast_dt: datetime,
-    warnings_out: List[Dict[str, Any]],
-) -> List[Dict[str, Any]]:
-    """Return items whose ``news_time`` is NOT strictly future.
-
-    Future items are appended to ``warnings_out`` with code
-    ``TEMPORAL_LEAKAGE_BLOCKED``. Items with missing or unparseable
-    ``news_time`` are kept and flagged with code ``MALFORMED_NEWS_TIME``.
-    """
-    output: List[Dict[str, Any]] = []
-    for item in evidence_items:
-        evidence_id = item.get("evidence_id", "")
-        raw_news_time = item.get("news_time")
-        parsed = _parse_news_time(raw_news_time)
-        if parsed is None:
-            warnings_out.append(
-                {
-                    "code": "MALFORMED_NEWS_TIME",
-                    "evidence_id": evidence_id,
-                    "message": (
-                        f"Evidence {evidence_id!r} has missing or unparseable "
-                        f"news_time={raw_news_time!r}; treated as not-future."
-                    ),
-                }
-            )
-            output.append(item)
-            continue
-        if _is_future(parsed, forecast_dt):
-            warnings_out.append(
-                {
-                    "code": "TEMPORAL_LEAKAGE_BLOCKED",
-                    "evidence_id": evidence_id,
-                    "news_time": raw_news_time,
-                    "forecast_time": forecast_dt.isoformat(),
-                    "message": (
-                        f"Evidence {evidence_id!r} has news_time strictly after "
-                        f"forecast_time; excluded from scoring."
-                    ),
-                }
-            )
-            continue
-        output.append(item)
-    return output
-
-
-# ---------------------------------------------------------------------------
-# Validation helpers
-# ---------------------------------------------------------------------------
-
-
-def _validate_request_envelope(input_data: Any) -> None:
-    """Validate the top-level request envelope. Raises ``ForecastModelError``."""
-    if not isinstance(input_data, dict):
-        raise ForecastModelError(
-            f"input must be a dict, got {type(input_data).__name__}"
-        )
-    for field_name in ("sample_id", "ticker", "forecast_time"):
-        value = input_data.get(field_name)
-        if not isinstance(value, str) or not value.strip():
-            raise ForecastModelError(
-                f"required field {field_name!r} is missing or not a non-empty string"
-            )
-    evidence = input_data.get("evidence")
-    if evidence is None:
-        raise ForecastModelError("required field 'evidence' is missing")
-    if not isinstance(evidence, list):
-        raise ForecastModelError(
-            f"'evidence' must be a list, got {type(evidence).__name__}"
-        )
-
-
-def _parse_forecast_time(value: str) -> datetime:
-    """Parse ``forecast_time`` strictly (raises ``ForecastModelError`` on failure)."""
-    try:
-        return _normalize_to_utc(_parse_datetime(value))
-    except (ValueError, TypeError) as exc:
-        raise ForecastModelError(
-            f"forecast_time is not a parseable timestamp: {value!r}"
-        ) from exc
-
-
-# ---------------------------------------------------------------------------
-# Core prediction function (used by all public APIs)
-# ---------------------------------------------------------------------------
-
-
-def _predict_core(
-    input_data: Dict[str, Any],
-    *,
-    exclude_ids: FrozenSet[str] = frozenset(),
-    strict: bool = False,
-) -> Dict[str, Any]:
-    """Run the V1 rule-based forecast algorithm.
-
-    This is the single source of truth for prediction logic. Both
-    :func:`predict` and :func:`predict_without_evidence` are thin
-    wrappers over this function so the algorithm cannot drift between
-    call sites.
-
-    Args:
-        input_data: A single forecast request dict.
-        exclude_ids: ``evidence_id`` values to skip before scoring.
-            Used by ``predict_without_evidence`` for the Faithfulness
-            Evaluator's ``confidence_drop`` calculation.
-        strict: When ``True``, raises ``ForecastModelError`` on the
-            first item with missing or invalid ``expected_direction``
-            instead of skipping with a warning.
-
-    Returns:
-        A ``ForecastResult`` dict matching the output schema in the
-        spec. ``model_version`` is always ``MODEL_VERSION``.
-    """
-    _validate_request_envelope(input_data)
-
-    sample_id = input_data["sample_id"]
-    ticker = input_data["ticker"]
-    forecast_time_str = input_data["forecast_time"]
-    forecast_dt = _parse_forecast_time(forecast_time_str)
-    evidence = input_data["evidence"]
-    label = input_data.get("label")  # echoed only; never read for scoring
-
-    warnings: List[Dict[str, Any]] = []
-
-    # --- 1. Apply faithfulness exclusion (silent) ------------------
-    if exclude_ids:
-        evidence = [e for e in evidence if e.get("evidence_id", "") not in exclude_ids]
-
-    # --- 2. Deduplicate by evidence_id ------------------------------
-    evidence = _deduplicate(evidence, warnings)
-
-    # --- 3. Temporal validation (defense in depth) ------------------
-    evidence = _filter_temporal(evidence, forecast_dt, warnings)
-
-    # --- 4. Strict-mode validation for expected_direction -----------
-    if strict:
-        for item in evidence:
-            if item.get("expected_direction") not in VALID_DIRECTIONS:
-                raise ForecastModelError(
-                    f"strict mode: expected_direction must be one of "
-                    f"{VALID_DIRECTIONS}, got {item.get('expected_direction')!r}"
-                )
-
-    # --- 5. Vote ---------------------------------------------------
-    positive_count, negative_count, neutral_count, score = _vote(evidence)
-    directional_evidence_count = positive_count + negative_count
-    total_evidence = len(evidence)
-
-    # --- 6. Prediction, confidence, derived metrics ----------------
-    if score > 0:
-        prediction = "UP"
-    elif score < 0:
-        prediction = "DOWN"
-    else:
-        prediction = "HOLD"
-
-    confidence = _compute_confidence(score, directional_evidence_count)
-    evidence_strength = _compute_evidence_strength(score, directional_evidence_count)
-    conflict_ratio = _compute_conflict_ratio(positive_count, negative_count)
-
-    # --- 7. Evidence lists -----------------------------------------
-    partitioned = _partition_evidence(evidence, warnings)
-    up_evidence = partitioned["up_evidence"]
-    down_evidence = partitioned["down_evidence"]
-    neutral_evidence = partitioned["neutral_evidence"]
-    pro_evidence, counter_evidence = _build_pro_and_counter(
-        prediction, up_evidence, down_evidence
+    #: Warning codes the model can emit. ``INPUT_ERROR`` is only emitted by
+    #: ``predict_batch`` when a single record raises.
+    WARNING_CODES: Tuple[str, ...] = (
+        "TEMPORAL_LEAKAGE_BLOCKED",
+        "INVALID_EVIDENCE",
+        "DUPLICATE_EVIDENCE_ID",
+        "MALFORMED_NEWS_TIME",
+        "INPUT_ERROR",
     )
 
-    # --- 8. Rationale ----------------------------------------------
-    rationale = _build_rationale(
-        prediction, positive_count, negative_count, directional_evidence_count
+    #: Per-row scalar columns for the CSV emitted by ``predict_batch``.
+    CSV_COLUMNS: Tuple[str, ...] = (
+        "sample_id",
+        "ticker",
+        "forecast_time",
+        "prediction",
+        "confidence",
+        "score",
+        "positive_count",
+        "negative_count",
+        "neutral_count",
+        "total_evidence",
+        "directional_evidence_count",
+        "evidence_strength",
+        "conflict_ratio",
+        "label",
+        "model_version",
     )
 
-    # --- 9. Assemble result ----------------------------------------
-    result: Dict[str, Any] = {
-        "sample_id": sample_id,
-        "ticker": ticker,
-        "forecast_time": forecast_time_str,
-        "prediction": prediction,
-        "confidence": confidence,
-        "score": score,
-        "positive_count": positive_count,
-        "negative_count": negative_count,
-        "neutral_count": neutral_count,
-        "total_evidence": total_evidence,
-        "directional_evidence_count": directional_evidence_count,
-        "evidence_strength": evidence_strength,
-        "conflict_ratio": conflict_ratio,
-        "pro_evidence": pro_evidence,
-        "counter_evidence": counter_evidence,
-        "up_evidence": up_evidence,
-        "down_evidence": down_evidence,
-        "neutral_evidence": neutral_evidence,
-        "rationale": rationale,
-        "warnings": warnings,
-        "model_version": MODEL_VERSION,
+    #: Default CSV output path.
+    CSV_DEFAULT_PATH: str = "outputs/prediction_results.csv"
+
+    #: Default JSON output path (sibling of the CSV).
+    JSON_DEFAULT_PATH: str = "outputs/prediction_results.json"
+
+    #: Rationale templates. Exposed as a single source of truth so
+    #: downstream classes (Faithfulness Evaluator, Dashboard) can import
+    #: the literal strings rather than redefine them.
+    RATIONALE_TEMPLATES: Dict[str, str] = {
+        "UP": "Prediction UP because positive evidence count ({positive_count}) is greater than negative evidence count ({negative_count}).",
+        "DOWN": "Prediction DOWN because negative evidence count ({negative_count}) is greater than positive evidence count ({positive_count}).",
+        "HOLD_BALANCED": "Prediction HOLD because positive and negative evidence are balanced.",
+        "HOLD_NO_DIRECTIONAL": "Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.",
     }
-    if label is not None:
-        result["label"] = label
-    return result
 
+    # -----------------------------------------------------------------
+    # Public API
+    # -----------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
+    def predict(self, input_data: Dict[str, Any], *, strict: bool = False) -> Dict[str, Any]:
+        """Run a single forecast and return a ``ForecastResult`` dict.
 
+        Args:
+            input_data: Forecast request dict (sample_id, ticker,
+                forecast_time, evidence, optional label).
+            strict: When ``True``, raises ``ForecastModelError`` on the
+                first item with missing or invalid ``expected_direction``
+                instead of skipping with a warning.
 
-def predict(input_data: Dict[str, Any], *, strict: bool = False) -> Dict[str, Any]:
-    """Run a single forecast and return a ``ForecastResult`` dict.
+        Returns:
+            The ``ForecastResult`` dict. See ``MODEL_VERSION`` for the
+            constant ``"rule_based_v1"``.
 
-    Args:
-        input_data: Forecast request dict (sample_id, ticker,
-            forecast_time, evidence, optional label).
-        strict: When ``True``, raises ``ForecastModelError`` on the
-            first item with missing or invalid ``expected_direction``
-            instead of skipping with a warning.
+        Raises:
+            ForecastModelError: On unrecoverable input problems (missing
+                sample_id / ticker / forecast_time / evidence, or
+                malformed forecast_time). With ``strict=True``, also on
+                invalid ``expected_direction``.
+        """
+        return self._predict_core(input_data, exclude_ids=frozenset(), strict=strict)
 
-    Returns:
-        The ``ForecastResult`` dict. See ``MODEL_VERSION`` for the
-        constant ``"rule_based_v1"``.
+    def predict_without_evidence(
+        self,
+        input_data: Dict[str, Any],
+        removed_evidence_ids: Optional[Iterable[str]],
+        *,
+        strict: bool = False,
+    ) -> Dict[str, Any]:
+        """Re-run the forecast after removing one or more cited ``evidence_id``s.
 
-    Raises:
-        ForecastModelError: On unrecoverable input problems (missing
-            sample_id / ticker / forecast_time / evidence, or
-            malformed forecast_time). With ``strict=True``, also on
-            invalid ``expected_direction``.
-    """
-    return _predict_core(input_data, exclude_ids=frozenset(), strict=strict)
+        Identical to :meth:`predict` except that any evidence item whose
+        ``evidence_id`` is in ``removed_evidence_ids`` is filtered out
+        before voting. The Faithfulness Evaluator then computes
+        ``confidence_drop = original.confidence - reduced.confidence``.
 
+        ``removed_evidence_ids`` may be ``None`` (treated as empty), an
+        empty iterable (no-op), or an iterable of strings. Strings that do
+        not match any ``evidence_id`` are silently ignored.
 
-def predict_without_evidence(
-    input_data: Dict[str, Any],
-    removed_evidence_ids: Optional[Iterable[str]],
-    *,
-    strict: bool = False,
-) -> Dict[str, Any]:
-    """Re-run the forecast after removing one or more cited ``evidence_id``s.
+        Args:
+            input_data: Forecast request dict.
+            removed_evidence_ids: Iterable of ``evidence_id`` values to
+                exclude. ``None`` is treated as empty.
+            strict: Forwarded to :meth:`predict`.
 
-    The function is identical to :func:`predict` except that any
-    evidence item whose ``evidence_id`` is in ``removed_evidence_ids``
-    is filtered out before voting. The Faithfulness Evaluator then
-    computes ``confidence_drop = original.confidence - reduced.confidence``.
+        Returns:
+            The ``ForecastResult`` dict computed from the remaining
+            evidence.
 
-    ``removed_evidence_ids`` may be ``None`` (treated as empty), an
-    empty iterable (no-op), or an iterable of strings. Strings that do
-    not match any ``evidence_id`` are silently ignored.
-
-    Args:
-        input_data: Forecast request dict.
-        removed_evidence_ids: Iterable of ``evidence_id`` values to
-            exclude. ``None`` is treated as empty.
-        strict: Forwarded to :func:`predict`.
-
-    Returns:
-        The ``ForecastResult`` dict computed from the remaining
-        evidence.
-
-    Raises:
-        ForecastModelError: Same conditions as :func:`predict`.
-    """
-    if removed_evidence_ids is None:
-        ids: FrozenSet[str] = frozenset()
-    else:
-        ids = frozenset(removed_evidence_ids)
-    return _predict_core(input_data, exclude_ids=ids, strict=strict)
-
-
-def predict_batch(
-    records: Sequence[Dict[str, Any]],
-    *,
-    output_csv_path: Optional[str] = CSV_DEFAULT_PATH,
-    output_json_path: Optional[str] = JSON_DEFAULT_PATH,
-    strict: bool = False,
-) -> List[Dict[str, Any]]:
-    """Run :func:`predict` on every record in input order.
-
-    A record that raises ``ForecastModelError`` is caught and replaced
-    with a default ``HOLD`` result (``confidence = 0.5``, all counts
-    zero) that carries an ``INPUT_ERROR`` warning. The batch never
-    raises.
-
-    Args:
-        records: List of forecast request dicts.
-        output_csv_path: Path to write the per-row scalar CSV. Pass
-            ``None`` to disable CSV writing. Default is
-            ``outputs/prediction_results.csv``.
-        output_json_path: Path to write the full per-record JSON.
-            Pass ``None`` to disable JSON writing. Default is
-            ``outputs/prediction_results.json``.
-        strict: Forwarded to :func:`predict`.
-
-    Returns:
-        A list of ``ForecastResult`` dicts, one per input record, in
-        input order.
-    """
-    results: List[Dict[str, Any]] = []
-    for record in records:
-        try:
-            results.append(predict(record, strict=strict))
-        except ForecastModelError as exc:
-            results.append(_default_error_result(record, str(exc)))
-    if output_csv_path is not None:
-        _write_csv(results, Path(output_csv_path))
-    if output_json_path is not None:
-        _write_json(results, Path(output_json_path))
-    return results
-
-
-def _default_error_result(record: Any, message: str) -> Dict[str, Any]:
-    """Return a default HOLD result with an ``INPUT_ERROR`` warning."""
-    sample_id = ""
-    ticker = ""
-    forecast_time = ""
-    label = None
-    if isinstance(record, dict):
-        sample_id = record.get("sample_id", "") if isinstance(record.get("sample_id"), str) else ""
-        ticker = record.get("ticker", "") if isinstance(record.get("ticker"), str) else ""
-        forecast_time = (
-            record.get("forecast_time", "")
-            if isinstance(record.get("forecast_time"), str)
-            else ""
+        Raises:
+            ForecastModelError: Same conditions as :meth:`predict`.
+        """
+        ids: FrozenSet[str] = (
+            frozenset() if removed_evidence_ids is None else frozenset(removed_evidence_ids)
         )
-        if "label" in record:
-            label = record.get("label")
-    result: Dict[str, Any] = {
-        "sample_id": sample_id,
-        "ticker": ticker,
-        "forecast_time": forecast_time,
-        "prediction": "HOLD",
-        "confidence": 0.5,
-        "score": 0,
-        "positive_count": 0,
-        "negative_count": 0,
-        "neutral_count": 0,
-        "total_evidence": 0,
-        "directional_evidence_count": 0,
-        "evidence_strength": 0.0,
-        "conflict_ratio": 0.0,
-        "pro_evidence": [],
-        "counter_evidence": [],
-        "up_evidence": [],
-        "down_evidence": [],
-        "neutral_evidence": [],
-        "rationale": RATIONALE_TEMPLATES["HOLD_NO_DIRECTIONAL"].format(
-            positive_count=0, negative_count=0
-        ),
-        "warnings": [
-            {
-                "code": "INPUT_ERROR",
-                "evidence_id": "",
-                "message": message,
-            }
-        ],
-        "model_version": MODEL_VERSION,
-    }
-    if label is not None:
-        result["label"] = label
-    return result
+        return self._predict_core(input_data, exclude_ids=ids, strict=strict)
 
+    def predict_batch(
+        self,
+        records: Sequence[Dict[str, Any]],
+        *,
+        output_csv_path: Optional[str] = CSV_DEFAULT_PATH,
+        output_json_path: Optional[str] = JSON_DEFAULT_PATH,
+        strict: bool = False,
+    ) -> List[Dict[str, Any]]:
+        """Run :meth:`predict` on every record in input order.
 
-def _write_csv(results: Sequence[Dict[str, Any]], path: Path) -> None:
-    """Write the per-row scalar fields of every result to ``path``."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=list(CSV_COLUMNS))
-        writer.writeheader()
-        for r in results:
-            writer.writerow({col: r.get(col, "") for col in CSV_COLUMNS})
+        A record that raises ``ForecastModelError`` is caught and replaced
+        with a default ``HOLD`` result (``confidence = 0.5``, all counts
+        zero) that carries an ``INPUT_ERROR`` warning. The batch never
+        raises.
 
+        Args:
+            records: List of forecast request dicts.
+            output_csv_path: Path to write the per-row scalar CSV. Pass
+                ``None`` to disable CSV writing. Default is
+                ``outputs/prediction_results.csv``.
+            output_json_path: Path to write the full per-record JSON.
+                Pass ``None`` to disable JSON writing. Default is
+                ``outputs/prediction_results.json``.
+            strict: Forwarded to :meth:`predict`.
 
-def _write_json(results: Sequence[Dict[str, Any]], path: Path) -> None:
-    """Write the full per-record results to ``path`` as JSON."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(list(results), f, ensure_ascii=False, indent=2, sort_keys=False)
+        Returns:
+            A list of ``ForecastResult`` dicts, one per input record, in
+            input order.
+        """
+        results: List[Dict[str, Any]] = []
+        for record in records:
+            try:
+                results.append(self.predict(record, strict=strict))
+            except ForecastModelError as exc:
+                results.append(self._default_error_result(record, str(exc)))
+        if output_csv_path is not None:
+            self._write_csv(results, Path(output_csv_path))
+        if output_json_path is not None:
+            self._write_json(results, Path(output_json_path))
+        return results
 
+    def compute_accuracy_and_confusion(
+        self,
+        results: Sequence[Any],
+        *,
+        label_key: str = "label",
+    ) -> Dict[str, Any]:
+        """Compute accuracy and a 3x3 confusion matrix from a batch of results.
 
-# ---------------------------------------------------------------------------
-# Evaluation helper
-# ---------------------------------------------------------------------------
+        Args:
+            results: Either a list of result dicts (each MUST carry
+                ``label``), or a list of ``(input_record, result_dict)``
+                pairs (label lives on the input).
+            label_key: The key on the result dict carrying the ground-truth
+                label. Default ``"label"``.
 
+        Returns:
+            ``{ "accuracy": float, "confusion_matrix": {"labels":
+            ["UP","DOWN","HOLD"], "matrix": [[...]]}, "per_class":
+            {"UP": {"precision":..., "recall":..., "f1":..., "support":...},
+            ...}, "n_samples": int }``.
 
-def _normalize_records_for_eval(
-    results: Sequence[Any],
-) -> List[Dict[str, Any]]:
-    """Accept either a list of result dicts or a list of ``(input, result)`` pairs.
+            For an empty input list, returns zero metrics with
+            ``n_samples = 0``. For a non-empty input where every record is
+            missing a label, raises ``ValueError`` (defensive default
+            against a misconfigured pipeline).
+        """
+        del label_key  # accepted for forward compatibility; "label" is the spec.
+        records = self._normalize_records_for_eval(results)
+        labels = list(self.VALID_PREDICTIONS)  # ["UP", "DOWN", "HOLD"]
+        n = len(records)
+        matrix: List[List[int]] = [[0, 0, 0] for _ in range(3)]
+        label_to_idx = {l: i for i, l in enumerate(labels)}
 
-    Returns a list of result dicts. When a pair is supplied, the label
-    is taken from the input record (``input["label"]``) and merged
-    onto the result dict so downstream code can rely on
-    ``result["label"]`` being present.
-    """
-    normalized: List[Dict[str, Any]] = []
-    for entry in results:
-        if isinstance(entry, tuple) and len(entry) == 2:
-            input_record, result = entry
-            if isinstance(input_record, dict) and isinstance(result, dict):
-                if "label" in input_record and "label" not in result:
-                    result = {**result, "label": input_record["label"]}
-                normalized.append(result)
+        scored = 0
+        correct = 0
+        per_class_correct: Dict[str, int] = {l: 0 for l in labels}
+        per_class_pred: Dict[str, int] = {l: 0 for l in labels}
+        per_class_actual: Dict[str, int] = {l: 0 for l in labels}
+
+        for r in records:
+            label = r.get("label")
+            prediction = r.get("prediction")
+            if label not in label_to_idx or prediction not in label_to_idx:
                 continue
-        if isinstance(entry, dict):
-            normalized.append(entry)
-    return normalized
+            scored += 1
+            i_pred = label_to_idx[prediction]
+            i_actual = label_to_idx[label]
+            matrix[i_pred][i_actual] += 1
+            per_class_pred[prediction] += 1
+            per_class_actual[label] += 1
+            if prediction == label:
+                correct += 1
+                per_class_correct[label] += 1
 
+        if n > 0 and scored == 0:
+            raise ValueError(
+                "compute_accuracy_and_confusion: no record carries a usable label"
+            )
 
-def compute_accuracy_and_confusion(
-    results: Sequence[Any],
-    *,
-    label_key: str = "label",
-) -> Dict[str, Any]:
-    """Compute accuracy and a 3x3 confusion matrix from a batch of results.
+        accuracy = (correct / scored) if scored > 0 else 0.0
 
-    Args:
-        results: Either a list of result dicts (each MUST carry
-            ``label``), or a list of ``(input_record, result_dict)``
-            pairs (label lives on the input).
-        label_key: The key on the result dict carrying the ground-truth
-            label. Default ``"label"``.
+        per_class: Dict[str, Dict[str, float]] = {}
+        for l in labels:
+            support = per_class_actual[l]
+            pred_total = per_class_pred[l]
+            precision = per_class_correct[l] / pred_total if pred_total > 0 else 0.0
+            recall = per_class_correct[l] / support if support > 0 else 0.0
+            f1 = (
+                2 * precision * recall / (precision + recall)
+                if (precision + recall) > 0
+                else 0.0
+            )
+            per_class[l] = {
+                "precision": precision,
+                "recall": recall,
+                "f1": f1,
+                "support": support,
+            }
 
-    Returns:
-        ``{ "accuracy": float, "confusion_matrix": {"labels":
-        ["UP","DOWN","HOLD"], "matrix": [[...]]}, "per_class":
-        {"UP": {"precision":..., "recall":..., "f1":..., "support":...},
-        ...}, "n_samples": int }``.
-
-        For an empty input list, returns zero metrics with
-        ``n_samples = 0``. For a non-empty input where every record is
-        missing a label, raises ``ValueError`` (defensive default
-        against a misconfigured pipeline).
-    """
-    del label_key  # accepted for forward compatibility; "label" is the spec.
-    records = _normalize_records_for_eval(results)
-    labels = list(VALID_PREDICTIONS)  # ["UP", "DOWN", "HOLD"]
-    n = len(records)
-    matrix: List[List[int]] = [[0, 0, 0] for _ in range(3)]
-    label_to_idx = {l: i for i, l in enumerate(labels)}
-
-    scored = 0
-    correct = 0
-    per_class_correct: Dict[str, int] = {l: 0 for l in labels}
-    per_class_pred: Dict[str, int] = {l: 0 for l in labels}
-    per_class_actual: Dict[str, int] = {l: 0 for l in labels}
-
-    for r in records:
-        label = r.get("label")
-        prediction = r.get("prediction")
-        if label not in label_to_idx or prediction not in label_to_idx:
-            continue
-        scored += 1
-        i_pred = label_to_idx[prediction]
-        i_actual = label_to_idx[label]
-        matrix[i_pred][i_actual] += 1
-        per_class_pred[prediction] += 1
-        per_class_actual[label] += 1
-        if prediction == label:
-            correct += 1
-            per_class_correct[label] += 1
-
-    if n > 0 and scored == 0:
-        raise ValueError(
-            "compute_accuracy_and_confusion: no record carries a usable label"
-        )
-
-    accuracy = (correct / scored) if scored > 0 else 0.0
-
-    per_class: Dict[str, Dict[str, float]] = {}
-    for l in labels:
-        support = per_class_actual[l]
-        pred_total = per_class_pred[l]
-        precision = (
-            per_class_correct[l] / pred_total if pred_total > 0 else 0.0
-        )
-        recall = per_class_correct[l] / support if support > 0 else 0.0
-        f1 = (
-            2 * precision * recall / (precision + recall)
-            if (precision + recall) > 0
-            else 0.0
-        )
-        per_class[l] = {
-            "precision": precision,
-            "recall": recall,
-            "f1": f1,
-            "support": support,
+        return {
+            "accuracy": accuracy,
+            "confusion_matrix": {"labels": labels, "matrix": matrix},
+            "per_class": per_class,
+            "n_samples": scored,
         }
 
-    return {
-        "accuracy": accuracy,
-        "confusion_matrix": {"labels": labels, "matrix": matrix},
-        "per_class": per_class,
-        "n_samples": scored,
-    }
+    # -----------------------------------------------------------------
+    # Core prediction (single source of truth for the algorithm)
+    # -----------------------------------------------------------------
+
+    def _predict_core(
+        self,
+        input_data: Dict[str, Any],
+        *,
+        exclude_ids: FrozenSet[str] = frozenset(),
+        strict: bool = False,
+    ) -> Dict[str, Any]:
+        """Run the V1 rule-based forecast algorithm.
+
+        This is the single source of truth for prediction logic. Both
+        :meth:`predict` and :meth:`predict_without_evidence` are thin
+        wrappers over this method so the algorithm cannot drift between
+        call sites.
+
+        Args:
+            input_data: A single forecast request dict.
+            exclude_ids: ``evidence_id`` values to skip before scoring.
+                Used by :meth:`predict_without_evidence` for the
+                Faithfulness Evaluator's ``confidence_drop`` calculation.
+            strict: When ``True``, raises ``ForecastModelError`` on the
+                first item with missing or invalid ``expected_direction``
+                instead of skipping with a warning.
+
+        Returns:
+            A ``ForecastResult`` dict matching the output schema in the
+            spec. ``model_version`` is always ``MODEL_VERSION``.
+        """
+        self._validate_request_envelope(input_data)
+
+        sample_id = input_data["sample_id"]
+        ticker = input_data["ticker"]
+        forecast_time_str = input_data["forecast_time"]
+        forecast_dt = self._parse_forecast_time(forecast_time_str)
+        evidence = input_data["evidence"]
+        label = input_data.get("label")  # echoed only; never read for scoring
+
+        warnings: List[Dict[str, Any]] = []
+
+        # --- 1. Apply faithfulness exclusion (silent) ------------------
+        if exclude_ids:
+            evidence = [e for e in evidence if e.get("evidence_id", "") not in exclude_ids]
+
+        # --- 2. Deduplicate by evidence_id ------------------------------
+        evidence = self._deduplicate(evidence, warnings)
+
+        # --- 3. Temporal validation (defense in depth) ------------------
+        evidence = self._filter_temporal(evidence, forecast_dt, warnings)
+
+        # --- 4. Strict-mode validation for expected_direction -----------
+        if strict:
+            for item in evidence:
+                if item.get("expected_direction") not in self.VALID_DIRECTIONS:
+                    raise ForecastModelError(
+                        f"strict mode: expected_direction must be one of "
+                        f"{self.VALID_DIRECTIONS}, got {item.get('expected_direction')!r}"
+                    )
+
+        # --- 5. Vote ---------------------------------------------------
+        positive_count, negative_count, neutral_count, score = self._vote(evidence)
+        directional_evidence_count = positive_count + negative_count
+        total_evidence = len(evidence)
+
+        # --- 6. Prediction, confidence, derived metrics ----------------
+        if score > 0:
+            prediction = "UP"
+        elif score < 0:
+            prediction = "DOWN"
+        else:
+            prediction = "HOLD"
+
+        confidence = self._compute_confidence(score, directional_evidence_count)
+        evidence_strength = self._compute_evidence_strength(score, directional_evidence_count)
+        conflict_ratio = self._compute_conflict_ratio(positive_count, negative_count)
+
+        # --- 7. Evidence lists -----------------------------------------
+        partitioned = self._partition_evidence(evidence, warnings)
+        up_evidence = partitioned["up_evidence"]
+        down_evidence = partitioned["down_evidence"]
+        neutral_evidence = partitioned["neutral_evidence"]
+        pro_evidence, counter_evidence = self._build_pro_and_counter(
+            prediction, up_evidence, down_evidence
+        )
+
+        # --- 8. Rationale ----------------------------------------------
+        rationale = self._build_rationale(
+            prediction, positive_count, negative_count, directional_evidence_count
+        )
+
+        # --- 9. Assemble result ----------------------------------------
+        result: Dict[str, Any] = {
+            "sample_id": sample_id,
+            "ticker": ticker,
+            "forecast_time": forecast_time_str,
+            "prediction": prediction,
+            "confidence": confidence,
+            "score": score,
+            "positive_count": positive_count,
+            "negative_count": negative_count,
+            "neutral_count": neutral_count,
+            "total_evidence": total_evidence,
+            "directional_evidence_count": directional_evidence_count,
+            "evidence_strength": evidence_strength,
+            "conflict_ratio": conflict_ratio,
+            "pro_evidence": pro_evidence,
+            "counter_evidence": counter_evidence,
+            "up_evidence": up_evidence,
+            "down_evidence": down_evidence,
+            "neutral_evidence": neutral_evidence,
+            "rationale": rationale,
+            "warnings": warnings,
+            "model_version": self.MODEL_VERSION,
+        }
+        if label is not None:
+            result["label"] = label
+        return result
+
+    # -----------------------------------------------------------------
+    # Datetime parsing helpers (reuse TimeUtils for UTC)
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _parse_news_time(value: Any) -> Optional[datetime]:
+        """Parse a ``news_time`` value defensively.
+
+        Returns ``None`` for missing, ``None``, empty, non-string, or
+        unparseable inputs. Tolerates both ``"T"`` and ``" "`` separators.
+        Naive timestamps are interpreted as UTC (per the Temporal
+        Retriever contract).
+        """
+        if value is None or not isinstance(value, str) or not value.strip():
+            return None
+        try:
+            return TimeUtils.parse_utc(value)
+        except (ValueError, TypeError):
+            return None
+
+    @staticmethod
+    def _is_future(news_dt: Optional[datetime], forecast_dt: datetime) -> bool:
+        """Return ``True`` only when ``news_dt`` is STRICTLY greater than
+        ``forecast_dt``. ``None`` news_dt (missing / unparseable) is
+        treated as not-future so the rest of the batch is not blocked.
+        """
+        if news_dt is None:
+            return False
+        return news_dt > forecast_dt
+
+    # -----------------------------------------------------------------
+    # Voting / confidence helpers (pure, easy to test)
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _vote(evidence_items: Sequence[Dict[str, Any]]) -> Tuple[int, int, int, int]:
+        """Compute ``(positive_count, negative_count, neutral_count, score)``.
+
+        Items with missing or unknown ``expected_direction`` are silently
+        skipped here (the strict-mode raise and the ``INVALID_EVIDENCE``
+        warning are handled in ``_predict_core``). ``score`` is an integer
+        in V1.
+        """
+        positive_count = 0
+        negative_count = 0
+        neutral_count = 0
+        for item in evidence_items:
+            direction = item.get("expected_direction")
+            if direction == "UP":
+                positive_count += 1
+            elif direction == "DOWN":
+                negative_count += 1
+            elif direction == "HOLD":
+                neutral_count += 1
+            # else: ignored; _partition_evidence emits INVALID_EVIDENCE.
+        score = positive_count - negative_count
+        return positive_count, negative_count, neutral_count, score
+
+    @staticmethod
+    def _compute_confidence(score: int, directional_evidence_count: int) -> float:
+        """Compute confidence in ``[0.5, 0.95]``.
+
+        Formula: ``0.5 + min(abs(score) * 0.1, 0.45)`` when there is at
+        least one directional evidence item, else ``0.5``.
+        """
+        if directional_evidence_count == 0:
+            return 0.5
+        raw = 0.5 + min(abs(score) * 0.1, 0.45)
+        return max(0.5, min(0.95, raw))
+
+    @staticmethod
+    def _compute_evidence_strength(score: int, directional_evidence_count: int) -> float:
+        """``abs(score) / directional_evidence_count`` (0.0 when denom is 0)."""
+        if directional_evidence_count == 0:
+            return 0.0
+        return abs(score) / directional_evidence_count
+
+    @staticmethod
+    def _compute_conflict_ratio(positive_count: int, negative_count: int) -> float:
+        """``min(p, n) / max(p + n, 1)`` in ``[0.0, 0.5]``."""
+        directional = positive_count + negative_count
+        if directional == 0:
+            return 0.0
+        return min(positive_count, negative_count) / max(directional, 1)
+
+    # -----------------------------------------------------------------
+    # Pro / counter / raw evidence partition
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _safe_support_score(item: Dict[str, Any]) -> float:
+        """Return the ``support_score`` field if numeric, else ``0.0``."""
+        value = item.get("support_score")
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            return float(value)
+        return 0.0
+
+    def _copy_evidence(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        """Return an evidence item dict with only the preserved fields.
+
+        Strips any ``label`` / ``ground_truth_label`` to prevent label
+        leakage into the output.
+        """
+        return {
+            "evidence_id": item.get("evidence_id", ""),
+            "news_id": item.get("news_id", ""),
+            "news_time": item.get("news_time", ""),
+            "evidence_text": item.get("evidence_text", ""),
+            "polarity": item.get("polarity", ""),
+            "expected_direction": item.get("expected_direction", ""),
+            "support_score": self._safe_support_score(item),
+        }
+
+    def _partition_evidence(
+        self,
+        evidence_items: Sequence[Dict[str, Any]],
+        warnings_out: List[Dict[str, Any]],
+    ) -> Dict[str, List[Dict[str, Any]]]:
+        """Split items into ``up_evidence``, ``down_evidence``, ``neutral_evidence``.
+
+        Items with missing or unknown ``expected_direction`` are skipped
+        and an ``INVALID_EVIDENCE`` warning is appended for each. Each
+        list is sorted by ``evidence_id`` ascending (stable, deterministic).
+        """
+        up: List[Dict[str, Any]] = []
+        down: List[Dict[str, Any]] = []
+        neutral: List[Dict[str, Any]] = []
+        for item in evidence_items:
+            direction = item.get("expected_direction")
+            evidence_id = item.get("evidence_id", "")
+            if direction == "UP":
+                up.append(self._copy_evidence(item))
+            elif direction == "DOWN":
+                down.append(self._copy_evidence(item))
+            elif direction == "HOLD":
+                neutral.append(self._copy_evidence(item))
+            else:
+                warnings_out.append(
+                    {
+                        "code": "INVALID_EVIDENCE",
+                        "evidence_id": evidence_id,
+                        "message": (
+                            f"Evidence {evidence_id!r} has missing or invalid "
+                            f"expected_direction={direction!r}; ignored."
+                        ),
+                    }
+                )
+        up.sort(key=lambda e: e["evidence_id"])
+        down.sort(key=lambda e: e["evidence_id"])
+        neutral.sort(key=lambda e: e["evidence_id"])
+        return {"up_evidence": up, "down_evidence": down, "neutral_evidence": neutral}
+
+    @staticmethod
+    def _build_pro_and_counter(
+        prediction: str,
+        up_evidence: List[Dict[str, Any]],
+        down_evidence: List[Dict[str, Any]],
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Return ``(pro_evidence, counter_evidence)`` per the spec table."""
+        if prediction == "UP":
+            return list(up_evidence), list(down_evidence)
+        if prediction == "DOWN":
+            return list(down_evidence), list(up_evidence)
+        # HOLD: no winning direction.
+        return [], []
+
+    # -----------------------------------------------------------------
+    # Rationale builder (template-based, NOT LLM-generated)
+    # -----------------------------------------------------------------
+
+    def _build_rationale(
+        self,
+        prediction: str,
+        positive_count: int,
+        negative_count: int,
+        directional_evidence_count: int,
+    ) -> str:
+        """Return the rationale string for the given prediction branch."""
+        if prediction == "UP":
+            return self.RATIONALE_TEMPLATES["UP"].format(
+                positive_count=positive_count, negative_count=negative_count
+            )
+        if prediction == "DOWN":
+            return self.RATIONALE_TEMPLATES["DOWN"].format(
+                negative_count=negative_count, positive_count=positive_count
+            )
+        # HOLD
+        if directional_evidence_count == 0:
+            return self.RATIONALE_TEMPLATES["HOLD_NO_DIRECTIONAL"].format(
+                positive_count=positive_count, negative_count=negative_count
+            )
+        return self.RATIONALE_TEMPLATES["HOLD_BALANCED"].format(
+            positive_count=positive_count, negative_count=negative_count
+        )
+
+    # -----------------------------------------------------------------
+    # Defensive helpers (deduplication and temporal filtering)
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _deduplicate(
+        evidence_items: Sequence[Dict[str, Any]],
+        warnings_out: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Return items with duplicate ``evidence_id`` removed (first wins).
+
+        Subsequent occurrences are appended to ``warnings_out`` with code
+        ``DUPLICATE_EVIDENCE_ID``.
+        """
+        seen: Dict[str, Dict[str, Any]] = {}
+        output: List[Dict[str, Any]] = []
+        for item in evidence_items:
+            evidence_id = item.get("evidence_id", "")
+            if evidence_id in seen:
+                warnings_out.append(
+                    {
+                        "code": "DUPLICATE_EVIDENCE_ID",
+                        "evidence_id": evidence_id,
+                        "message": (
+                            f"Evidence {evidence_id!r} appeared more than once; "
+                            f"keeping the first occurrence."
+                        ),
+                    }
+                )
+                continue
+            seen[evidence_id] = item
+            output.append(item)
+        return output
+
+    def _filter_temporal(
+        self,
+        evidence_items: Sequence[Dict[str, Any]],
+        forecast_dt: datetime,
+        warnings_out: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Return items whose ``news_time`` is NOT strictly future.
+
+        Future items are appended to ``warnings_out`` with code
+        ``TEMPORAL_LEAKAGE_BLOCKED``. Items with missing or unparseable
+        ``news_time`` are kept and flagged with code
+        ``MALFORMED_NEWS_TIME``.
+        """
+        output: List[Dict[str, Any]] = []
+        for item in evidence_items:
+            evidence_id = item.get("evidence_id", "")
+            raw_news_time = item.get("news_time")
+            parsed = self._parse_news_time(raw_news_time)
+            if parsed is None:
+                warnings_out.append(
+                    {
+                        "code": "MALFORMED_NEWS_TIME",
+                        "evidence_id": evidence_id,
+                        "message": (
+                            f"Evidence {evidence_id!r} has missing or unparseable "
+                            f"news_time={raw_news_time!r}; treated as not-future."
+                        ),
+                    }
+                )
+                output.append(item)
+                continue
+            if self._is_future(parsed, forecast_dt):
+                warnings_out.append(
+                    {
+                        "code": "TEMPORAL_LEAKAGE_BLOCKED",
+                        "evidence_id": evidence_id,
+                        "news_time": raw_news_time,
+                        "forecast_time": forecast_dt.isoformat(),
+                        "message": (
+                            f"Evidence {evidence_id!r} has news_time strictly after "
+                            f"forecast_time; excluded from scoring."
+                        ),
+                    }
+                )
+                continue
+            output.append(item)
+        return output
+
+    # -----------------------------------------------------------------
+    # Validation helpers
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _validate_request_envelope(input_data: Any) -> None:
+        """Validate the top-level request envelope. Raises ``ForecastModelError``."""
+        if not isinstance(input_data, dict):
+            raise ForecastModelError(
+                f"input must be a dict, got {type(input_data).__name__}"
+            )
+        for field_name in ("sample_id", "ticker", "forecast_time"):
+            value = input_data.get(field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ForecastModelError(
+                    f"required field {field_name!r} is missing or not a non-empty string"
+                )
+        evidence = input_data.get("evidence")
+        if evidence is None:
+            raise ForecastModelError("required field 'evidence' is missing")
+        if not isinstance(evidence, list):
+            raise ForecastModelError(
+                f"'evidence' must be a list, got {type(evidence).__name__}"
+            )
+
+    @staticmethod
+    def _parse_forecast_time(value: str) -> datetime:
+        """Parse ``forecast_time`` strictly (raises ``ForecastModelError`` on failure)."""
+        try:
+            return TimeUtils.parse_utc(value)
+        except (ValueError, TypeError) as exc:
+            raise ForecastModelError(
+                f"forecast_time is not a parseable timestamp: {value!r}"
+            ) from exc
+
+    # -----------------------------------------------------------------
+    # Batch error default / IO helpers
+    # -----------------------------------------------------------------
+
+    def _default_error_result(self, record: Any, message: str) -> Dict[str, Any]:
+        """Return a default HOLD result with an ``INPUT_ERROR`` warning."""
+        sample_id = ""
+        ticker = ""
+        forecast_time = ""
+        label = None
+        if isinstance(record, dict):
+            sample_id = record.get("sample_id", "") if isinstance(record.get("sample_id"), str) else ""
+            ticker = record.get("ticker", "") if isinstance(record.get("ticker"), str) else ""
+            forecast_time = (
+                record.get("forecast_time", "")
+                if isinstance(record.get("forecast_time"), str)
+                else ""
+            )
+            if "label" in record:
+                label = record.get("label")
+        result: Dict[str, Any] = {
+            "sample_id": sample_id,
+            "ticker": ticker,
+            "forecast_time": forecast_time,
+            "prediction": "HOLD",
+            "confidence": 0.5,
+            "score": 0,
+            "positive_count": 0,
+            "negative_count": 0,
+            "neutral_count": 0,
+            "total_evidence": 0,
+            "directional_evidence_count": 0,
+            "evidence_strength": 0.0,
+            "conflict_ratio": 0.0,
+            "pro_evidence": [],
+            "counter_evidence": [],
+            "up_evidence": [],
+            "down_evidence": [],
+            "neutral_evidence": [],
+            "rationale": self.RATIONALE_TEMPLATES["HOLD_NO_DIRECTIONAL"].format(
+                positive_count=0, negative_count=0
+            ),
+            "warnings": [
+                {
+                    "code": "INPUT_ERROR",
+                    "evidence_id": "",
+                    "message": message,
+                }
+            ],
+            "model_version": self.MODEL_VERSION,
+        }
+        if label is not None:
+            result["label"] = label
+        return result
+
+    def _write_csv(self, results: Sequence[Dict[str, Any]], path: Path) -> None:
+        """Write the per-row scalar fields of every result to ``path``."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=list(self.CSV_COLUMNS))
+            writer.writeheader()
+            for r in results:
+                writer.writerow({col: r.get(col, "") for col in self.CSV_COLUMNS})
+
+    @staticmethod
+    def _write_json(results: Sequence[Dict[str, Any]], path: Path) -> None:
+        """Write the full per-record results to ``path`` as JSON."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8") as f:
+            json.dump(list(results), f, ensure_ascii=False, indent=2, sort_keys=False)
+
+    # -----------------------------------------------------------------
+    # Evaluation helper
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _normalize_records_for_eval(results: Sequence[Any]) -> List[Dict[str, Any]]:
+        """Accept either a list of result dicts or a list of ``(input, result)`` pairs.
+
+        Returns a list of result dicts. When a pair is supplied, the label
+        is taken from the input record (``input["label"]``) and merged
+        onto the result dict so downstream code can rely on
+        ``result["label"]`` being present.
+        """
+        normalized: List[Dict[str, Any]] = []
+        for entry in results:
+            if isinstance(entry, tuple) and len(entry) == 2:
+                input_record, result = entry
+                if isinstance(input_record, dict) and isinstance(result, dict):
+                    if "label" in input_record and "label" not in result:
+                        result = {**result, "label": input_record["label"]}
+                    normalized.append(result)
+                    continue
+            if isinstance(entry, dict):
+                normalized.append(entry)
+        return normalized

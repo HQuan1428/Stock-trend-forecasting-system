@@ -8,16 +8,15 @@ from pathlib import Path
 
 import pytest
 
-from src.faithfulness_evaluator import (
-    ABLATION_STRATEGIES,
-    CSV_COLUMNS,
-    CSV_DEFAULT_PATH,
-    FaithfulnessEvaluator,
-    FaithfulnessEvaluatorError,
-    JSON_DEFAULT_PATH,
-    evaluate_batch,
-)
-from src.forecast_model import predict
+from src.faithfulness_evaluator import FaithfulnessEvaluator, FaithfulnessEvaluatorError
+from src.forecast_model import ForecastModel
+
+ABLATION_STRATEGIES = FaithfulnessEvaluator.ABLATION_STRATEGIES
+CSV_COLUMNS = FaithfulnessEvaluator.CSV_COLUMNS
+CSV_DEFAULT_PATH = FaithfulnessEvaluator.CSV_DEFAULT_PATH
+JSON_DEFAULT_PATH = FaithfulnessEvaluator.JSON_DEFAULT_PATH
+evaluate_batch = FaithfulnessEvaluator().evaluate_batch
+predict = ForecastModel().predict
 
 
 SAMPLES = Path(__file__).resolve().parent.parent / "samples" / "faithfulness_evaluator"
@@ -426,7 +425,7 @@ def test_default_paths() -> None:
 
 def test_integration_predict_then_evaluate_batch(tmp_path: Path) -> None:
     """Wires `predict_batch` → `evaluate_batch` and asserts the CSV shape."""
-    from src.forecast_model import predict_batch
+    predict_batch = ForecastModel().predict_batch
 
     records = []
     for i in range(5):

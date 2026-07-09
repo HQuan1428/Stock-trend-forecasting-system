@@ -34,7 +34,7 @@ The system MUST never pass a news item whose `news_time > forecast_time` into th
 
 #### Scenario: Future news is excluded from prediction
 - **WHEN** a `(ticker, forecast_time)` group contains at least one row with `news_time > forecast_time`
-- **THEN** that row's `news_id` appears in `outputs/temporal_leakage_results.csv` and is absent from the `evidence` list passed to `extract_evidence`, `select_evidence`, `predict`, and `FaithfulnessEvaluator.evaluate`.
+- **THEN** that row's `news_id` appears in `outputs/temporal_leakage_results.csv` and is absent from the `evidence` list passed to `EvidenceExtractor.extract`, `EvidenceSelector.select`, `ForecastModel.predict`, and `FaithfulnessEvaluator.evaluate`.
 
 #### Scenario: All-future group still produces a prediction row
 - **WHEN** every row in a group has `news_time > forecast_time`
@@ -93,7 +93,7 @@ The pipeline MUST compute `confidence_drop = original_confidence - confidence_wi
 
 ### Requirement: Module reuse without rewrites
 
-The pipeline MUST reuse `src.retriever.retrieve_valid_news`, `src.evidence_extractor.extract_evidence_batch`, `src.evidence_selector.select_evidence_batch`, `src.forecast_model.predict`, `src.forecast_model.predict_without_evidence`, and `src.faithfulness_evaluator.FaithfulnessEvaluator.evaluate` as black-box functions. It MUST NOT reimplement temporal filtering, keyword matching, classification logic, voting, or ablation logic.
+The pipeline MUST reuse `src.retriever.TemporalRetriever.retrieve`, `src.evidence_extractor.EvidenceExtractor.extract_batch`, `src.evidence_selector.EvidenceSelector.select_batch`, `src.forecast_model.predict`, `src.forecast_model.ForecastModel.predict_without_evidence`, and `src.faithfulness_evaluator.FaithfulnessEvaluator.evaluate` as black-box functions. It MUST NOT reimplement temporal filtering, keyword matching, classification logic, voting, or ablation logic.
 
 #### Scenario: No duplicate logic
 - **WHEN** the pipeline source is grepped for keyword lists, vote counts, or classification rules

@@ -32,33 +32,33 @@ pytest tests/test_forecast_model.py::test_predict_up -v
 
 ## Architecture
 
-Pipeline nhiều giai đoạn (mỗi giai đoạn là một module độc lập, dùng plain `dict`, không dùng dataclass runtime). 6 giai đoạn cơ bản (A1–A7) + 2 giai đoạn nâng cao B1/B3 đã tích hợp vào `run_pipeline()`; B2 (Counterevidence Coverage) là hàm phụ trợ trong `evidence_selector.py`, không phải stage riêng; B4 (Agentic SDLC trace) chạy ngoài `run_pipeline()`, chỉ được dashboard đọc trực tiếp:
+Pipeline nhiều giai đoạn — mỗi giai đoạn là một **class** (OOP), method public trả về plain `dict` (payload không dùng dataclass runtime, chỉ orchestration là class). 6 giai đoạn cơ bản (A1–A7) + 2 giai đoạn nâng cao B1/B3 đã tích hợp vào `PipelineRunner.run()`; B2 (Counterevidence Coverage) là method phụ trợ trên `EvidenceSelector`, không phải stage riêng; B4 (Agentic SDLC trace) chạy ngoài `PipelineRunner`, chỉ được dashboard đọc trực tiếp:
 
 ```
 data/sample_dataset.csv
     │
     ▼
-src/retriever.py          → retrieve_valid_news()
+src/retriever.py          → TemporalRetriever.retrieve()
     │  Phân loại tin: valid_news (news_time ≤ forecast_time) vs invalid_future_news
-    │  Trả về RetrievalResult (frozen dataclass)
+    │  Trả về RetrievalResult (frozen dataclass); TimeUtils = single source of truth UTC parsing
     ▼
-src/evidence_extractor.py → extract_evidence_batch()
+src/evidence_extractor.py → EvidenceExtractor.extract_batch()
     │  Keyword matching (rule-based, V1/V2/V3 dictionary) → polarity + expected_direction
-    │  POSITIVE_KEYWORDS / NEGATIVE_KEYWORDS là single source of truth cho polarity
+    │  EvidenceExtractor.POSITIVE_KEYWORDS / NEGATIVE_KEYWORDS là single source of truth cho polarity
     ▼
-src/evidence_selector.py  → select_evidence_batch() + compute_coverage() (B2)
-    │  Phân loại: pro_evidence / counterevidence / neutral_evidence theo CLASSIFICATION_TABLE
+src/evidence_selector.py  → EvidenceSelector.select_batch() + .compute_coverage() (B2)
+    │  Phân loại: pro_evidence / counterevidence / neutral_evidence theo EvidenceSelector.CLASSIFICATION_TABLE
     │  compute_coverage() tính counterevidence_coverage (B2), dùng trong faithfulness_results.csv
     ▼
-src/forecast_model.py     → predict() / predict_without_evidence()
+src/forecast_model.py     → ForecastModel.predict() / .predict_without_evidence()
     │  Rule-based voting: score = positive_count - negative_count
     │  confidence = 0.5 + min(abs(score)*0.1, 0.45)
     │  predict_without_evidence() dùng để tính confidence_drop cho faithfulness
     ▼
 src/faithfulness_evaluator.py → FaithfulnessEvaluator.evaluate()
-    │  3 metrics: temporal_validity, evidence_support, confidence_drop
+    │  3 metrics (từ FaithfulnessMetrics): temporal_validity, evidence_support, confidence_drop
     │  faithfulness_label: HIGH (drop≥0.20) / MEDIUM (drop≥0.05) / LOW
-    │  (quy tắc label nằm ở pipeline.py::_faithfulness_label(), không phải verdict nội bộ)
+    │  (quy tắc label nằm ở PipelineRunner._faithfulness_label(), không phải verdict nội bộ)
     ▼
 src/sufficiency_evaluator.py → SufficiencyEvaluator.evaluate()  (B1)
     │  Sufficiency: predict() chỉ với evidence đã cited → sufficiency_score
@@ -78,10 +78,10 @@ outputs/
     │
     ▼
 src/dashboard/app.py      (Streamlit, read-only, không gọi pipeline)
-    │  Tab "Agentic SDLC" đọc src/agent_trace.py trực tiếp (B4, ngoài run_pipeline())
+    │  Tab "Agentic SDLC" đọc src/agent_trace.py trực tiếp (B4, ngoài PipelineRunner)
 ```
 
-**Orchestrator**: `src/pipeline.py::run_pipeline()` — glue code, không re-implement logic của các stage.
+**Orchestrator**: `src/pipeline.py::PipelineRunner.run()` — glue code, không re-implement logic của các stage class. `PipelineRunner.__init__()` compose instance của từng stage class (`TemporalRetriever`, `EvidenceExtractor`, `EvidenceSelector`, `ForecastModel`, `FaithfulnessEvaluator`, `SufficiencyEvaluator`, `MarketAnalyzer`).
 
 **Ghi chú B3**: `market_analyzer.py` cần cột `next_day_return`, `price_5d_return` trong CSV đầu vào; nếu thiếu, pipeline mặc định `0.0` (không lỗi).
 
@@ -103,7 +103,8 @@ Nếu implementation và spec không khớp → cập nhật spec hoặc hỏi t
 
 - **Temporal validity là bất khả xâm phạm**: `news_time > forecast_time` → loại. Retriever lọc trước, Forecast Model lọc thêm lần nữa (defense in depth).
 - **Không có ML/LLM/external API** trong baseline. Toàn bộ V1 là deterministic, rule-based.
-- `POSITIVE_KEYWORDS` và `NEGATIVE_KEYWORDS` trong `evidence_extractor.py` là single source of truth — downstream modules import từ đây, không tự định nghĩa lại polarity.
+- `EvidenceExtractor.POSITIVE_KEYWORDS` và `NEGATIVE_KEYWORDS` là single source of truth — downstream class đọc trực tiếp attr này (`EvidenceExtractor.POSITIVE_KEYWORDS`), không tự định nghĩa lại polarity.
+- Timestamp parsing dùng chung `src.retriever.TimeUtils` (`parse_datetime` / `normalize_to_utc` / `parse_utc`) — không tự viết lại logic parse ISO-8601/UTC ở module khác.
 - Pipeline là **deterministic**: cùng input → cùng output byte-for-byte.
 - Dashboard **không mutate** files trong `outputs/` và không gọi pipeline.
 

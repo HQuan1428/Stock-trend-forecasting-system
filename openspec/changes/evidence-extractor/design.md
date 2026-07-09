@@ -9,12 +9,12 @@ Version 1 is intentionally minimal: a hard-coded keyword dictionary, case-insens
 ## Goals / Non-Goals
 
 **Goals**
-- Provide a deterministic `extract_evidence(news_item)` function that returns every positive and negative keyword match plus a neutral fallback.
+- Provide a deterministic `EvidenceExtractor.extract(news_item)` function that returns every positive and negative keyword match plus a neutral fallback.
 - Produce a stable per-news result object whose `evidence` list is in text order and includes character offsets, polarity, expected direction, matched keyword, and `support_score`.
 - Generate deterministic evidence IDs in the form `<news_id>_E<index>` so downstream tests and audits can reference evidence by ID.
 - Emit a per-news `summary` block (positive/negative/neutral counts and `has_mixed_evidence`) without dropping any evidence.
 - Provide a `primary_evidence_id` field chosen by a fixed priority rule (negative > positive > neutral, then earliest in text) so the rest of the pipeline has a stable default anchor.
-- Provide `extract_evidence_batch(news_items)` that returns one result per input item, preserving `forecast_time` and `news_time`.
+- Provide `EvidenceExtractor.extract_batch(news_items)` that returns one result per input item, preserving `forecast_time` and `news_time`.
 - Be fully testable with unit tests that cover the eight acceptance scenarios in the proposal and spec.
 
 **Non-Goals**
@@ -66,8 +66,8 @@ Version 1 is intentionally minimal: a hard-coded keyword dictionary, case-insens
   - Pydantic models: useful but adds a runtime dependency; deferred until the rest of the pipeline adopts a shared schema library.
   - TypedDict: a fine option inside the implementation, but the public contract remains the JSON shape.
 
-### Decision 6 — `extract_evidence_batch` is a thin loop, not a parallel map
-- **Choice:** `extract_evidence_batch` iterates over input items and calls `extract_evidence` on each, returning a list of result dicts in input order.
+### Decision 6 — `EvidenceExtractor.extract_batch` is a thin loop, not a parallel map
+- **Choice:** `EvidenceExtractor.extract_batch` iterates over input items and calls `EvidenceExtractor.extract` on each, returning a list of result dicts in input order.
 - **Why:** The function is pure and CPU-light; parallelism adds complexity (pickling, error handling, ordering) without measurable benefit at expected batch sizes.
 - **Alternatives considered:**
   - `concurrent.futures.ProcessPoolExecutor`: premature optimization for V1; can be layered in later if profiling shows a bottleneck.
@@ -88,13 +88,13 @@ Version 1 is intentionally minimal: a hard-coded keyword dictionary, case-insens
 
 ## Migration Plan
 
-- Step 1: Land the keyword dictionary and `extract_evidence` function behind unit tests. No existing pipeline code consumes the module yet, so there is no migration risk.
-- Step 2: Land `extract_evidence_batch` and example I/O fixtures in the project `samples/` directory (or equivalent) so the Temporal Retriever and the rest of the pipeline can be wired in incrementally.
+- Step 1: Land the keyword dictionary and `EvidenceExtractor.extract` function behind unit tests. No existing pipeline code consumes the module yet, so there is no migration risk.
+- Step 2: Land `EvidenceExtractor.extract_batch` and example I/O fixtures in the project `samples/` directory (or equivalent) so the Temporal Retriever and the rest of the pipeline can be wired in incrementally.
 - Step 3: When the Evidence Selector is implemented, it imports the dictionary and helper from this module rather than redefining polarity rules.
 - Rollback: removing the module is a single git revert; no data migration, no schema migration in downstream storage.
 
 ## Open Questions
 
 - Should `primary_evidence_id` always be emitted, or only when at least one keyword matches? Current plan: always emit (neutral evidence when no keywords match) so downstream code can assume the field is present.
-- Should the keyword list be exposed as a module-level constant for reuse by the Evidence Selector and Counterevidence Coverage metric? Current plan: yes, expose `POSITIVE_KEYWORDS` and `NEGATIVE_KEYWORDS` lists and a `KEYWORD_TO_POLARITY` dict.
+- Should the keyword list be exposed as a module-level constant for reuse by the Evidence Selector and Counterevidence Coverage metric? Current plan: yes, expose `EvidenceExtractor.POSITIVE_KEYWORDS` and `EvidenceExtractor.NEGATIVE_KEYWORDS` lists and a `EvidenceExtractor.KEYWORD_TO_POLARITY` dict.
 - Will future versions need per-keyword weights? Current plan: out of scope for V1; the `support_score` field is the extension point.

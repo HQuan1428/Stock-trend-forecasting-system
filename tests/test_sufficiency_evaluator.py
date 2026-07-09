@@ -6,12 +6,11 @@ from typing import Any, Dict, List
 
 import pytest
 
-from src.sufficiency_evaluator import (
-    SufficiencyEvaluator,
-    _compute_sufficiency_score,
-    _only_cited_evidence,
-    _perturb_to_neutral,
-)
+from src.sufficiency_evaluator import SufficiencyEvaluator
+
+_only_cited_evidence = SufficiencyEvaluator._only_cited_evidence
+_perturb_to_neutral = SufficiencyEvaluator._perturb_to_neutral
+_compute_sufficiency_score = SufficiencyEvaluator._compute_sufficiency_score
 
 
 # ---------------------------------------------------------------------------
@@ -107,8 +106,8 @@ def test_compute_sufficiency_score_zero_original_confidence() -> None:
 def test_sufficiency_score_in_range() -> None:
     evs = [_make_evidence("N1", "UP"), _make_evidence("N2", "UP")]
     req = _make_request(evs)
-    from src.forecast_model import predict
-    result = predict(req)
+    from src.forecast_model import ForecastModel
+    result = ForecastModel().predict(req)
     cited = {"N1"}
     evaluator = SufficiencyEvaluator()
     out = evaluator.evaluate(req, result, cited)
@@ -118,8 +117,8 @@ def test_sufficiency_score_in_range() -> None:
 def test_prediction_on_only_cited_is_valid_label() -> None:
     evs = [_make_evidence("N1", "UP"), _make_evidence("N2", "DOWN")]
     req = _make_request(evs)
-    from src.forecast_model import predict
-    result = predict(req)
+    from src.forecast_model import ForecastModel
+    result = ForecastModel().predict(req)
     cited = {"N1"}
     evaluator = SufficiencyEvaluator()
     out = evaluator.evaluate(req, result, cited)
@@ -129,8 +128,8 @@ def test_prediction_on_only_cited_is_valid_label() -> None:
 def test_counterfactual_delta_is_signed_float() -> None:
     evs = [_make_evidence("N1", "UP"), _make_evidence("N2", "UP")]
     req = _make_request(evs)
-    from src.forecast_model import predict
-    result = predict(req)
+    from src.forecast_model import ForecastModel
+    result = ForecastModel().predict(req)
     cited = {"N1", "N2"}
     evaluator = SufficiencyEvaluator()
     out = evaluator.evaluate(req, result, cited)
@@ -142,8 +141,8 @@ def test_counterfactual_delta_is_signed_float() -> None:
 def test_empty_cited_ids_gives_sufficiency_zero_and_no_counterfactual_change() -> None:
     evs = [_make_evidence("N1", "UP")]
     req = _make_request(evs)
-    from src.forecast_model import predict
-    result = predict(req)
+    from src.forecast_model import ForecastModel
+    result = ForecastModel().predict(req)
     original_confidence = float(result["confidence"])
     evaluator = SufficiencyEvaluator()
     out = evaluator.evaluate(req, result, set())
@@ -157,8 +156,8 @@ def test_empty_cited_ids_gives_sufficiency_zero_and_no_counterfactual_change() -
 def test_all_evidence_cited_sufficiency_score_approx_one() -> None:
     evs = [_make_evidence("N1", "UP"), _make_evidence("N2", "UP")]
     req = _make_request(evs)
-    from src.forecast_model import predict
-    result = predict(req)
+    from src.forecast_model import ForecastModel
+    result = ForecastModel().predict(req)
     cited = {"N1", "N2"}
     evaluator = SufficiencyEvaluator()
     out = evaluator.evaluate(req, result, cited)

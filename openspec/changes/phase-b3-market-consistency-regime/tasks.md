@@ -15,8 +15,8 @@
 - [x] 3.1 Trong `src/pipeline.py`, import `MarketAnalyzer` từ `src.market_analyzer`
 - [x] 3.2 Thêm `MARKET_COLUMNS` tuple: `("sample_id", "ticker", "forecast_time", "prediction", "next_day_return", "price_5d_return", "market_consistent", "regime", "market_consistency_score")`
 - [x] 3.3 Trong `_run_group()`, sau bước Sufficiency (B1), đọc `next_day_return` và `price_5d_return` từ `group_rows[0]` (với default `0.0` nếu thiếu cột), gọi `MarketAnalyzer().analyze(prediction, next_day_return, price_5d_return)`, build `market_row`
-- [x] 3.4 Trong `run_pipeline()`, thu thập `market_rows` và ghi `market_consistency_results.csv` bằng `_write_csv(market_rows, MARKET_COLUMNS, market_path)`
-- [x] 3.5 Thêm `market_consistency_results_csv` vào summary dict và print statement của `run_pipeline()` / `main()`
+- [x] 3.4 Trong `PipelineRunner.run()`, thu thập `market_rows` và ghi `market_consistency_results.csv` bằng `_write_csv(market_rows, MARKET_COLUMNS, market_path)`
+- [x] 3.5 Thêm `market_consistency_results_csv` vào summary dict và print statement của `PipelineRunner.run()` / `main()`
 
 ## 4. Dashboard Data Loader
 

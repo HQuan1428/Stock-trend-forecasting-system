@@ -26,7 +26,7 @@ Each `evidence` entry MUST contain the fields documented by the Forecast Model s
 
 ### `original_result`
 
-A `ForecastResult` dict produced by `predict(...)`, `predict_batch(...)`, or a hand-built fixture. The evaluator reads:
+A `ForecastResult` dict produced by `ForecastModel.predict(...)`, `ForecastModel.predict_batch(...)`, or a hand-built fixture. The evaluator reads:
 
 | Field             | Type    | Description |
 |-------------------|---------|-------------|
@@ -42,7 +42,7 @@ A `ForecastResult` dict produced by `predict(...)`, `predict_batch(...)`, or a h
 
 ### `ablation_strategy`
 
-One of `ABLATION_STRATEGIES`:
+One of `FaithfulnessEvaluator.ABLATION_STRATEGIES`:
 
 | Strategy                         | Description |
 |----------------------------------|-------------|
@@ -53,7 +53,7 @@ For V1, the evaluator MUST raise `FaithfulnessEvaluatorError(ValueError)` if `ab
 
 ### Evidence Removal
 
-When the ablation strategy targets an `evidence_id`, the Forecast Model's `predict_without_evidence` is invoked with the matching `evidence_id` set. When the Forecast Model only accepts news-level input (i.e., when `predict_without_evidence` is internally mapped to news IDs), the evaluator MUST expand each removed `evidence_id` to its `news_id`, dedupe the resulting `news_id` set, and remove every evidence item whose `news_id` is in the expanded set. The report MUST record this expansion in `ablation_warnings` as `"COLLAPSED_BY_NEWS_ID: <news_id> (expanded from <evidence_id_list>)"`.
+When the ablation strategy targets an `evidence_id`, the Forecast Model's `ForecastModel.predict_without_evidence` is invoked with the matching `evidence_id` set. When the Forecast Model only accepts news-level input (i.e., when `ForecastModel.predict_without_evidence` is internally mapped to news IDs), the evaluator MUST expand each removed `evidence_id` to its `news_id`, dedupe the resulting `news_id` set, and remove every evidence item whose `news_id` is in the expanded set. The report MUST record this expansion in `ablation_warnings` as `"COLLAPSED_BY_NEWS_ID: <news_id> (expanded from <evidence_id_list>)"`.
 
 When multiple cited evidence snippets come from the same news article, both snippets are removed together. This behavior is explicitly documented and applies only to the `remove_all_cited_evidence` strategy when invoked at the news level (the default behavior removes by `evidence_id` first, so multiple snippets from the same article stay removed together regardless).
 
@@ -98,7 +98,7 @@ Each entry in `per_evidence_results` is a dict with the following keys:
 
 ### CSV Row Schema
 
-`evaluate_batch(reports, *, output_csv_path=None, output_json_path=None) -> list[dict]` writes one CSV row per report using these columns in this order:
+`FaithfulnessEvaluator.evaluate_batch(reports, *, output_csv_path=None, output_json_path=None) -> list[dict]` writes one CSV row per report using these columns in this order:
 
 ```
 ticker, forecast_time, prediction, original_confidence,
@@ -226,10 +226,10 @@ The system SHALL be deterministic. Identical inputs SHALL produce identical outp
 The module SHALL expose the following module-level constants:
 
 - `VERDICTS = frozenset({"invalid_temporal_leakage", "unsupported_evidence", "strong_faithful_candidate", "moderate_faithful_candidate", "weak_faithful_candidate", "decorative_explanation_risk"})`
-- `ABLATION_STRATEGIES = ("remove_cited_pro_evidence", "remove_all_cited_evidence")`
-- `CSV_COLUMNS = ("ticker", "forecast_time", "prediction", "original_confidence", "prediction_after_removal", "confidence_after_removal", "confidence_drop", "temporal_validity", "evidence_support", "faithfulness_score", "verdict", "warnings")`
-- `CSV_DEFAULT_PATH = "outputs/faithfulness_results.csv"`
-- `JSON_DEFAULT_PATH = "outputs/faithfulness_results.json"`
+- `FaithfulnessEvaluator.ABLATION_STRATEGIES = ("remove_cited_pro_evidence", "remove_all_cited_evidence")`
+- `FaithfulnessEvaluator.CSV_COLUMNS = ("ticker", "forecast_time", "prediction", "original_confidence", "prediction_after_removal", "confidence_after_removal", "confidence_drop", "temporal_validity", "evidence_support", "faithfulness_score", "verdict", "warnings")`
+- `FaithfulnessEvaluator.CSV_DEFAULT_PATH = "outputs/faithfulness_results.csv"`
+- `FaithfulnessEvaluator.JSON_DEFAULT_PATH = "outputs/faithfulness_results.json"`
 
 The module SHALL re-export `FaithfulnessEvaluator`, `FaithfulnessEvaluatorError`, the public metric functions, and the constants from `src/__init__.py`.
 
@@ -393,14 +393,14 @@ The system SHALL export faithfulness results for multiple predictions into a CSV
 
 #### Scenario: Multiple forecast rows produce multiple faithfulness rows
 
-- **WHEN** `evaluate_batch` is called with a list of three reports
+- **WHEN** `FaithfulnessEvaluator.evaluate_batch` is called with a list of three reports
 - **THEN** the resulting CSV SHALL contain exactly three data rows after the header
 - **AND** the rows SHALL be in the same order as the input reports
 
 #### Scenario: Export includes all required columns in the documented order
 
-- **WHEN** `evaluate_batch` writes a CSV file
-- **THEN** the header row SHALL equal `CSV_COLUMNS` in order
+- **WHEN** `FaithfulnessEvaluator.evaluate_batch` writes a CSV file
+- **THEN** the header row SHALL equal `FaithfulnessEvaluator.CSV_COLUMNS` in order
 - **AND** every data row SHALL contain values for every column
 
 #### Scenario: Warning fields are encoded as JSON in the warnings column
@@ -411,7 +411,7 @@ The system SHALL export faithfulness results for multiple predictions into a CSV
 
 #### Scenario: Per-record evaluation errors are recorded but never abort the batch
 
-- **WHEN** one report in the batch triggers a `FaithfulnessEvaluatorError` during `evaluate_batch`
+- **WHEN** one report in the batch triggers a `FaithfulnessEvaluatorError` during `FaithfulnessEvaluator.evaluate_batch`
 - **THEN** the function SHALL NOT raise
 - **AND** the failing report SHALL be replaced by a row with `verdict = "unsupported_evidence"`
 - **AND** the row's `warnings` column SHALL start with `"EVALUATION_ERROR: "`

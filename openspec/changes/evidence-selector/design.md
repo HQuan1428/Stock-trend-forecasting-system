@@ -22,7 +22,7 @@ News + Price Data
 
 **Goals**
 
-- Provide a deterministic `select_evidence(...)` function that classifies every evidence candidate into exactly one of `pro_evidence`, `counterevidence`, or `neutral_evidence`, ranked by `selector_score` descending.
+- Provide a deterministic `EvidenceSelector.select(...)` function that classifies every evidence candidate into exactly one of `pro_evidence`, `counterevidence`, or `neutral_evidence`, ranked by `selector_score` descending.
 - Expose a per-prediction `summary` block with `pro_count`, `counter_count`, `neutral_count`, `has_counterevidence`, and `counterevidence_ratio` so downstream modules and the dashboard can detect one-sided explanations.
 - Surface — not silently drop — any evidence item with `news_time > forecast_time` via an `invalid_future_evidence` list. The Temporal Retriever normally guarantees this never happens, but the Selector must defend in depth and never let a future item pollute the pro/counter/neutral groups.
 - Support configurable `top_k` per group with safe defaults (`top_k_pro=5`, `top_k_counter=5`, `top_k_neutral=5`).
@@ -156,7 +156,7 @@ The selector never raises on a single bad candidate — one malformed item must 
 
 ## Dashboard Integration
 
-The Visualization Dashboard (later change) consumes the output of `select_evidence` to render:
+The Visualization Dashboard (later change) consumes the output of `EvidenceSelector.select` to render:
 
 - A "Pro evidence" table (top `top_k_pro` rows, descending score).
 - A "Counter evidence" table (top `top_k_counter` rows, descending score) — the most important signal for faithfulness.
@@ -164,7 +164,7 @@ The Visualization Dashboard (later change) consumes the output of `select_eviden
 - A summary tile showing `has_counterevidence` (red badge if true, green if false) and `counterevidence_ratio` (gauge).
 - A warning banner when `invalid_future_evidence` is non-empty — this should never happen if the Temporal Retriever is wired correctly, but a non-empty list is a smoke alarm for pipeline integrity.
 
-The contract that downstream modules MUST import the selector's classification table and reasons from `src/evidence_selector.py` is codified in a module docstring (analogous to the Evidence Extractor's `KEYWORD_TO_POLARITY` rule).
+The contract that downstream modules MUST import the selector's classification table and reasons from `src/evidence_selector.py` is codified in a module docstring (analogous to the Evidence Extractor's `EvidenceExtractor.KEYWORD_TO_POLARITY` rule).
 
 ## Testing Strategy
 
@@ -206,6 +206,6 @@ The contract that downstream modules MUST import the selector's classification t
 ## Open Questions
 
 - Should `top_k` truncation be per-group, per-prediction, or per-news-item? Current plan: per-group per-prediction. Revisit when the dashboard mockups are in.
-- Should the selector expose a `select_evidence_batch(predictions)` helper for pipeline use, or only `select_evidence` (one at a time)? Current plan: ship both; batch is a thin loop, no parallelism (V1).
+- Should the selector expose a `EvidenceSelector.select_batch(predictions)` helper for pipeline use, or only `EvidenceSelector.select` (one at a time)? Current plan: ship both; batch is a thin loop, no parallelism (V1).
 - Should the `reason` string be machine-translatable? Current plan: emit English literal strings; a future change can add a `reason_id` integer for i18n.
 - Should we surface `selector_score_components` (e.g., `{"extractor_score": 0.9, "keyword_strength": 1.0, "recency_weight": 1.0}`) in V1 to ease the V2 extension? Current plan: deferred to V2; V1 emits a single `selector_score` field.

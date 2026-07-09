@@ -4,11 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from src.retriever import (
-    RetrievalResult,
-    TemporalValidationError,
-    retrieve_valid_news,
-)
+from src.retriever import RetrievalResult, TemporalRetriever, TemporalValidationError
+
+_retriever = TemporalRetriever()
 
 
 # ---------------------------------------------------------------------------
@@ -17,7 +15,7 @@ from src.retriever import (
 
 
 def test_past_news_is_treated_as_valid() -> None:
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         news=[{"news_id": "n1", "news_time": "2025-03-11 08:30", "text": "Past"}],
     )
@@ -27,7 +25,7 @@ def test_past_news_is_treated_as_valid() -> None:
 
 
 def test_news_at_exactly_forecast_time_is_valid() -> None:
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         news=[{"news_id": "n1", "news_time": "2025-03-12 09:00", "text": "Equal"}],
     )
@@ -36,7 +34,7 @@ def test_news_at_exactly_forecast_time_is_valid() -> None:
 
 
 def test_news_one_second_in_the_future_is_invalid() -> None:
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00:00",
         news=[{"news_id": "n1", "news_time": "2025-03-12 09:00:01", "text": "Just after"}],
     )
@@ -45,7 +43,7 @@ def test_news_one_second_in_the_future_is_invalid() -> None:
 
 
 def test_news_six_hours_in_the_future_is_invalid() -> None:
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         news=[{"news_id": "n1", "news_time": "2025-03-12 15:30", "text": "Future"}],
     )
@@ -64,7 +62,7 @@ def test_mixed_list_partitions_into_non_overlapping_groups() -> None:
         {"news_id": "n2", "news_time": "2025-03-12 09:00", "text": "Equal"},
         {"news_id": "n3", "news_time": "2025-03-12 15:30", "text": "Future"},
     ]
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=news)
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=news)
     assert [n["news_id"] for n in result.valid_news] == ["n1", "n2"]
     assert [n["news_id"] for n in result.invalid_future_news] == ["n3"]
     # Non-overlapping
@@ -88,7 +86,7 @@ def test_counts_and_temporal_validity_reported_correctly() -> None:
         {"news_id": f"f{i}", "news_time": "2025-03-12 15:00", "text": "x"}
         for i in range(2)
     ]
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=news)
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=news)
     assert result.valid_count == 4
     assert result.invalid_future_count == 2
     assert result.total_count == 6
@@ -101,7 +99,7 @@ def test_all_valid_list_has_temporal_validity_of_one() -> None:
         {"news_id": "n2", "news_time": "2025-03-11 09:00", "text": "x"},
         {"news_id": "n3", "news_time": "2025-03-12 09:00", "text": "x"},
     ]
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=news)
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=news)
     assert result.valid_count == 3
     assert result.invalid_future_count == 0
     assert result.temporal_validity == 1.0
@@ -113,14 +111,14 @@ def test_all_invalid_list_has_temporal_validity_of_zero() -> None:
         {"news_id": "n2", "news_time": "2025-03-14 09:00", "text": "x"},
         {"news_id": "n3", "news_time": "2025-03-15 09:00", "text": "x"},
     ]
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=news)
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=news)
     assert result.valid_count == 0
     assert result.invalid_future_count == 3
     assert result.temporal_validity == 0.0
 
 
 def test_empty_list_produces_zero_counts_and_zero_validity() -> None:
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=[])
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=[])
     assert result.valid_news == []
     assert result.invalid_future_news == []
     assert result.valid_count == 0
@@ -143,7 +141,7 @@ def test_all_input_fields_are_preserved_verbatim() -> None:
         "text": "Past body",
         "extra_field": "extra_value",
     }
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=[item])
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=[item])
     assert result.valid_news[0] == item
 
 
@@ -153,7 +151,7 @@ def test_news_text_input_is_preserved_as_is() -> None:
         "news_time": "2025-03-11 08:30",
         "news_text": "Body under the news_text key",
     }
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=[item])
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=[item])
     # Field name preserved verbatim — no synthetic 'text' created.
     assert "news_text" in result.valid_news[0]
     assert result.valid_news[0]["news_text"] == "Body under the news_text key"
@@ -166,7 +164,7 @@ def test_news_text_input_is_preserved_as_is() -> None:
 
 
 def test_ticker_is_echoed_when_provided() -> None:
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         ticker="AAPL",
         news=[{"news_id": "n1", "news_time": "2025-03-11 08:00", "text": "x"}],
@@ -177,13 +175,13 @@ def test_ticker_is_echoed_when_provided() -> None:
 
 
 def test_ticker_defaults_to_none_when_absent() -> None:
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         news=[{"news_id": "n1", "news_time": "2025-03-11 08:00", "text": "x"}],
     )
     assert result.ticker is None
 
-    result2 = retrieve_valid_news(
+    result2 = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         ticker=None,
         news=[{"news_id": "n1", "news_time": "2025-03-11 08:00", "text": "x"}],
@@ -198,17 +196,17 @@ def test_ticker_defaults_to_none_when_absent() -> None:
 
 def test_missing_forecast_time_raises_temporal_validation_error() -> None:
     with pytest.raises(TemporalValidationError):
-        retrieve_valid_news(forecast_time="", news=[])
+        _retriever.retrieve(forecast_time="", news=[])
 
 
 def test_malformed_forecast_time_raises_temporal_validation_error() -> None:
     with pytest.raises(TemporalValidationError):
-        retrieve_valid_news(forecast_time="not-a-date", news=[])
+        _retriever.retrieve(forecast_time="not-a-date", news=[])
 
 
 def test_forecast_time_is_echoed_verbatim() -> None:
     raw = "2025-03-12 09:00"
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time=raw, news=[{"news_id": "n1", "news_time": "2025-03-11 08:00", "text": "x"}]
     )
     assert result.forecast_time == raw
@@ -226,7 +224,7 @@ def test_malformed_news_time_populates_errors_list() -> None:
         {"news_id": "n3", "news_time": "not-a-date", "text": "bad"},
         {"news_id": "n4", "news_time": "2025-03-12 15:00", "text": "future"},
     ]
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=news)
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=news)
     assert result.valid_count == 1
     assert result.invalid_future_count == 1
     assert len(result.errors) == 2
@@ -249,7 +247,7 @@ def test_malformed_news_time_populates_errors_list() -> None:
 def test_naive_timestamp_is_interpreted_as_utc() -> None:
     # forecast_time is naive (09:00 UTC). news_time is timezone-aware 08:30 UTC.
     # Naive 09:00 is later than aware 08:30 → news is valid.
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         news=[{"news_id": "n1", "news_time": "2025-03-12 08:30+00:00", "text": "x"}],
     )
@@ -259,7 +257,7 @@ def test_naive_timestamp_is_interpreted_as_utc() -> None:
 
 def test_offset_aware_timestamp_is_normalized_to_utc() -> None:
     # 17:00 in UTC+7 == 10:00 UTC. forecast is naive 09:00 UTC → 10:00 > 09:00 → future.
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time="2025-03-12 09:00",
         news=[{"news_id": "n1", "news_time": "2025-03-12T17:00:00+07:00", "text": "x"}],
     )
@@ -282,8 +280,8 @@ def test_identical_requests_produce_identical_responses() -> None:
             {"news_id": "n3", "news_time": "garbage", "text": "z"},
         ],
     }
-    r1 = retrieve_valid_news(**payload)
-    r2 = retrieve_valid_news(**payload)
+    r1 = _retriever.retrieve(**payload)
+    r2 = _retriever.retrieve(**payload)
     # Compare every observable field.
     assert r1.valid_news == r2.valid_news
     assert r1.invalid_future_news == r2.invalid_future_news
@@ -307,7 +305,7 @@ def test_partition_invariant_holds_with_malformed_items() -> None:
         {"news_id": "n2", "news_time": "2025-03-12 15:00", "text": "future"},
         {"news_id": "n3", "news_time": "bad", "text": "malformed"},
     ]
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=news)
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=news)
     assert (
         len(result.valid_news) + len(result.invalid_future_news) + len(result.errors)
         == result.total_count
@@ -320,5 +318,5 @@ def test_partition_invariant_holds_with_malformed_items() -> None:
 
 
 def test_returns_retrieval_result_instance() -> None:
-    result = retrieve_valid_news(forecast_time="2025-03-12 09:00", news=[])
+    result = _retriever.retrieve(forecast_time="2025-03-12 09:00", news=[])
     assert isinstance(result, RetrievalResult)

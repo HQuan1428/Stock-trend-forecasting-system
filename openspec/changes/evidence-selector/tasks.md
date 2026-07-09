@@ -7,7 +7,7 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [x] 1.1 Create the module file `src/evidence_selector.py` and re-export the public API from `src/__init__.py` (analogous to the Evidence Extractor's `__init__.py` exports).
 - [x] 1.2 Define a typed `EvidenceSelectorError(ValueError)` exception class for unrecoverable input problems (e.g., missing `prediction`, `prediction` not in `{"UP","DOWN","HOLD"}`, missing or non-list `evidence_candidates`).
 - [x] 1.3 Document in the module docstring the contract: the selector consumes a (prediction, evidence_candidates) request and emits a structured per-prediction result object, never re-implements temporal filtering, and never reads a ground-truth label.
-- [x] 1.4 Define the input field list and output field list as constants in the module (e.g., `REQUIRED_INPUT_FIELDS`, `OUTPUT_GROUPS = ("pro_evidence", "counterevidence", "neutral_evidence")`) so tests and downstream code can introspect them.
+- [x] 1.4 Define the input field list and output field list as constants in the module (e.g., `EvidenceSelector.REQUIRED_INPUT_FIELDS`, `EvidenceSelector.OUTPUT_GROUPS = ("pro_evidence", "counterevidence", "neutral_evidence")`) so tests and downstream code can introspect them.
 
 ## 2. Classification Rules
 
@@ -37,15 +37,15 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 
 ## 6. Public API
 
-- [x] 6.1 Implement `select_evidence(request: dict, *, top_k_pro: int = 3, top_k_counter: int = 3, top_k_neutral: int = 3) -> dict` that:
+- [x] 6.1 Implement `EvidenceSelector.select(request: dict, *, top_k_pro: int = 3, top_k_counter: int = 3, top_k_neutral: int = 3) -> dict` that:
   - Validates the top-level fields and raises `EvidenceSelectorError` on bad `prediction` or non-list `evidence_candidates`.
   - Iterates candidates, applies future-evidence protection, classifies valid candidates, and aggregates into the three groups.
   - Sorts and truncates each group with the appropriate `top_k`.
   - Builds the `summary` from the pre-truncation groups.
   - Returns the result dict with `selection_method = "rule_based"`.
-- [x] 6.2 Implement `select_evidence_batch(requests: List[dict], **kwargs) -> List[dict]` that returns one result per input, in input order. No time-based filtering, no parallelism.
+- [x] 6.2 Implement `EvidenceSelector.select_batch(requests: List[dict], **kwargs) -> List[dict]` that returns one result per input, in input order. No time-based filtering, no parallelism.
 - [x] 6.3 Add an optional `select_evidence_with_coverage(request, *, expected_labels: Optional[Dict[str, str]] = None)` helper that, when `expected_labels` is provided, augments the result with a `coverage` field containing `counterevidence_coverage` and `counterevidence_detected_rate` (per-prediction) values. Document that this helper exists for the Faithfulness Evaluator to use and that it never reads a label from the input candidate list.
-- [x] 6.4 Add a module-level `CLASSIFICATION_TABLE` and `REASON_TABLE` re-export so downstream modules (Faithfulness Evaluator, Dashboard) can import them as the single source of truth (analogous to the Evidence Extractor's `KEYWORD_TO_POLARITY`).
+- [x] 6.4 Add a module-level `EvidenceSelector.CLASSIFICATION_TABLE` and `EvidenceSelector.REASON_TABLE` re-export so downstream modules (Faithfulness Evaluator, Dashboard) can import them as the single source of truth (analogous to the Evidence Extractor's `EvidenceExtractor.KEYWORD_TO_POLARITY`).
 
 ## 7. Unit Tests — Classification Matrix
 
@@ -77,7 +77,7 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 
 ## 10. Module Integration and Re-exports
 
-- [x] 10.1 Update `src/__init__.py` to re-export `select_evidence`, `select_evidence_batch`, `EvidenceSelectorError`, and the public classification / reason tables.
+- [x] 10.1 Update `src/__init__.py` to re-export `EvidenceSelector.select`, `EvidenceSelector.select_batch`, `EvidenceSelectorError`, and the public classification / reason tables.
 - [x] 10.2 Verify there are no circular imports with `src/retriever.py` and `src/evidence_extractor.py`.
 - [x] 10.3 Verify the module does not import `datetime` parsing utilities from the Temporal Retriever (or, if it does, document the dependency and pin the contract).
 

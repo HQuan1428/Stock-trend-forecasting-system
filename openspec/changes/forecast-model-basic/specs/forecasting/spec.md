@@ -16,7 +16,7 @@ The module SHALL accept a single forecast request with the following fields:
 | `ticker`        | string | yes      | Stock ticker the forecast is about. Echoed in the response. Not used as a filter. |
 | `forecast_time` | string | yes      | Datetime string at which the forecast is made. Compared to each `evidence[].news_time`. |
 | `evidence`      | list   | yes      | List of selected evidence items (see below). May be empty. |
-| `label`         | string | no       | Ground-truth label (`UP` / `DOWN` / `HOLD`) for evaluation. **MUST NOT** be read by `predict`. |
+| `label`         | string | no       | Ground-truth label (`UP` / `DOWN` / `HOLD`) for evaluation. **MUST NOT** be read by `ForecastModel.predict`. |
 
 Each `evidence` entry MUST contain:
 
@@ -169,24 +169,24 @@ When `strict = True`, an `INVALID_EVIDENCE` condition SHALL raise a typed error 
 
 ## Faithfulness Support
 
-The system SHALL expose a `predict_without_evidence(input_data, removed_evidence_ids) -> ForecastResult` method that runs the same algorithm as `predict` after filtering out the items whose `evidence_id` is in `removed_evidence_ids`. The result SHALL include `prediction`, `confidence`, `score`, and evidence counts so the Faithfulness Evaluator can compute:
+The system SHALL expose a `ForecastModel.predict_without_evidence(input_data, removed_evidence_ids) -> ForecastResult` method that runs the same algorithm as `ForecastModel.predict` after filtering out the items whose `evidence_id` is in `removed_evidence_ids`. The result SHALL include `prediction`, `confidence`, `score`, and evidence counts so the Faithfulness Evaluator can compute:
 
 ```
 confidence_drop = original.confidence - reduced.confidence
 ```
 
-The system MUST NOT raise when `removed_evidence_ids` is empty or when none of the IDs match; in those cases the function behaves exactly like `predict`.
+The system MUST NOT raise when `removed_evidence_ids` is empty or when none of the IDs match; in those cases the function behaves exactly like `ForecastModel.predict`.
 
 ## Batch API
 
-The system SHALL expose `predict_batch(records, *, output_csv_path=None) -> list[ForecastResult]` that:
+The system SHALL expose `ForecastModel.predict_batch(records, *, output_csv_path=None) -> list[ForecastResult]` that:
 
-- Iterates `records` in input order and calls `predict` on each.
+- Iterates `records` in input order and calls `ForecastModel.predict` on each.
 - Returns one result per input record, in input order.
 - When `output_csv_path` is provided, writes the per-row scalar fields (`sample_id`, `ticker`, `forecast_time`, `prediction`, `confidence`, `score`, `positive_count`, `negative_count`, `neutral_count`, `total_evidence`, `directional_evidence_count`, `evidence_strength`, `conflict_ratio`, `label`, `model_version`) as a CSV. The default `output_csv_path` SHALL be `outputs/prediction_results.csv`.
 - A record that raises a typed error SHALL be caught, replaced with a default result (`prediction = "HOLD"`, `confidence = 0.5`, evidence counts zero), and the result SHALL include an `INPUT_ERROR` warning. The batch never raises.
 
-The system SHALL expose `compute_accuracy_and_confusion(results, *, label_key="label") -> dict` that:
+The system SHALL expose `ForecastModel.compute_accuracy_and_confusion(results, *, label_key="label") -> dict` that:
 
 - Accepts a list of result dicts (each MUST carry `label` or be paired with its input record).
 - Returns `{ "accuracy": float, "confusion_matrix": {"labels": ["UP","DOWN","HOLD"], "matrix": [[...]]}, "per_class": {...}, "n_samples": int }`.
@@ -304,12 +304,12 @@ The system SHALL defensively compare each evidence `news_time` to the request's 
 
 ### Requirement: Faithfulness support through evidence removal
 
-The system SHALL expose a `predict_without_evidence` method that re-runs the same algorithm after filtering out one or more cited `evidence_id`s. The result SHALL include all standard output fields so the Faithfulness Evaluator can compute `confidence_drop = original.confidence - reduced.confidence`.
+The system SHALL expose a `ForecastModel.predict_without_evidence` method that re-runs the same algorithm after filtering out one or more cited `evidence_id`s. The result SHALL include all standard output fields so the Faithfulness Evaluator can compute `confidence_drop = original.confidence - reduced.confidence`.
 
 #### Scenario: Removing all pro evidence drops confidence
 
 - **WHEN** an original prediction has `prediction = "UP"`, `confidence = 0.8`, and 3 UP items
-- **AND** `predict_without_evidence` is called with `removed_evidence_ids` containing those 3 UP IDs
+- **AND** `ForecastModel.predict_without_evidence` is called with `removed_evidence_ids` containing those 3 UP IDs
 - **THEN** the new result SHALL be returned with the same output schema
 - **AND** the new result SHALL have `prediction` re-computed from the remaining items
 - **AND** the new `confidence` SHALL be lower than the original `confidence`
@@ -317,13 +317,13 @@ The system SHALL expose a `predict_without_evidence` method that re-runs the sam
 
 #### Scenario: Empty removed_evidence_ids behaves like predict
 
-- **WHEN** `predict_without_evidence` is called with `removed_evidence_ids = []`
-- **THEN** the result SHALL be byte-equal to `predict(input_data)` on the same input
+- **WHEN** `ForecastModel.predict_without_evidence` is called with `removed_evidence_ids = []`
+- **THEN** the result SHALL be byte-equal to `ForecastModel.predict(input_data)` on the same input
 
 #### Scenario: removed_evidence_ids that do not match any item behaves like predict
 
-- **WHEN** `predict_without_evidence` is called with `removed_evidence_ids` that contain no `evidence_id` present in the input
-- **THEN** the result SHALL be byte-equal to `predict(input_data)` on the same input
+- **WHEN** `ForecastModel.predict_without_evidence` is called with `removed_evidence_ids` that contain no `evidence_id` present in the input
+- **THEN** the result SHALL be byte-equal to `ForecastModel.predict(input_data)` on the same input
 
 ### Requirement: Template-based rationale
 
@@ -347,24 +347,24 @@ The system SHALL generate the `rationale` string from a fixed set of templates (
 
 ### Requirement: Batch evaluation output
 
-The system SHALL expose `predict_batch` and `compute_accuracy_and_confusion` so the dataset can be evaluated end-to-end.
+The system SHALL expose `ForecastModel.predict_batch` and `ForecastModel.compute_accuracy_and_confusion` so the dataset can be evaluated end-to-end.
 
 #### Scenario: Batch outputs one result per input
 
-- **WHEN** `predict_batch` is called with 5 input records
+- **WHEN** `ForecastModel.predict_batch` is called with 5 input records
 - **THEN** the returned list SHALL contain exactly 5 `ForecastResult` dicts in input order
 - **AND** the result list SHALL be JSON-serializable
 
 #### Scenario: CSV file is written with per-row scalar fields
 
-- **WHEN** `predict_batch` is called with a non-empty `records` list and an `output_csv_path`
+- **WHEN** `ForecastModel.predict_batch` is called with a non-empty `records` list and an `output_csv_path`
 - **THEN** the CSV file SHALL exist at the given path
 - **AND** the CSV SHALL have one row per record
 - **AND** the CSV header SHALL include `sample_id`, `ticker`, `forecast_time`, `prediction`, `confidence`, `score`, `positive_count`, `negative_count`, `neutral_count`, `total_evidence`, `directional_evidence_count`, `evidence_strength`, `conflict_ratio`, `label`, `model_version`
 
 #### Scenario: Confusion matrix supports accuracy and per-class metrics
 
-- **WHEN** `compute_accuracy_and_confusion` is called with a list of result dicts each carrying a `label`
+- **WHEN** `ForecastModel.compute_accuracy_and_confusion` is called with a list of result dicts each carrying a `label`
 - **THEN** the returned object SHALL include `accuracy` in `[0.0, 1.0]`
 - **AND** the returned `confusion_matrix.matrix` SHALL be 3×3
 - **AND** the returned `per_class` object SHALL include `precision`, `recall`, `f1`, and `support` for each of `UP`, `DOWN`, `HOLD`
@@ -406,7 +406,7 @@ The system SHALL be deterministic. Given identical inputs, the system SHALL prod
 
 #### Scenario: Identical inputs produce identical outputs
 
-- **WHEN** the same input record is provided twice to `predict`
+- **WHEN** the same input record is provided twice to `ForecastModel.predict`
 - **THEN** the two result dicts SHALL be field-by-field equal
 - **AND** the rationale string SHALL be byte-equal
 - **AND** the order of items in `pro_evidence`, `counter_evidence`, `up_evidence`, `down_evidence`, and `neutral_evidence` SHALL be byte-equal

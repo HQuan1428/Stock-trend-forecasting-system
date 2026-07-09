@@ -11,8 +11,8 @@ This stays inside the project scope: rule-based, deterministic, no LLM, no FinBE
 
 ## What Changes
 
-- Extend `POSITIVE_KEYWORDS` in `src/evidence_extractor.py` with additional multi-word phrases that co-occur with UP-labelled news in the sample.
-- Extend `NEGATIVE_KEYWORDS` in `src/evidence_extractor.py` with additional multi-word phrases that co-occur with DOWN-labelled news in the sample.
+- Extend `EvidenceExtractor.POSITIVE_KEYWORDS` in `src/evidence_extractor.py` with additional multi-word phrases that co-occur with UP-labelled news in the sample.
+- Extend `EvidenceExtractor.NEGATIVE_KEYWORDS` in `src/evidence_extractor.py` with additional multi-word phrases that co-occur with DOWN-labelled news in the sample.
 - Update the V1 dictionary assertions in `tests/test_evidence_extractor.py` (`test_positive_keywords_match_spec_vocabulary`, `test_negative_keywords_match_spec_vocabulary`) to match the V2 lists.
 - Add 8 new unit tests that pin behaviour on real sample sentences (UP, DOWN, HOLD, mixed).
 - Add a `Version 2 Keyword Dictionary` section and a new `V2 keyword coverage` requirement to the delta spec, with three normative scenarios and one extra acceptance criterion.

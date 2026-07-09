@@ -57,6 +57,9 @@ _TAB_LABELS = (
     "📉 Confidence Drop",
     "⏱️ Temporal Leakage",
     "🔎 Case Detail",
+    "🧪 Sufficiency",
+    "📈 Market Consistency",
+    "🤖 Agentic SDLC",
 )
 
 #: Custom CSS layer. Pure Streamlit feature (``st.markdown`` +

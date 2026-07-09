@@ -4,9 +4,9 @@
 
 For each `(ticker, forecast_time)` group, after the Evidence Selector step, the pipeline SHALL compute counterevidence coverage and include it in `faithfulness_results.csv`.
 
-The coverage MUST be computed by calling `compute_coverage()` from `src.evidence_selector` with:
+The coverage MUST be computed by calling `EvidenceSelector.compute_coverage()` from `src.evidence_selector` with:
 - `result`: the Evidence Selector's output for this group.
-- `expected_labels`: a dict mapping each candidate's `news_id` to its expected role, derived by applying `CLASSIFICATION_TABLE[(prediction, expected_direction)]` for each candidate.
+- `expected_labels`: a dict mapping each candidate's `news_id` to its expected role, derived by applying `EvidenceSelector.CLASSIFICATION_TABLE[(prediction, expected_direction)]` for each candidate.
 
 The pipeline SHALL add 2 fields to `faithfulness_row`:
 - `counterevidence_coverage` (float, 0.0–1.0)

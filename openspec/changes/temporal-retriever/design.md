@@ -73,7 +73,7 @@ The Temporal Retriever is the **first** filtering module. It must guarantee that
 
 ### Decision 8: Pure function with a small dataclass
 
-- **Chosen behavior:** Expose `retrieve_valid_news(forecast_time, news, ticker=None) -> RetrievalResult` as a pure function. `RetrievalResult` is a small dataclass with the fields listed in the spec. No global state, no I/O.
+- **Chosen behavior:** Expose `TemporalRetriever.retrieve(forecast_time, news, ticker=None) -> RetrievalResult` as a pure function. `RetrievalResult` is a small dataclass with the fields listed in the spec. No global state, no I/O.
 - **Rationale:** Pure functions are easy to unit-test, easy to reuse from notebooks, and easy to reason about.
 
 ### Decision 9: Implementation lives in `src/retriever.py`

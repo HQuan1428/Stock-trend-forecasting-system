@@ -16,8 +16,8 @@ This change extends the V2 dictionary with a third wave of keywords that recover
 
 ## What Changes
 
-- Extend `POSITIVE_KEYWORDS` in `src/evidence_extractor.py` with 21 V3 entries.
-- Extend `NEGATIVE_KEYWORDS` in `src/evidence_extractor.py` with 16 V3 entries.
+- Extend `EvidenceExtractor.POSITIVE_KEYWORDS` in `src/evidence_extractor.py` with 21 V3 entries.
+- Extend `EvidenceExtractor.NEGATIVE_KEYWORDS` in `src/evidence_extractor.py` with 16 V3 entries.
 - Update the V2 dictionary assertions in `tests/test_evidence_extractor.py` (`test_positive_keywords_match_spec_vocabulary`, `test_negative_keywords_match_spec_vocabulary`) to match the V3 lists.
 - Add 9 new unit tests that pin V3 behaviour on real sample sentences (3 UP, 4 DOWN, 2 HOLD regression).
 - Add a `Version 3 Keyword Dictionary` section and a new `V3 keyword coverage` requirement to the delta spec, with normative scenarios and an extra acceptance criterion.

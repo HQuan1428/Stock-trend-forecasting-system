@@ -1,19 +1,19 @@
 ## Context
 
-`compute_coverage()` đã tồn tại trong `src/evidence_selector.py` (dòng 414–460). Hàm này nhận `result` (output của Evidence Selector) và `expected_labels` (dict `news_id → "pro"/"counter"/"neutral"`) và trả về 4 metrics bao gồm `counterevidence_coverage` và `counterevidence_detected_rate`.
+`EvidenceSelector.compute_coverage()` đã tồn tại trong `src/evidence_selector.py` (dòng 414–460). Hàm này nhận `result` (output của Evidence Selector) và `expected_labels` (dict `news_id → "pro"/"counter"/"neutral"`) và trả về 4 metrics bao gồm `counterevidence_coverage` và `counterevidence_detected_rate`.
 
-Hiện tại `FaithfulnessEvaluator` và `pipeline.py` không gọi `compute_coverage()`. `faithfulness_results.csv` chưa có cột counterevidence.
+Hiện tại `FaithfulnessEvaluator` và `pipeline.py` không gọi `EvidenceSelector.compute_coverage()`. `faithfulness_results.csv` chưa có cột counterevidence.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Wire `compute_coverage()` vào `pipeline.py::_run_group()` sau bước Evidence Selector.
+- Wire `EvidenceSelector.compute_coverage()` vào `pipeline.py::PipelineRunner._run_group()` sau bước Evidence Selector.
 - Bổ sung 2 cột vào `faithfulness_results.csv`: `counterevidence_coverage`, `counterevidence_detected`.
 - Hiển thị coverage metric trên dashboard (1 metric card).
 - Giữ backward compatibility với sample fixtures hiện có bằng cách dùng `get()` với default khi đọc CSV.
 
 **Non-Goals:**
-- Không sửa logic của `compute_coverage()` hay Evidence Selector.
+- Không sửa logic của `EvidenceSelector.compute_coverage()` hay Evidence Selector.
 - Không thêm manual annotation vào dataset.
 - Không tạo file output riêng — cột mới thêm vào `faithfulness_results.csv` hiện có.
 
@@ -21,14 +21,14 @@ Hiện tại `FaithfulnessEvaluator` và `pipeline.py` không gọi `compute_cov
 
 **D1 — Cách xây dựng `expected_labels` không cần annotation thủ công**
 
-`compute_coverage()` nhận `expected_labels: Dict[str, str]` — mapping từ `news_id` sang `"pro"/"counter"/"neutral"`. Trong pipeline, ta không có annotation thủ công.
+`EvidenceSelector.compute_coverage()` nhận `expected_labels: Dict[str, str]` — mapping từ `news_id` sang `"pro"/"counter"/"neutral"`. Trong pipeline, ta không có annotation thủ công.
 
-**Chọn**: Derive `expected_labels` từ `evidence_candidates` bằng cách áp dụng `CLASSIFICATION_TABLE` của Evidence Selector (cùng bảng tra mà selector đang dùng):
+**Chọn**: Derive `expected_labels` từ `evidence_candidates` bằng cách áp dụng `EvidenceSelector.CLASSIFICATION_TABLE` của Evidence Selector (cùng bảng tra mà selector đang dùng):
 
 ```python
-from src.evidence_selector import CLASSIFICATION_TABLE
+from src.evidence_selector import EvidenceSelector
 expected_labels = {
-    cand["news_id"]: CLASSIFICATION_TABLE.get(
+    cand["news_id"]: EvidenceSelector.CLASSIFICATION_TABLE.get(
         (prediction, cand.get("expected_direction", "HOLD")), "neutral"
     )
     for cand in evidence_candidates
@@ -41,12 +41,12 @@ expected_labels = {
 
 **D2 — Tên 2 cột mới**
 
-- `counterevidence_coverage` (float 0.0–1.0): trực tiếp từ `compute_coverage()`.
+- `counterevidence_coverage` (float 0.0–1.0): trực tiếp từ `EvidenceSelector.compute_coverage()`.
 - `counterevidence_detected` (bool): True khi `counterevidence_detected_rate == 1.0` (ít nhất 1 counterevidence được phát hiện). Dùng bool thay vì float để dễ filter trên dashboard.
 
 **D3 — Không sửa `FaithfulnessEvaluator`**
 
-Coverage là pipeline-level metric, không phải faithfulness-level metric. Tính trong `_run_group()` của `pipeline.py` và ghi trực tiếp vào `faithfulness_row` — giữ `FaithfulnessEvaluator` độc lập (single responsibility).
+Coverage là pipeline-level metric, không phải faithfulness-level metric. Tính trong `PipelineRunner._run_group()` của `pipeline.py` và ghi trực tiếp vào `faithfulness_row` — giữ `FaithfulnessEvaluator` độc lập (single responsibility).
 
 **D4 — Dashboard: thêm vào tab hiện có, không tạo tab mới**
 

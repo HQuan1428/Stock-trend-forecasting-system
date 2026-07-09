@@ -12,8 +12,9 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from src.retriever import retrieve_valid_news
+from src.retriever import TemporalRetriever
 
+_retriever = TemporalRetriever()
 
 FORECAST = datetime(2025, 3, 12, 9, 0, 0)
 
@@ -31,7 +32,7 @@ FORECAST = datetime(2025, 3, 12, 9, 0, 0)
 def test_future_news_never_leaks_into_valid_news(delta: timedelta) -> None:
     forecast_time = FORECAST.isoformat()
     future_time = (FORECAST + delta).isoformat()
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time=forecast_time,
         news=[{"news_id": "f1", "news_time": future_time, "text": "future"}],
     )
@@ -54,7 +55,7 @@ def test_future_news_never_leaks_into_valid_news(delta: timedelta) -> None:
 def test_future_news_preserved_in_invalid_future_news(delta: timedelta) -> None:
     forecast_time = FORECAST.isoformat()
     future_time = (FORECAST + delta).isoformat()
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time=forecast_time,
         news=[{"news_id": "f1", "news_time": future_time, "text": "future"}],
     )
@@ -65,7 +66,7 @@ def test_future_news_preserved_in_invalid_future_news(delta: timedelta) -> None:
 
 def test_equal_timestamp_is_valid_not_invalid() -> None:
     # Boundary: 0 seconds in the future is still considered valid.
-    result = retrieve_valid_news(
+    result = _retriever.retrieve(
         forecast_time=FORECAST.isoformat(),
         news=[{"news_id": "e1", "news_time": FORECAST.isoformat(), "text": "equal"}],
     )
@@ -92,7 +93,7 @@ def test_no_future_item_in_large_mixed_input() -> None:
                 "text": "x",
             }
         )
-    result = retrieve_valid_news(forecast_time=FORECAST.isoformat(), news=news)
+    result = _retriever.retrieve(forecast_time=FORECAST.isoformat(), news=news)
     # Every item in valid_news must have news_time <= forecast_time.
     forecast_dt = FORECAST
     for item in result.valid_news:

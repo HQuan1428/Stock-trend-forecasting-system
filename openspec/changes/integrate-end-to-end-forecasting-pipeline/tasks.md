@@ -5,11 +5,11 @@
 
 ## 2. Pipeline orchestration
 
-- [x] 2.1 Create `src/pipeline.py` with `run_pipeline(input_path, output_dir, *, ticker_column="ticker", news_time_column="news_time", forecast_time_column="forecast_time", label_column="label") -> PipelineResult`.
-- [x] 2.2 Implement the per-group loop: partition rows by `(ticker_column, forecast_time_column)`, call `retrieve_valid_news`, separate `valid_news` from `invalid_future_news`.
-- [x] 2.3 Call `extract_evidence_batch` on each group's `valid_news`, flatten to one evidence list per group.
-- [x] 2.4 Call `select_evidence_batch` to classify each evidence item into `pro` / `counter` / `neutral` for the `evidence_role` column.
-- [x] 2.5 Build the Forecast Model request envelope from `valid_news` + extracted evidence and call `predict(...)`.
+- [x] 2.1 Create `src/pipeline.py` with `PipelineRunner.run(input_path, output_dir, *, ticker_column="ticker", news_time_column="news_time", forecast_time_column="forecast_time", label_column="label") -> PipelineResult`.
+- [x] 2.2 Implement the per-group loop: partition rows by `(ticker_column, forecast_time_column)`, call `TemporalRetriever.retrieve`, separate `valid_news` from `invalid_future_news`.
+- [x] 2.3 Call `EvidenceExtractor.extract_batch` on each group's `valid_news`, flatten to one evidence list per group.
+- [x] 2.4 Call `EvidenceSelector.select_batch` to classify each evidence item into `pro` / `counter` / `neutral` for the `evidence_role` column.
+- [x] 2.5 Build the Forecast Model request envelope from `valid_news` + extracted evidence and call `ForecastModel.predict(...)`.
 - [x] 2.6 Build a `valid_evidence` list for the Faithfulness Evaluator (excluding any future-dated items defensively) and call `FaithfulnessEvaluator().evaluate(request, result)`.
 - [x] 2.7 Compute `confidence_drop = original_confidence - confidence_without_cited_evidence` from the report.
 - [x] 2.8 Apply the faithfulness_label rule (`HIGH` / `MEDIUM` / `LOW`).

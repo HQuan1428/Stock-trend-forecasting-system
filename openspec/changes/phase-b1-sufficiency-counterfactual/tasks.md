@@ -6,10 +6,10 @@
 - [x] 1.4 Implement `_compute_sufficiency_score(sufficiency_confidence, original_confidence)` — trả về `min(s/o, 1.0)` nếu `o > 0`, else `0.0`
 - [x] 1.5 Implement class `SufficiencyEvaluator` với method `evaluate(original_input, original_result, cited_evidence_ids)`:
   - Tách cited evidence: `cited_only = _only_cited_evidence(evidence, cited_ids)`
-  - Gọi `predict({..., "evidence": cited_only})` → lấy `sufficiency_confidence`, `prediction_on_only_cited`
+  - Gọi `ForecastModel.predict({..., "evidence": cited_only})` → lấy `sufficiency_confidence`, `prediction_on_only_cited`
   - Tính `sufficiency_score`
   - Perturb: `perturbed = _perturb_to_neutral(evidence, cited_ids)`
-  - Gọi `predict({..., "evidence": perturbed})` → lấy `counterfactual_confidence`
+  - Gọi `ForecastModel.predict({..., "evidence": perturbed})` → lấy `counterfactual_confidence`
   - Tính `counterfactual_delta = original_confidence - counterfactual_confidence`
   - Trả về dict đủ 5 fields theo spec
 
@@ -22,8 +22,8 @@
   - Khởi tạo `SufficiencyEvaluator()` và gọi `evaluate(request, forecast, cited_ids)`
   - Build `sufficiency_row` dict với 10 fields từ `SUFFICIENCY_COLUMNS`
   - Return `sufficiency_row` trong dict kết quả của `_run_group()`
-- [x] 2.4 Trong `run_pipeline()`, thu thập `sufficiency_rows` và ghi `sufficiency_results.csv` bằng `_write_csv(sufficiency_rows, SUFFICIENCY_COLUMNS, suff_path)`
-- [x] 2.5 Thêm `sufficiency_results_csv` vào summary dict trả về của `run_pipeline()`
+- [x] 2.4 Trong `PipelineRunner.run()`, thu thập `sufficiency_rows` và ghi `sufficiency_results.csv` bằng `_write_csv(sufficiency_rows, SUFFICIENCY_COLUMNS, suff_path)`
+- [x] 2.5 Thêm `sufficiency_results_csv` vào summary dict trả về của `PipelineRunner.run()`
 
 ## 3. Dashboard Data Loader
 

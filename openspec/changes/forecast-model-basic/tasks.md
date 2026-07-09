@@ -6,7 +6,7 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 
 - [x] 1.1 Create the module file `src/forecast_model.py` and re-export the public API from `src/__init__.py` (analogous to the Evidence Selector's `__init__.py` exports).
 - [x] 1.2 Define a typed `ForecastModelError(ValueError)` exception class for unrecoverable input problems (e.g., missing `forecast_time`, malformed `forecast_time`).
-- [x] 1.3 Define the input field list and output field list as module-level constants: `REQUIRED_INPUT_FIELDS = ("sample_id", "ticker", "forecast_time", "evidence")`, `VALID_PREDICTIONS = ("UP", "DOWN", "HOLD")`, `VALID_DIRECTIONS = ("UP", "DOWN", "HOLD")`, `MODEL_VERSION = "rule_based_v1"`, `OUTPUT_EVIDENCE_LISTS = ("pro_evidence", "counter_evidence", "up_evidence", "down_evidence", "neutral_evidence")`. The CSV column list and rationale templates are also exposed as module-level constants so downstream modules can import them as the single source of truth.
+- [x] 1.3 Define the input field list and output field list as `ForecastModel` class constants: `REQUIRED_INPUT_FIELDS = ("sample_id", "ticker", "forecast_time", "evidence")`, `VALID_PREDICTIONS = ("UP", "DOWN", "HOLD")`, `VALID_DIRECTIONS = ("UP", "DOWN", "HOLD")`, `MODEL_VERSION = "rule_based_v1"`, `OUTPUT_EVIDENCE_LISTS = ("pro_evidence", "counter_evidence", "up_evidence", "down_evidence", "neutral_evidence")`. The CSV column list and rationale templates are also exposed as `ForecastModel` class constants so downstream classes can import them as the single source of truth.
 - [x] 1.4 Document in the module docstring the contract: the model consumes a `(sample_id, ticker, forecast_time, evidence)` request and emits a `ForecastResult` dict. It does NOT re-extract evidence from raw news text, does NOT call any LLM / FinBERT / transformer / logistic regression / deep-learning model / external API, and does NOT consult price data. The Temporal Retriever owns temporal validity (defense-in-depth here); the Evidence Extractor owns polarity; the Evidence Selector owns pro/counter/neutral classification.
 
 ## 2. Voting and Confidence Helpers
@@ -30,13 +30,13 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 
 ## 5. Temporal Validation and Defensive Helpers
 
-- [x] 5.1 Implement a private helper `_parse_news_time(value) -> Optional[datetime]` that returns `None` for missing, `null`, or unparseable values. The function MUST be tolerant of both `"T"` and `" "` separators. Reuse the `src.retriever._parse_datetime` and `src.retriever._normalize_to_utc` helpers (or local copies of the same logic) so naive timestamps are interpreted as UTC consistently across the pipeline.
+- [x] 5.1 Implement a private helper `_parse_news_time(value) -> Optional[datetime]` that returns `None` for missing, `null`, or unparseable values. The function MUST be tolerant of both `"T"` and `" "` separators. Reuse the `src.retriever.TimeUtils.parse_datetime` and `src.retriever.TimeUtils.normalize_to_utc` helpers (or local copies of the same logic) so naive timestamps are interpreted as UTC consistently across the pipeline.
 - [x] 5.2 Implement a private helper `_is_future(news_time, forecast_time) -> bool` that compares parsed datetimes in UTC, returning `True` only when `news_time` is STRICTLY greater than `forecast_time` (equal is not future).
 - [x] 5.3 Implement a private helper `_deduplicate(evidence_items, warnings_out) -> List[dict]` that walks the input in order, keeps the first occurrence of each `evidence_id`, and appends a `{"code": "DUPLICATE_EVIDENCE_ID", "evidence_id": ..., "message": ...}` entry to `warnings_out` for each dropped duplicate.
 - [x] 5.4 Implement a private helper `_filter_temporal(evidence_items, forecast_time, warnings_out) -> List[dict]` that returns the items that are NOT in the future (strict inequality), appending a `TEMPORAL_LEAKAGE_BLOCKED` entry to `warnings_out` for each excluded item and a `MALFORMED_NEWS_TIME` entry for items with missing or unparseable `news_time`.
 - [x] 5.5 Add unit tests for: (a) future item excluded with warning; (b) equal-timestamp item included; (c) missing `news_time` included with `MALFORMED_NEWS_TIME` warning; (d) duplicate `evidence_id` kept-once with `DUPLICATE_EVIDENCE_ID` warning.
 
-## 6. Public API — `predict` and `predict_without_evidence`
+## 6. Public API — `ForecastModel.predict` and `ForecastModel.predict_without_evidence`
 
 - [x] 6.1 Implement `_predict_core(input_data, *, exclude_ids=frozenset(), strict=False) -> dict` that:
   - Validates the top-level fields and raises `ForecastModelError` on missing `sample_id`, missing `ticker`, missing or unparseable `forecast_time`, or non-list `evidence`.
@@ -49,30 +49,30 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
   - Calls `_build_rationale` to produce the rationale string.
   - Echoes `sample_id`, `ticker`, `forecast_time`, and (if present) `label` verbatim in the result.
   - Returns a dict containing every field in the spec's output schema, with `model_version = "rule_based_v1"`.
-- [x] 6.2 Implement `predict(input_data, *, strict=False) -> dict` as a thin wrapper that calls `_predict_core(input_data, strict=strict)`.
-- [x] 6.3 Implement `predict_without_evidence(input_data, removed_evidence_ids, *, strict=False) -> dict` that calls `_predict_core(input_data, exclude_ids=frozenset(removed_evidence_ids or ()), strict=strict)`. The function MUST accept `removed_evidence_ids = None` and treat it as empty.
-- [x] 6.4 Add unit tests for the nine acceptance scenarios from the spec (UP-dominant, DOWN-dominant, balanced HOLD, neutral-only HOLD, empty HOLD, future-evidence blocking, predict_without_evidence for confidence_drop, template-based rationale, batch evaluation — the last is covered in task 7).
+- [x] 6.2 Implement `ForecastModel.predict(input_data, *, strict=False) -> dict` as a thin wrapper that calls `_predict_core(input_data, strict=strict)`.
+- [x] 6.3 Implement `ForecastModel.predict_without_evidence(input_data, removed_evidence_ids, *, strict=False) -> dict` that calls `_predict_core(input_data, exclude_ids=frozenset(removed_evidence_ids or ()), strict=strict)`. The function MUST accept `removed_evidence_ids = None` and treat it as empty.
+- [x] 6.4 Add unit tests for the nine acceptance scenarios from the spec (UP-dominant, DOWN-dominant, balanced HOLD, neutral-only HOLD, empty HOLD, future-evidence blocking, ForecastModel.predict_without_evidence for confidence_drop, template-based rationale, batch evaluation — the last is covered in task 7).
 
 ## 7. Public API — Batch, CSV, and Evaluation Helper
 
-- [x] 7.1 Implement `predict_batch(records, *, output_csv_path=None, output_json_path=None, strict=False) -> List[dict]` that:
-  - Iterates `records` in input order and calls `predict` on each.
+- [x] 7.1 Implement `ForecastModel.predict_batch(records, *, output_csv_path=None, output_json_path=None, strict=False) -> List[dict]` that:
+  - Iterates `records` in input order and calls `ForecastModel.predict` on each.
   - Catches `ForecastModelError` per record: on error, returns a default result with `prediction = "HOLD"`, `confidence = 0.5`, all counts zero, and an `INPUT_ERROR` warning. The batch never raises.
   - Returns a list of result dicts, one per record, in input order.
-  - When `output_csv_path` is provided, writes the per-row scalar fields (`sample_id`, `ticker`, `forecast_time`, `prediction`, `confidence`, `score`, `positive_count`, `negative_count`, `neutral_count`, `total_evidence`, `directional_evidence_count`, `evidence_strength`, `conflict_ratio`, `label`, `model_version`) as a CSV. The column list is exposed as `CSV_COLUMNS`. The default `output_csv_path` is `outputs/prediction_results.csv`.
+  - When `output_csv_path` is provided, writes the per-row scalar fields (`sample_id`, `ticker`, `forecast_time`, `prediction`, `confidence`, `score`, `positive_count`, `negative_count`, `neutral_count`, `total_evidence`, `directional_evidence_count`, `evidence_strength`, `conflict_ratio`, `label`, `model_version`) as a CSV. The column list is exposed as `ForecastModel.CSV_COLUMNS`. The default `output_csv_path` is `outputs/prediction_results.csv`.
   - When `output_json_path` is provided, writes the full list of result dicts (including the evidence lists) as a JSON file. The default `output_json_path` is `outputs/prediction_results.json` (sibling of the CSV).
-- [x] 7.2 Implement `compute_accuracy_and_confusion(results, *, label_key="label") -> dict` that:
+- [x] 7.2 Implement `ForecastModel.compute_accuracy_and_confusion(results, *, label_key="label") -> dict` that:
   - Accepts a list of result dicts (each carrying `label`) OR a list of `(input_record, result_dict)` pairs (label lives on the input).
   - Builds a 3×3 confusion matrix over `["UP", "DOWN", "HOLD"]` with rows = predicted, columns = actual.
   - Computes `accuracy`, `precision`, `recall`, `f1`, `support` for each class.
   - Returns `{ "accuracy": float, "confusion_matrix": {"labels": [...], "matrix": [[...]]}, "per_class": {...}, "n_samples": int }`.
   - Returns zero metrics for an empty input list. Raises `ValueError` for a non-empty input where every record is missing a label (defensive default).
-- [x] 7.3 Add unit tests for: (a) batch returns one result per record in input order; (b) batch writes a CSV with the correct header and one row per record; (c) batch writes a JSON file with the full per-record objects; (d) `compute_accuracy_and_confusion` returns the expected matrix and metrics for a small fixture (e.g., 6 records: 2 UP/UP, 1 UP/DOWN, 1 DOWN/UP, 1 HOLD/HOLD, 1 DOWN/HOLD); (e) `compute_accuracy_and_confusion` raises on a non-empty input with no labels.
+- [x] 7.3 Add unit tests for: (a) batch returns one result per record in input order; (b) batch writes a CSV with the correct header and one row per record; (c) batch writes a JSON file with the full per-record objects; (d) `ForecastModel.compute_accuracy_and_confusion` returns the expected matrix and metrics for a small fixture (e.g., 6 records: 2 UP/UP, 1 UP/DOWN, 1 DOWN/UP, 1 HOLD/HOLD, 1 DOWN/HOLD); (e) `ForecastModel.compute_accuracy_and_confusion` raises on a non-empty input with no labels.
 
 ## 8. Module Integration and Re-exports
 
-- [x] 8.1 Update `src/__init__.py` to re-export `predict`, `predict_batch`, `predict_without_evidence`, `compute_accuracy_and_confusion`, `ForecastModelError`, `MODEL_VERSION`, `VALID_PREDICTIONS`, `VALID_DIRECTIONS`, `REQUIRED_INPUT_FIELDS`, `OUTPUT_EVIDENCE_LISTS`, `CSV_COLUMNS`, `RATIONALE_TEMPLATES`, and `CSV_DEFAULT_PATH` / `JSON_DEFAULT_PATH`.
-- [x] 8.2 Verify there are no circular imports with `src/retriever.py`, `src/evidence_extractor.py`, and `src/evidence_selector.py`. The Forecast Model reuses `_parse_datetime` / `_normalize_to_utc` from the retriever (or a local copy with identical behavior) but does NOT import from the Evidence Extractor or the Evidence Selector.
+- [x] 8.1 Update `src/__init__.py` to re-export `ForecastModel` and `ForecastModelError` (constants `MODEL_VERSION`, `VALID_PREDICTIONS`, `VALID_DIRECTIONS`, `REQUIRED_INPUT_FIELDS`, `OUTPUT_EVIDENCE_LISTS`, `CSV_COLUMNS`, `RATIONALE_TEMPLATES`, `CSV_DEFAULT_PATH` / `JSON_DEFAULT_PATH` are reached as `ForecastModel.<NAME>` class attributes).
+- [x] 8.2 Verify there are no circular imports with `src/retriever.py`, `src/evidence_extractor.py`, and `src/evidence_selector.py`. The Forecast Model reuses `TimeUtils.parse_datetime` / `TimeUtils.normalize_to_utc` from the retriever (or a local copy with identical behavior) but does NOT import from the Evidence Extractor or the Evidence Selector.
 - [x] 8.3 Add a `__pycache__`/`__init__.py` no-op if the package is being reorganized (only if the existing layout requires it — do not move files).
 
 ## 9. Golden Fixtures
@@ -93,9 +93,9 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [ ] 10.4 Scenario 4 — Predict HOLD from neutral-only evidence (3 HOLD + 0 UP + 0 DOWN → HOLD, confidence 0.5, "no valid directional evidence" rationale).
 - [ ] 10.5 Scenario 5 — Predict HOLD from empty evidence (HOLD, confidence 0.5, "no valid directional evidence" rationale, all evidence lists `[]`).
 - [ ] 10.6 Scenario 6 — Block future evidence (`forecast_time = "2025-03-12 09:00"`, one item with `news_time = "2025-03-12 15:30"` → that item excluded, `TEMPORAL_LEAKAGE_BLOCKED` warning).
-- [ ] 10.7 Scenario 7 — Support confidence drop evaluation (original confidence 0.8, predict_without_evidence removes pro evidence → reduced confidence, evaluator can compute `confidence_drop`).
+- [ ] 10.7 Scenario 7 — Support confidence drop evaluation (original confidence 0.8, ForecastModel.predict_without_evidence removes pro evidence → reduced confidence, evaluator can compute `confidence_drop`).
 - [ ] 10.8 Scenario 8 — Generate template-based rationale (rationale mentions evidence count comparison; rationale does not invent external reasons).
-- [ ] 10.9 Scenario 9 — Batch evaluation output (predict_batch + compute_accuracy_and_confusion → accuracy, confusion matrix, per-class metrics).
+- [ ] 10.9 Scenario 9 — Batch evaluation output (ForecastModel.predict_batch + ForecastModel.compute_accuracy_and_confusion → accuracy, confusion matrix, per-class metrics).
 
 ## 11. Unit Tests — Edge Cases and Defensive Behavior
 
@@ -105,22 +105,22 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [ ] 11.4 Test deduplication: two items with the same `evidence_id` → first kept, second reported in `warnings` as `DUPLICATE_EVIDENCE_ID`.
 - [ ] 11.5 Test invalid `expected_direction`: skipped with `INVALID_EVIDENCE` warning under `strict = False`; raises `ForecastModelError` under `strict = True`.
 - [ ] 11.6 Test missing or unparseable `news_time`: item included with `MALFORMED_NEWS_TIME` warning.
-- [ ] 11.7 Test missing or unparseable `forecast_time`: `predict` raises `ForecastModelError`.
-- [ ] 11.8 Test missing `sample_id`, missing `ticker`, missing `evidence`: `predict` raises `ForecastModelError`.
+- [ ] 11.7 Test missing or unparseable `forecast_time`: `ForecastModel.predict` raises `ForecastModelError`.
+- [ ] 11.8 Test missing `sample_id`, missing `ticker`, missing `evidence`: `ForecastModel.predict` raises `ForecastModelError`.
 - [ ] 11.9 Test field preservation: every output evidence item contains `evidence_id`, `news_id`, `news_time`, `evidence_text`, `polarity`, `expected_direction`, `support_score`. No `ground_truth_label` echoed.
 - [ ] 11.10 Test empty evidence lists are returned as `[]` (not `null`) for all five evidence-list fields.
 - [ ] 11.11 Test determinism: same input twice → same output (byte-equal for JSON-serializable parts, including the order of items within each evidence list).
-- [ ] 11.12 Test that `predict` does NOT read `label` even when present (label is echoed in output, never used for prediction).
+- [ ] 11.12 Test that `ForecastModel.predict` does NOT read `label` even when present (label is echoed in output, never used for prediction).
 
 ## 12. Integration Test with the Evidence Extractor / Selector
 
-- [ ] 12.1 Add an integration test that wires `extract_evidence` → `select_evidence` (mocked, since V1 is single-ticker) → `predict` on a small fixture and asserts the dashboard-ready result is well-formed and uses the correct `model_version`.
-- [ ] 12.2 Add an integration test that calls `predict_batch` on a 5-record fixture and asserts the CSV is written with the correct header and one row per record. Reuse the same fixture for the JSON sibling.
-- [ ] 12.3 Add an integration test that calls `predict_batch` followed by `compute_accuracy_and_confusion` and asserts `n_samples`, `accuracy`, and the confusion matrix match the expected values for the fixture.
+- [ ] 12.1 Add an integration test that wires `EvidenceExtractor.extract` → `EvidenceSelector.select` (mocked, since V1 is single-ticker) → `ForecastModel.predict` on a small fixture and asserts the dashboard-ready result is well-formed and uses the correct `model_version`.
+- [ ] 12.2 Add an integration test that calls `ForecastModel.predict_batch` on a 5-record fixture and asserts the CSV is written with the correct header and one row per record. Reuse the same fixture for the JSON sibling.
+- [ ] 12.3 Add an integration test that calls `ForecastModel.predict_batch` followed by `ForecastModel.compute_accuracy_and_confusion` and asserts `n_samples`, `accuracy`, and the confusion matrix match the expected values for the fixture.
 
 ## 13. Documentation
 
-- [ ] 13.1 Update `README.md` to add a "Forecast Model" section with: the algorithm summary, the input/output schemas, the rationale templates, the `predict` / `predict_batch` / `predict_without_evidence` API, and a pointer to the sample fixtures.
+- [ ] 13.1 Update `README.md` to add a "Forecast Model" section with: the algorithm summary, the input/output schemas, the rationale templates, the `ForecastModel.predict` / `ForecastModel.predict_batch` / `ForecastModel.predict_without_evidence` API, and a pointer to the sample fixtures.
 - [ ] 13.2 Document the rule-based scope in the module docstring and `README.md` (no LLM, no FinBERT, no model training, no network access, no price features).
 - [ ] 13.3 Add a "Limitations" subsection enumerating: integer-only score (no `support_score` weighting), confidence saturation at `abs(score) = 5`, the rationale is intentionally templated (no nuance), the V1 model is not designed for trading decisions, and the V2 extension point for keyword strength / recency weighting.
 

@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from src.market_analyzer import (
-    REGIME_THRESHOLD,
-    RETURN_THRESHOLD,
-    MarketAnalyzer,
-    _classify_regime,
-    _is_market_consistent,
-)
+from src.market_analyzer import MarketAnalyzer
+
+REGIME_THRESHOLD = MarketAnalyzer.REGIME_THRESHOLD
+RETURN_THRESHOLD = MarketAnalyzer.RETURN_THRESHOLD
+_classify_regime = MarketAnalyzer._classify_regime
+_is_market_consistent = MarketAnalyzer._is_market_consistent
 
 
 # ---------------------------------------------------------------------------

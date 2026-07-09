@@ -8,12 +8,12 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [x] 1.2 Define a typed `FaithfulnessEvaluatorError(ValueError)` exception class in `src/faithfulness_evaluator.py` for unrecoverable input problems (e.g., missing `prediction`, invalid `ablation_strategy`).
 - [x] 1.3 Define module-level constants in `src/faithfulness_evaluator.py`:
   - `VERDICTS = frozenset({"invalid_temporal_leakage", "unsupported_evidence", "strong_faithful_candidate", "moderate_faithful_candidate", "weak_faithful_candidate", "decorative_explanation_risk"})`
-  - `ABLATION_STRATEGIES = ("remove_cited_pro_evidence", "remove_all_cited_evidence")`
-  - `CSV_COLUMNS = ("ticker", "forecast_time", "prediction", "original_confidence", "prediction_after_removal", "confidence_after_removal", "confidence_drop", "temporal_validity", "evidence_support", "faithfulness_score", "verdict", "warnings")`
-  - `CSV_DEFAULT_PATH = "outputs/faithfulness_results.csv"`
-  - `JSON_DEFAULT_PATH = "outputs/faithfulness_results.json"`
+  - `FaithfulnessEvaluator.ABLATION_STRATEGIES = ("remove_cited_pro_evidence", "remove_all_cited_evidence")`
+  - `FaithfulnessEvaluator.CSV_COLUMNS = ("ticker", "forecast_time", "prediction", "original_confidence", "prediction_after_removal", "confidence_after_removal", "confidence_drop", "temporal_validity", "evidence_support", "faithfulness_score", "verdict", "warnings")`
+  - `FaithfulnessEvaluator.CSV_DEFAULT_PATH = "outputs/faithfulness_results.csv"`
+  - `FaithfulnessEvaluator.JSON_DEFAULT_PATH = "outputs/faithfulness_results.json"`
 - [x] 1.4 Re-export the public surface from `src/__init__.py`: `FaithfulnessEvaluator`, `FaithfulnessEvaluatorError`, the seven metric functions, and the four constants from task 1.3.
-- [x] 1.5 Add a `_parse_news_time` helper (local to `src/faithfulness_metrics.py` or `src/faithfulness_evaluator.py`) that reuses `src.retriever._parse_datetime` and `src.retriever._normalize_to_utc` for UTC-naive consistency with the rest of the pipeline.
+- [x] 1.5 Add a `_parse_news_time` helper (local to `src/faithfulness_metrics.py` or `src/faithfulness_evaluator.py`) that reuses `src.retriever.TimeUtils.parse_datetime` and `src.retriever.TimeUtils.normalize_to_utc` for UTC-naive consistency with the rest of the pipeline.
 
 ## 2. Pure Metric Helpers — Temporal Validity
 
@@ -51,7 +51,7 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 
 - [x] 7.1 Implement `_select_removed_evidence_ids(strategy, original_result, original_input) -> Tuple[List[str], List[str]]` that returns `(removed_evidence_ids, ablation_warnings)`. For `remove_cited_pro_evidence`, collect `pro_evidence` IDs. For `remove_all_cited_evidence`, collect `pro_evidence + counter_evidence` IDs.
 - [x] 7.2 Implement `_expand_to_news_ids(removed_evidence_ids, original_input) -> Tuple[List[str], List[str]]` that maps each removed `evidence_id` to its `news_id`, dedupes, and returns the collapsed list plus the warnings. Document this in the warnings as `"COLLAPSED_BY_NEWS_ID: <news_id> (expanded from <evidence_id_list>)"`.
-- [x] 7.3 Implement `_invoke_ablation(original_input, removed_evidence_ids) -> Tuple[Dict[str, Any], List[str]]` that calls `src.forecast_model.predict_without_evidence(original_input, removed_evidence_ids)` and catches `ForecastModelError` (appending `"FORECAST_MODEL_ERROR: <message>"` to warnings, returning a default `{"prediction": "HOLD", "confidence": 0.5}` result). The function MUST NOT raise.
+- [x] 7.3 Implement `_invoke_ablation(original_input, removed_evidence_ids) -> Tuple[Dict[str, Any], List[str]]` that calls `src.forecast_model.ForecastModel.predict_without_evidence(original_input, removed_evidence_ids)` and catches `ForecastModelError` (appending `"FORECAST_MODEL_ERROR: <message>"` to warnings, returning a default `{"prediction": "HOLD", "confidence": 0.5}` result). The function MUST NOT raise.
 - [x] 7.4 Add unit tests for: default strategy uses `pro_evidence`; explicit `remove_all_cited_evidence` uses both lists; news-id collapse produces the right warning; `ForecastModelError` is caught and the default HOLD result is returned.
 
 ## 8. FaithfulnessEvaluator Class
@@ -65,22 +65,22 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [x] 8.3 Implement `_extract_forecast_time(original_input, original_result) -> str` with the documented fallback chain.
 - [x] 8.4 Add unit tests for the class: raises on missing `prediction`; raises on invalid strategy; produces a fully populated report on a happy-path fixture.
 
-## 9. evaluate_batch Helper and CSV/JSON Export
+## 9. FaithfulnessEvaluator.evaluate_batch Helper and CSV/JSON Export
 
 - [x] 9.1 Implement `_flatten_report_to_csv_row(report) -> Dict[str, Any]` that maps the report to the 12-column schema, JSON-encoding the concatenated `warnings` list into the `warnings` column.
-- [x] 9.2 Implement `_write_csv(rows, output_csv_path) -> None` that writes the CSV with the `CSV_COLUMNS` header and one row per record.
+- [x] 9.2 Implement `_write_csv(rows, output_csv_path) -> None` that writes the CSV with the `FaithfulnessEvaluator.CSV_COLUMNS` header and one row per record.
 - [x] 9.3 Implement `_write_json(reports, output_json_path) -> None` that writes the full per-record reports as JSON.
-- [x] 9.4 Implement `evaluate_batch(reports, *, output_csv_path=None, output_json_path=None) -> List[Dict[str, Any]]` that:
+- [x] 9.4 Implement `FaithfulnessEvaluator.evaluate_batch(reports, *, output_csv_path=None, output_json_path=None) -> List[Dict[str, Any]]` that:
   - Iterates `reports` in input order and calls `FaithfulnessEvaluator().evaluate(...)` on each.
   - Catches `FaithfulnessEvaluatorError` per record and replaces the row with `verdict = "unsupported_evidence"` and a `warnings` column starting with `"EVALUATION_ERROR: "`.
   - Returns a list of result reports in input order.
   - When `output_csv_path` is provided, writes the CSV. When `output_json_path` is provided, writes the JSON sibling.
-- [x] 9.5 Add unit tests: batch returns one result per input report; CSV header matches `CSV_COLUMNS`; JSON contains the full reports; per-record error is captured without aborting the batch.
+- [x] 9.5 Add unit tests: batch returns one result per input report; CSV header matches `FaithfulnessEvaluator.CSV_COLUMNS`; JSON contains the full reports; per-record error is captured without aborting the batch.
 
 ## 10. Module Integration and Re-exports
 
-- [x] 10.1 Update `src/__init__.py` to re-export `FaithfulnessEvaluator`, `FaithfulnessEvaluatorError`, `calculate_prediction_temporal_validity`, `calculate_dataset_temporal_validity`, `evidence_support_score`, `calculate_evidence_support`, `calculate_confidence_drop`, `calculate_faithfulness_score`, `classify_faithfulness`, `VERDICTS`, `ABLATION_STRATEGIES`, `CSV_COLUMNS`, `CSV_DEFAULT_PATH`, `JSON_DEFAULT_PATH`.
-- [x] 10.2 Verify there are no circular imports with `src/forecast_model.py`, `src/evidence_selector.py`, `src/evidence_extractor.py`, and `src/retriever.py`. The Faithfulness Evaluator imports `predict` and `predict_without_evidence` from `src.forecast_model` and `_parse_datetime` / `_normalize_to_utc` from `src.retriever`.
+- [x] 10.1 Update `src/__init__.py` to re-export `FaithfulnessEvaluator`, `FaithfulnessEvaluatorError`, `FaithfulnessMetrics` (with methods `calculate_prediction_temporal_validity`, `calculate_dataset_temporal_validity`, `evidence_support_score`, `calculate_evidence_support`, `calculate_confidence_drop`, `calculate_faithfulness_score`, `classify_faithfulness`), `VERDICTS`, `FaithfulnessEvaluator.ABLATION_STRATEGIES`, `FaithfulnessEvaluator.CSV_COLUMNS`, `FaithfulnessEvaluator.CSV_DEFAULT_PATH`, `FaithfulnessEvaluator.JSON_DEFAULT_PATH`.
+- [x] 10.2 Verify there are no circular imports with `src/forecast_model.py`, `src/evidence_selector.py`, `src/evidence_extractor.py`, and `src/retriever.py`. The Faithfulness Evaluator imports `ForecastModel.predict` and `ForecastModel.predict_without_evidence` from `src.forecast_model` and `TimeUtils.parse_datetime` / `TimeUtils.normalize_to_utc` from `src.retriever`.
 - [x] 10.3 Verify the package still imports cleanly: `python -c "import src; print(src.FaithfulnessEvaluator)"`.
 
 ## 11. Golden Fixtures
@@ -104,7 +104,7 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [x] 12.8 Scenario 8 — Confidence drop negative (0.55 - 0.80 = -0.25, warning `confidence_increased_after_removal`).
 - [x] 12.9 Scenario 9 — Prediction changes after ablation (UP → DOWN, confidence_after_removal fallback 0.0, verdict `strong_faithful_candidate`).
 - [x] 12.10 Scenario 10 — Empty cited evidence handled safely (verdict `decorative_explanation_risk`, no exceptions).
-- [x] 12.11 Scenario 11 — Batch CSV export contains required columns (header matches `CSV_COLUMNS` in order, one row per report, warnings JSON-encoded).
+- [x] 12.11 Scenario 11 — Batch CSV export contains required columns (header matches `FaithfulnessEvaluator.CSV_COLUMNS` in order, one row per report, warnings JSON-encoded).
 
 ## 13. Unit Tests — Edge Cases and Defensive Behavior
 
@@ -119,12 +119,12 @@ Tasks are grouped by dependency order. Each task is small enough to complete in 
 - [x] 13.9 Test `evaluate` reports all keys present on the output dict (no `None` for any list-valued key).
 - [x] 13.10 Test `per_evidence_results` are sorted by `evidence_id` ascending.
 - [x] 13.11 Test determinism: same input twice → byte-equal output (including list ordering).
-- [x] 13.12 Test `evaluate_batch` swallows per-record errors without raising and records the failure in the row's `warnings`.
+- [x] 13.12 Test `FaithfulnessEvaluator.evaluate_batch` swallows per-record errors without raising and records the failure in the row's `warnings`.
 
 ## 14. Integration Test with the Forecast Model
 
-- [x] 14.1 Add an integration test that wires a small fixture through `predict(...)` → `evaluate(...)` and asserts the dashboard-ready report is well-formed and the verdict is one of `VERDICTS`.
-- [x] 14.2 Add an integration test that wires `predict_batch(...)` → `evaluate_batch(...)` on a 5-record fixture and asserts the CSV is written with the correct header and one row per record.
+- [x] 14.1 Add an integration test that wires a small fixture through `ForecastModel.predict(...)` → `evaluate(...)` and asserts the dashboard-ready report is well-formed and the verdict is one of `VERDICTS`.
+- [x] 14.2 Add an integration test that wires `ForecastModel.predict_batch(...)` → `FaithfulnessEvaluator.evaluate_batch(...)` on a 5-record fixture and asserts the CSV is written with the correct header and one row per record.
 - [x] 14.3 Add an integration test that exercises both ablation strategies (`remove_cited_pro_evidence`, `remove_all_cited_evidence`) on a single fixture and asserts the reports differ when the cited sets differ.
 - [x] 14.4 Add an integration test that exercises the news-id collapse when the Forecast Model only accepts news-level input (mock if needed) and asserts the `ablation_warnings` record the expansion.
 

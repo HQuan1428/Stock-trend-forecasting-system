@@ -223,11 +223,11 @@ The system SHALL copy `forecast_time` and `news_time` from the input news item i
 
 ### Requirement: Batch processing returns one result per input
 
-The system SHALL provide `extract_evidence_batch(news_items)` that returns a list of result objects with the same length and order as the input list, one per input news item.
+The system SHALL provide `EvidenceExtractor.extract_batch(news_items)` that returns a list of result objects with the same length and order as the input list, one per input news item.
 
 #### Scenario: Batch of three items
 - **GIVEN** an input list of three news items
-- **WHEN** `extract_evidence_batch` is called
+- **WHEN** `EvidenceExtractor.extract_batch` is called
 - **THEN** the output is a list of three result objects in the same order as the input
 - **AND** each result object has the same `news_id` as the corresponding input item
 

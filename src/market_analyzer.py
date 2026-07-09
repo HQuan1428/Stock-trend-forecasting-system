@@ -18,50 +18,15 @@ Both functions are pure, deterministic, and free of IO, ML, or external APIs.
 
 from __future__ import annotations
 
-#: Threshold for classifying next_day_return as directional (vs. neutral).
-RETURN_THRESHOLD: float = 0.005
-
-#: Threshold for classifying the 5-day trend as bull/bear (vs. sideways).
-REGIME_THRESHOLD: float = 0.02
-
-
-# ---------------------------------------------------------------------------
-# Private helpers
-# ---------------------------------------------------------------------------
-
-
-def _classify_regime(price_5d_return: float) -> str:
-    """Return ``"bull"``, ``"bear"``, or ``"sideways"`` based on price_5d_return."""
-    if price_5d_return > REGIME_THRESHOLD:
-        return "bull"
-    if price_5d_return < -REGIME_THRESHOLD:
-        return "bear"
-    return "sideways"
-
-
-def _is_market_consistent(prediction: str, next_day_return: float) -> bool:
-    """Return ``True`` when ``prediction`` direction matches ``next_day_return`` sign.
-
-    Mapping:
-    - ``UP``   matches when ``next_day_return > RETURN_THRESHOLD``
-    - ``DOWN`` matches when ``next_day_return < -RETURN_THRESHOLD``
-    - ``HOLD`` matches when ``abs(next_day_return) <= RETURN_THRESHOLD``
-    """
-    if prediction == "UP":
-        return next_day_return > RETURN_THRESHOLD
-    if prediction == "DOWN":
-        return next_day_return < -RETURN_THRESHOLD
-    # HOLD
-    return abs(next_day_return) <= RETURN_THRESHOLD
-
-
-# ---------------------------------------------------------------------------
-# Public evaluator
-# ---------------------------------------------------------------------------
-
 
 class MarketAnalyzer:
     """Compute market consistency and regime for a single forecast group."""
+
+    #: Threshold for classifying next_day_return as directional (vs. neutral).
+    RETURN_THRESHOLD: float = 0.005
+
+    #: Threshold for classifying the 5-day trend as bull/bear (vs. sideways).
+    REGIME_THRESHOLD: float = 0.02
 
     def analyze(
         self,
@@ -84,11 +49,40 @@ class MarketAnalyzer:
             - ``next_day_return`` (float, echoed)
             - ``price_5d_return`` (float, echoed)
         """
-        consistent = _is_market_consistent(prediction, next_day_return)
+        consistent = self._is_market_consistent(prediction, next_day_return)
         return {
             "market_consistent": consistent,
             "market_consistency_score": 1.0 if consistent else 0.0,
-            "regime": _classify_regime(price_5d_return),
+            "regime": self._classify_regime(price_5d_return),
             "next_day_return": next_day_return,
             "price_5d_return": price_5d_return,
         }
+
+    # -----------------------------------------------------------------
+    # Private helpers
+    # -----------------------------------------------------------------
+
+    @classmethod
+    def _classify_regime(cls, price_5d_return: float) -> str:
+        """Return ``"bull"``, ``"bear"``, or ``"sideways"`` based on price_5d_return."""
+        if price_5d_return > cls.REGIME_THRESHOLD:
+            return "bull"
+        if price_5d_return < -cls.REGIME_THRESHOLD:
+            return "bear"
+        return "sideways"
+
+    @classmethod
+    def _is_market_consistent(cls, prediction: str, next_day_return: float) -> bool:
+        """Return ``True`` when ``prediction`` direction matches ``next_day_return`` sign.
+
+        Mapping:
+        - ``UP``   matches when ``next_day_return > RETURN_THRESHOLD``
+        - ``DOWN`` matches when ``next_day_return < -RETURN_THRESHOLD``
+        - ``HOLD`` matches when ``abs(next_day_return) <= RETURN_THRESHOLD``
+        """
+        if prediction == "UP":
+            return next_day_return > cls.RETURN_THRESHOLD
+        if prediction == "DOWN":
+            return next_day_return < -cls.RETURN_THRESHOLD
+        # HOLD
+        return abs(next_day_return) <= cls.RETURN_THRESHOLD

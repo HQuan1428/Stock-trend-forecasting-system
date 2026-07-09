@@ -7,22 +7,23 @@ from pathlib import Path
 
 import pytest
 
-from src.evidence_extractor import (
-    EXTRACTION_METHOD,
-    KEYWORDS,
-    KEYWORD_TO_POLARITY,
-    NEGATIVE_KEYWORDS,
-    POLARITY_TO_DIRECTION,
-    POSITIVE_KEYWORDS,
-    SUPPORT_SCORES,
-    _find_keyword_occurrences,
-    _resolve_overlaps,
-    build_evidence_objects,
-    build_summary,
-    extract_evidence,
-    extract_evidence_batch,
-    select_primary_evidence_id,
-)
+from src.evidence_extractor import EvidenceExtractor
+
+_extractor = EvidenceExtractor()
+EXTRACTION_METHOD = EvidenceExtractor.EXTRACTION_METHOD
+KEYWORDS = EvidenceExtractor.KEYWORDS
+KEYWORD_TO_POLARITY = EvidenceExtractor.KEYWORD_TO_POLARITY
+NEGATIVE_KEYWORDS = EvidenceExtractor.NEGATIVE_KEYWORDS
+POLARITY_TO_DIRECTION = EvidenceExtractor.POLARITY_TO_DIRECTION
+POSITIVE_KEYWORDS = EvidenceExtractor.POSITIVE_KEYWORDS
+SUPPORT_SCORES = EvidenceExtractor.SUPPORT_SCORES
+_find_keyword_occurrences = _extractor._find_keyword_occurrences
+_resolve_overlaps = _extractor._resolve_overlaps
+build_evidence_objects = _extractor.build_evidence_objects
+build_summary = _extractor.build_summary
+extract_evidence = _extractor.extract
+extract_evidence_batch = _extractor.extract_batch
+select_primary_evidence_id = _extractor.select_primary_evidence_id
 
 
 # ---------------------------------------------------------------------------

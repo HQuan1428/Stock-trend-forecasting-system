@@ -1,71 +1,17 @@
 """Faithful evidence-centric financial news forecasting prototype."""
 
 from src.faithfulness_evaluator import (
-    ABLATION_STRATEGIES,
-    CSV_COLUMNS as FAITHFULNESS_CSV_COLUMNS,
-    CSV_DEFAULT_PATH as FAITHFULNESS_CSV_DEFAULT_PATH,
     FaithfulnessEvaluator,
     FaithfulnessEvaluatorError,
-    JSON_DEFAULT_PATH as FAITHFULNESS_JSON_DEFAULT_PATH,
-    VALID_PREDICTIONS as FAITHFULNESS_VALID_PREDICTIONS,
-    evaluate_batch,
 )
-from src.faithfulness_metrics import (
-    VERDICTS,
-    calculate_confidence_drop,
-    calculate_dataset_temporal_validity,
-    calculate_evidence_support,
-    calculate_faithfulness_score,
-    calculate_prediction_temporal_validity,
-    classify_faithfulness,
-    confidence_after_removal_for_original_class,
-    evidence_support_score,
-)
-from src.evidence_extractor import (
-    EXTRACTION_METHOD,
-    KEYWORDS,
-    KEYWORD_TO_POLARITY,
-    NEGATIVE_KEYWORDS,
-    POLARITY_TO_DIRECTION,
-    POSITIVE_KEYWORDS,
-    SUPPORT_SCORES,
-    build_evidence_objects,
-    build_summary,
-    extract_evidence,
-    extract_evidence_batch,
-    result_to_dict,
-    select_primary_evidence_id,
-)
-from src.evidence_selector import (
-    CLASSIFICATION_TABLE,
-    DEFAULT_TOP_K,
-    EVIDENCE_SELECTOR_FIELDS,
-    EvidenceSelectorError,
-    OUTPUT_GROUPS,
-    REASON_TABLE,
-    SELECTION_METHOD,
-    compute_coverage,
-    select_evidence,
-    select_evidence_batch,
-)
-from src.forecast_model import (
-    CSV_COLUMNS,
-    CSV_DEFAULT_PATH,
-    ForecastModelError,
-    JSON_DEFAULT_PATH,
-    MODEL_VERSION,
-    OUTPUT_EVIDENCE_LISTS,
-    RATIONALE_TEMPLATES,
-    REQUIRED_INPUT_FIELDS,
-    VALID_DIRECTIONS,
-    VALID_PREDICTIONS,
-    WARNING_CODES,
-    compute_accuracy_and_confusion,
-    predict,
-    predict_batch,
-    predict_without_evidence,
-)
-from src.retriever import RetrievalResult, TemporalValidationError, retrieve_valid_news
+from src.faithfulness_metrics import VERDICTS, FaithfulnessMetrics
+from src.evidence_extractor import EvidenceExtractor
+from src.evidence_selector import EvidenceSelector, EvidenceSelectorError
+from src.forecast_model import ForecastModel, ForecastModelError
+from src.retriever import RetrievalResult, TemporalRetriever, TemporalValidationError, TimeUtils
+from src.market_analyzer import MarketAnalyzer
+from src.sufficiency_evaluator import SufficiencyEvaluator
+from src.pipeline import PipelineRunner
 from src.schema import (
     EvidenceItem,
     FaithfulnessResult,
@@ -108,68 +54,28 @@ from src.dashboard import (  # noqa: E402 — placed after retriever for groupin
 
 __all__ = [
     # retriever
-    "retrieve_valid_news",
+    "TemporalRetriever",
+    "TimeUtils",
     "RetrievalResult",
     "TemporalValidationError",
     # evidence_extractor
-    "extract_evidence",
-    "extract_evidence_batch",
-    "build_evidence_objects",
-    "build_summary",
-    "select_primary_evidence_id",
-    "result_to_dict",
-    "POSITIVE_KEYWORDS",
-    "NEGATIVE_KEYWORDS",
-    "KEYWORDS",
-    "KEYWORD_TO_POLARITY",
-    "POLARITY_TO_DIRECTION",
-    "SUPPORT_SCORES",
-    "EXTRACTION_METHOD",
-    # evidence_selector (kept at package root for backward compatibility)
-    "select_evidence",
-    "select_evidence_batch",
-    "compute_coverage",
+    "EvidenceExtractor",
+    # evidence_selector
+    "EvidenceSelector",
     "EvidenceSelectorError",
-    "CLASSIFICATION_TABLE",
-    "REASON_TABLE",
-    "SELECTION_METHOD",
-    "OUTPUT_GROUPS",
-    "DEFAULT_TOP_K",
-    "EVIDENCE_SELECTOR_FIELDS",
     # forecast_model
-    "predict",
-    "predict_batch",
-    "predict_without_evidence",
-    "compute_accuracy_and_confusion",
+    "ForecastModel",
     "ForecastModelError",
-    "MODEL_VERSION",
-    "VALID_PREDICTIONS",
-    "VALID_DIRECTIONS",
-    "REQUIRED_INPUT_FIELDS",
-    "OUTPUT_EVIDENCE_LISTS",
-    "CSV_COLUMNS",
-    "CSV_DEFAULT_PATH",
-    "JSON_DEFAULT_PATH",
-    "RATIONALE_TEMPLATES",
-    "WARNING_CODES",
     # faithfulness_evaluator / faithfulness_metrics
     "FaithfulnessEvaluator",
     "FaithfulnessEvaluatorError",
-    "evaluate_batch",
-    "calculate_prediction_temporal_validity",
-    "calculate_dataset_temporal_validity",
-    "evidence_support_score",
-    "calculate_evidence_support",
-    "confidence_after_removal_for_original_class",
-    "calculate_confidence_drop",
-    "calculate_faithfulness_score",
-    "classify_faithfulness",
+    "FaithfulnessMetrics",
     "VERDICTS",
-    "ABLATION_STRATEGIES",
-    "FAITHFULNESS_CSV_COLUMNS",
-    "FAITHFULNESS_CSV_DEFAULT_PATH",
-    "FAITHFULNESS_JSON_DEFAULT_PATH",
-    "FAITHFULNESS_VALID_PREDICTIONS",
+    # sufficiency (B1) / market (B3)
+    "SufficiencyEvaluator",
+    "MarketAnalyzer",
+    # pipeline
+    "PipelineRunner",
     # dashboard — validators
     "DashboardDataError",
     "assert_columns",

@@ -14,7 +14,7 @@ The evaluator MUST NOT use any LLM, ML model, or external API. It MUST reuse `sr
 
 #### Scenario: All evidence is cited and supports prediction
 - **WHEN** original prediction is `UP` with confidence `0.7` and all evidence items are cited
-- **THEN** `sufficiency_confidence` equals the confidence from running `predict()` on only cited items
+- **THEN** `sufficiency_confidence` equals the confidence from running `ForecastModel.predict()` on only cited items
 - **AND** `sufficiency_score` is in range [0.0, 1.0]
 - **AND** `prediction_on_only_cited` is one of `UP`, `DOWN`, `HOLD`
 

@@ -7,7 +7,7 @@ this is a first-party Streamlit testing API, not a new dependency.
 
 These tests exercise exactly the "data only appears on request" flow:
 the app must start in a welcome state with no tabs, and only render the
-five tabs after the sidebar form's Apply button is clicked.
+eight tabs after the sidebar form's Apply button is clicked.
 """
 
 from __future__ import annotations
@@ -43,11 +43,11 @@ def test_initial_load_shows_welcome_state_with_no_tabs() -> None:
     assert len(at.metric) == 3  # welcome panel's 3 summary metrics
 
 
-def test_apply_filters_reveals_all_five_tabs() -> None:
+def test_apply_filters_reveals_all_eight_tabs() -> None:
     at = _fresh_app()
     _apply_button(at).click().run(timeout=60)
     assert not at.exception
-    assert len(at.tabs) == 5
+    assert len(at.tabs) == 8
 
 
 def test_narrowing_ticker_filter_and_reapplying_does_not_raise() -> None:
@@ -58,7 +58,7 @@ def test_narrowing_ticker_filter_and_reapplying_does_not_raise() -> None:
         ticker_filter.set_value([ticker_filter.value[0]])
     _apply_button(at).click().run(timeout=60)
     assert not at.exception
-    assert len(at.tabs) == 5
+    assert len(at.tabs) == 8
 
 
 def test_evidence_search_box_does_not_raise() -> None:
@@ -85,4 +85,4 @@ def test_reset_button_returns_to_full_unfiltered_view() -> None:
     reset_btn = next(b for b in at.button if "Reset" in (b.label or ""))
     reset_btn.click().run(timeout=60)
     assert not at.exception
-    assert len(at.tabs) == 5
+    assert len(at.tabs) == 8

@@ -7,24 +7,24 @@ from pathlib import Path
 
 import pytest
 
-from src.evidence_selector import (
-    CLASSIFICATION_TABLE,
-    DEFAULT_TOP_K,
-    EVIDENCE_SELECTOR_FIELDS,
-    EvidenceSelectorError,
-    OUTPUT_GROUPS,
-    REASON_TABLE,
-    REQUIRED_INPUT_FIELDS,
-    SELECTION_METHOD,
-    VALID_DIRECTIONS,
-    VALID_PREDICTIONS,
-    _classify,
-    _is_future,
-    _parse_news_time,
-    compute_coverage,
-    select_evidence,
-    select_evidence_batch,
-)
+from src.evidence_selector import EvidenceSelector, EvidenceSelectorError
+
+_selector = EvidenceSelector()
+CLASSIFICATION_TABLE = EvidenceSelector.CLASSIFICATION_TABLE
+DEFAULT_TOP_K = EvidenceSelector.DEFAULT_TOP_K
+EVIDENCE_SELECTOR_FIELDS = EvidenceSelector.EVIDENCE_SELECTOR_FIELDS
+OUTPUT_GROUPS = EvidenceSelector.OUTPUT_GROUPS
+REASON_TABLE = EvidenceSelector.REASON_TABLE
+REQUIRED_INPUT_FIELDS = EvidenceSelector.REQUIRED_INPUT_FIELDS
+SELECTION_METHOD = EvidenceSelector.SELECTION_METHOD
+VALID_DIRECTIONS = EvidenceSelector.VALID_DIRECTIONS
+VALID_PREDICTIONS = EvidenceSelector.VALID_PREDICTIONS
+_classify = _selector._classify
+_is_future = _selector._is_future
+_parse_news_time = _selector._parse_news_time
+compute_coverage = _selector.compute_coverage
+select_evidence = _selector.select
+select_evidence_batch = _selector.select_batch
 
 
 # ---------------------------------------------------------------------------

@@ -11,9 +11,9 @@ The current Streamlit dashboard reads four CSVs from `outputs/` (`prediction_res
 **Goals**
 
 - One CLI command (`python -m src.pipeline --input <csv> --output-dir <dir>`) that produces all four dashboard CSVs.
-- A small orchestration module (`src/pipeline.py`) with one public `run_pipeline(...)` function plus an `argparse` CLI in `if __name__ == "__main__":`.
+- A small orchestration module (`src/pipeline.py`) with one public `PipelineRunner.run(...)` function plus an `argparse` CLI in `if __name__ == "__main__":`.
 - Lightweight dataclasses (`src/schema.py`) for `NewsRecord`, `EvidenceItem`, `ForecastResult`, `FaithfulnessResult`, `PipelineResult` so the cross-stage data flow is documented in one place.
-- Reuse — zero rewrites of existing module logic. The pipeline imports `retrieve_valid_news`, `extract_evidence`, `select_evidence`, `predict`, `predict_without_evidence`, `FaithfulnessEvaluator` as black boxes.
+- Reuse — zero rewrites of existing module logic. The pipeline imports `TemporalRetriever.retrieve`, `EvidenceExtractor.extract`, `EvidenceSelector.select`, `ForecastModel.predict`, `ForecastModel.predict_without_evidence`, `FaithfulnessEvaluator` as black boxes.
 - Strict temporal safety: the `valid_news` list never carries `news_time > forecast_time`. Future news flows only to `outputs/temporal_leakage_results.csv` and `invalid_future_news_count`.
 - Integration tests (`tests/test_pipeline.py`) covering the ten scenarios from the proposal.
 - README updated with the canonical run command, the four output files, and a one-paragraph end-to-end description.
@@ -39,15 +39,15 @@ A single orchestration file is enough for a 5-minute demo. Splitting into `src/p
 
 **Alternative considered:** `sample_id` as a separate column. Rejected because the CSV doesn't have one, and inventing one complicates `data/sample_dataset.csv` for no benefit.
 
-### D3. `extract_evidence_batch` then per-group flatten
+### D3. `EvidenceExtractor.extract_batch` then per-group flatten
 
-The Evidence Extractor exposes both single (`extract_evidence`) and batch (`extract_evidence_batch`) entry points. The batch variant preserves input order and is documented as "no time-based filtering", which is exactly what we need: we already filtered with the retriever, so calling the extractor on the (already valid) per-group list is correct.
+The Evidence Extractor exposes both single (`EvidenceExtractor.extract`) and batch (`EvidenceExtractor.extract_batch`) entry points. The batch variant preserves input order and is documented as "no time-based filtering", which is exactly what we need: we already filtered with the retriever, so calling the extractor on the (already valid) per-group list is correct.
 
-We call `extract_evidence_batch` once per `(ticker, forecast_time)` group on the group's `valid_news` list, then keep the union of all `evidence` items for downstream stages.
+We call `EvidenceExtractor.extract_batch` once per `(ticker, forecast_time)` group on the group's `valid_news` list, then keep the union of all `evidence` items for downstream stages.
 
 ### D4. Skip the Evidence Selector for non-deterministic label leakage protection
 
-The Faithfulness Evaluator already defines `select_evidence` semantics. The pipeline DOES call `select_evidence` per group (the proposal requires it explicitly) — but only to classify evidence into `pro`/`counter`/`neutral` for the `evidence_results.csv` `evidence_role` column. The actual `predict(...)` call still receives the full `evidence` list (as its API requires). This keeps the Faithfulness Evaluator's "did the cited evidence actually move the prediction?" test honest: `cited_evidence = pro_evidence + counter_evidence` after classification, never before.
+The Faithfulness Evaluator already defines `EvidenceSelector.select` semantics. The pipeline DOES call `EvidenceSelector.select` per group (the proposal requires it explicitly) — but only to classify evidence into `pro`/`counter`/`neutral` for the `evidence_results.csv` `evidence_role` column. The actual `ForecastModel.predict(...)` call still receives the full `evidence` list (as its API requires). This keeps the Faithfulness Evaluator's "did the cited evidence actually move the prediction?" test honest: `cited_evidence = pro_evidence + counter_evidence` after classification, never before.
 
 ### D5. Output writers as DataFrame `to_csv` calls
 
@@ -67,7 +67,7 @@ This matches the proposal text exactly. It's a V1 heuristic — same status as t
 
 ### D7. `evidence_role` mapping
 
-After `select_evidence` returns `pro_evidence` / `counterevidence` / `neutral_evidence`, every evidence item gets exactly one of those labels in `evidence_results.csv`. Cited = `True` if its `evidence_id` is in `pro_evidence ∪ counterevidence`; non-cited = `True` otherwise (incl. neutral). The mapping is per-group, deterministic.
+After `EvidenceSelector.select` returns `pro_evidence` / `counterevidence` / `neutral_evidence`, every evidence item gets exactly one of those labels in `evidence_results.csv`. Cited = `True` if its `evidence_id` is in `pro_evidence ∪ counterevidence`; non-cited = `True` otherwise (incl. neutral). The mapping is per-group, deterministic.
 
 ### D8. Dashboard contract is preserved — no dashboard edits
 
@@ -106,7 +106,7 @@ A malformed row (e.g. unparseable `news_time`) goes into the retriever's `errors
 
 - **[Empty group after retriever]** If every row in a group is `news_time > forecast_time`, the Forecast Model receives `[]`. The Forecast Model already handles this — but the `evidence_results.csv` row for that group will be empty. → Mitigation: the writer still writes a `prediction_results.csv` row (with `prediction=HOLD`, `valid_news_count=0`, `invalid_future_news_count>0`), and `temporal_leakage_results.csv` gets one row per leaked news item.
 
-- **[The Faithfulness Evaluator's CSV writer conflicts]** The Faithfulness Evaluator already writes `faithfulness_results.csv` when called via `evaluate_batch`. If we call `evaluate_batch`, it will write to that path with its own column order. → Mitigation: do NOT call `evaluate_batch`. Call `FaithfulnessEvaluator().evaluate(request, result)` per group and build the CSV row by hand from the report dict using the proposal's column order. This keeps `evaluate_batch` available for ad-hoc use but does not couple the pipeline to its file-writing side effect.
+- **[The Faithfulness Evaluator's CSV writer conflicts]** The Faithfulness Evaluator already writes `faithfulness_results.csv` when called via `FaithfulnessEvaluator.evaluate_batch`. If we call `FaithfulnessEvaluator.evaluate_batch`, it will write to that path with its own column order. → Mitigation: do NOT call `FaithfulnessEvaluator.evaluate_batch`. Call `FaithfulnessEvaluator().evaluate(request, result)` per group and build the CSV row by hand from the report dict using the proposal's column order. This keeps `FaithfulnessEvaluator.evaluate_batch` available for ad-hoc use but does not couple the pipeline to its file-writing side effect.
 
 ## Migration Plan
 

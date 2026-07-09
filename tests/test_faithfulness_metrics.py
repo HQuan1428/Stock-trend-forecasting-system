@@ -6,22 +6,22 @@ from datetime import datetime, timezone
 
 import pytest
 
-from src.faithfulness_metrics import (
-    VERDICTS,
-    calculate_confidence_drop,
-    calculate_dataset_temporal_validity,
-    calculate_evidence_support,
-    calculate_faithfulness_score,
-    calculate_prediction_temporal_validity,
-    classify_faithfulness,
-    confidence_after_removal_for_original_class,
-    evidence_support_score,
+from src.faithfulness_metrics import VERDICTS, FaithfulnessMetrics
+from src.faithfulness_evaluator import FaithfulnessEvaluator
+
+calculate_confidence_drop = FaithfulnessMetrics.calculate_confidence_drop
+calculate_dataset_temporal_validity = FaithfulnessMetrics.calculate_dataset_temporal_validity
+calculate_evidence_support = FaithfulnessMetrics.calculate_evidence_support
+calculate_faithfulness_score = FaithfulnessMetrics.calculate_faithfulness_score
+calculate_prediction_temporal_validity = FaithfulnessMetrics.calculate_prediction_temporal_validity
+classify_faithfulness = FaithfulnessMetrics.classify_faithfulness
+confidence_after_removal_for_original_class = (
+    FaithfulnessMetrics.confidence_after_removal_for_original_class
 )
-from src.faithfulness_evaluator import (
-    CSV_COLUMNS,
-    CSV_DEFAULT_PATH,
-    JSON_DEFAULT_PATH,
-)
+evidence_support_score = FaithfulnessMetrics.evidence_support_score
+CSV_COLUMNS = FaithfulnessEvaluator.CSV_COLUMNS
+CSV_DEFAULT_PATH = FaithfulnessEvaluator.CSV_DEFAULT_PATH
+JSON_DEFAULT_PATH = FaithfulnessEvaluator.JSON_DEFAULT_PATH
 
 
 FORECAST_TIME = "2025-03-12 09:00"

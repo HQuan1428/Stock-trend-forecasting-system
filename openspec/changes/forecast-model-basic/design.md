@@ -16,7 +16,7 @@ News + Price Data
   → Evidence Extractor       (owns per-phrase evidence)
   → Evidence Selector        (owns pro/counter/neutral classification)
   → Forecast Model           (owns prediction + confidence + rationale)  ← this change
-  → Faithfulness Evaluator   (consumes prediction; runs predict_without_evidence)
+  → Faithfulness Evaluator   (consumes prediction; runs ForecastModel.predict_without_evidence)
   → Visualization Dashboard  (consumes prediction + evaluation metrics)
 ```
 
@@ -27,12 +27,12 @@ The reason for that order is deliberate: the Forecast Model never sees the raw n
 **Goals**
 
 - Provide a deterministic `predict(input_data) -> ForecastResult` function that emits a `UP / DOWN / HOLD` prediction, a stable confidence in `[0.5, 0.95]`, a numeric score, evidence counts, `evidence_strength`, `conflict_ratio`, `pro_evidence`, `counter_evidence`, a deterministic template-based `rationale`, and a `warnings` list.
-- Expose `predict_batch(records) -> list[ForecastResult]` that returns one result per input, in input order, and additionally persists the scalar fields of every result to `outputs/prediction_results.csv` for the dashboard.
-- Expose `predict_without_evidence(input_data, removed_evidence_ids) -> ForecastResult` so the Faithfulness Evaluator can compute `confidence_drop = original.confidence - new.confidence` after removing one or more cited evidence IDs.
+- Expose `ForecastModel.predict_batch(records) -> list[ForecastResult]` that returns one result per input, in input order, and additionally persists the scalar fields of every result to `outputs/prediction_results.csv` for the dashboard.
+- Expose `ForecastModel.predict_without_evidence(input_data, removed_evidence_ids) -> ForecastResult` so the Faithfulness Evaluator can compute `confidence_drop = original.confidence - new.confidence` after removing one or more cited evidence IDs.
 - Compute `evidence_strength = abs(score) / directional_evidence_count` and `conflict_ratio = min(positive_count, negative_count) / max(positive_count + negative_count, 1)`. These are the V1 faithfulness-friendly summaries; the Evidence Selector covers the per-item classification.
 - Defend in depth against temporal leakage: any evidence item with `news_time > forecast_time` is excluded from scoring and produces a `TEMPORAL_LEAKAGE_BLOCKED` warning. The Temporal Retriever normally prevents this; the Forecast Model must not silently trust upstream.
 - Deduplicate evidence by `evidence_id` (first occurrence wins, subsequent ones go to `warnings` as `DUPLICATE_EVIDENCE_ID`); ignore evidence with missing or invalid `expected_direction` (warning code `INVALID_EVIDENCE`).
-- Ship a `compute_accuracy_and_confusion(results, label_key="label") -> dict` helper that returns `accuracy`, `confusion_matrix` (3×3 over `UP/DOWN/HOLD`), `per_class`, and `n_samples`. This is the V1 evaluation surface used by the dashboard and the offline experiment scripts.
+- Ship a `ForecastModel.compute_accuracy_and_confusion(results, label_key="label") -> dict` helper that returns `accuracy`, `confusion_matrix` (3×3 over `UP/DOWN/HOLD`), `per_class`, and `n_samples`. This is the V1 evaluation surface used by the dashboard and the offline experiment scripts.
 - Be fully testable with unit tests that pin the nine acceptance scenarios from the spec.
 
 **Non-Goals**
@@ -42,14 +42,14 @@ The reason for that order is deliberate: the Forecast Model never sees the raw n
 - Price features. The pipeline does not have a price module yet, and Version 1 must not invent one. Voting on selected evidence is enough.
 - Counterfactual reasoning, post-hoc explanation generation, or natural-language rationale synthesis by an LLM. Rationale is template-based.
 - Calibrated probabilistic confidence (no Platt scaling, no isotonic regression, no temperature). The V1 confidence is a stable deterministic function of `abs(score)`.
-- Multi-horizon forecasts, multi-ticker joint prediction, or per-keyword weighting. Each `predict(...)` call is independent and single-ticker.
+- Multi-horizon forecasts, multi-ticker joint prediction, or per-keyword weighting. Each `ForecastModel.predict(...)` call is independent and single-ticker.
 - Trading advice, buy/sell recommendations, or portfolio action.
 
 ## Data Contract
 
 ### Input
 
-`predict` and `predict_without_evidence` accept one envelope:
+`ForecastModel.predict` and `ForecastModel.predict_without_evidence` accept one envelope:
 
 ```json
 {
@@ -77,7 +77,7 @@ The reason for that order is deliberate: the Forecast Model never sees the raw n
 | `ticker`        | string | yes      | Stock ticker. Echoed in output. Not used as a filter. |
 | `forecast_time` | string | yes      | Datetime string at which the forecast is made. Used to validate `news_time`. |
 | `evidence`      | list   | yes      | Selected evidence items. May be empty. |
-| `label`         | string | no       | Ground-truth label (`UP` / `DOWN` / `HOLD`) for evaluation. NEVER read during `predict`; ONLY read by `compute_accuracy_and_confusion`. |
+| `label`         | string | no       | Ground-truth label (`UP` / `DOWN` / `HOLD`) for evaluation. NEVER read during `ForecastModel.predict`; ONLY read by `ForecastModel.compute_accuracy_and_confusion`. |
 
 Each evidence item MUST have:
 
@@ -95,7 +95,7 @@ The model MUST NOT read `news_text`, `title`, or any other raw-news field. It MU
 
 ### Output
 
-`predict` returns a `ForecastResult` dict (also the type used by `predict_batch` and `predict_without_evidence`):
+`ForecastModel.predict` returns a `ForecastResult` dict (also the type used by `ForecastModel.predict_batch` and `ForecastModel.predict_without_evidence`):
 
 ```json
 {
@@ -217,7 +217,7 @@ Even though the Temporal Retriever is the owner of temporal validity, the Foreca
 2. If `news_time` parses to a datetime STRICTLY greater than `forecast_time` → exclude the item from scoring, do not place it in any evidence list, and append a `TEMPORAL_LEAKAGE_BLOCKED` warning that records the offending `evidence_id` and the parsed timestamps.
 3. If `news_time` is equal to `forecast_time` → keep the item. Strict inequality is the rule.
 
-The forecast_time is parsed using the existing `src.retriever._parse_datetime` and `_normalize_to_utc` helpers so naive timestamps are interpreted as UTC consistently across the pipeline. If `forecast_time` is missing or unparseable, `predict` raises `ForecastModelError` (this is a hard failure: the forecast cannot be made without a forecast time).
+The forecast_time is parsed using the existing `src.retriever.TimeUtils.parse_datetime` and `TimeUtils.normalize_to_utc` helpers so naive timestamps are interpreted as UTC consistently across the pipeline. If `forecast_time` is missing or unparseable, `ForecastModel.predict` raises `ForecastModelError` (this is a hard failure: the forecast cannot be made without a forecast time).
 
 ## Defensive Handling of Bad Evidence
 
@@ -238,10 +238,10 @@ One bad item MUST NOT abort the rest of the batch. The `strict` flag is a top-le
 The Faithfulness Evaluator needs to re-run the model after removing one or more cited evidence IDs. The API is:
 
 ```python
-predict_without_evidence(input_data, removed_evidence_ids) -> ForecastResult
+ForecastModel.predict_without_evidence(input_data, removed_evidence_ids) -> ForecastResult
 ```
 
-The behavior is identical to `predict` except that any evidence item whose `evidence_id` is in `removed_evidence_ids` is filtered out **before** the voting step. The function is intentionally separate from `predict` (rather than implemented as `predict` with an optional `removed_evidence_ids` argument) so the call site at the Faithfulness Evaluator is self-documenting and the unit tests can pin the contract independently. Internally both functions call a single private helper `_predict_core(input_data, *, exclude_ids=frozenset())` so they cannot drift.
+The behavior is identical to `ForecastModel.predict` except that any evidence item whose `evidence_id` is in `removed_evidence_ids` is filtered out **before** the voting step. The function is intentionally separate from `ForecastModel.predict` (rather than implemented as `ForecastModel.predict` with an optional `removed_evidence_ids` argument) so the call site at the Faithfulness Evaluator is self-documenting and the unit tests can pin the contract independently. Internally both functions call a single private helper `_predict_core(input_data, *, exclude_ids=frozenset())` so they cannot drift.
 
 The Faithfulness Evaluator then computes:
 
@@ -253,14 +253,14 @@ When `confidence_drop` is small (e.g., `< 0.05`) the cited evidence was not load
 
 ## Batch API and CSV Output
 
-`predict_batch(records, *, output_csv_path=None) -> list[ForecastResult]`:
+`ForecastModel.predict_batch(records, *, output_csv_path=None) -> list[ForecastResult]`:
 
-- Iterates `records` in input order and calls `predict(...)` on each.
+- Iterates `records` in input order and calls `ForecastModel.predict(...)` on each.
 - Returns a list of `ForecastResult` dicts, one per record, in input order.
 - If `output_csv_path` is provided, writes the per-row scalar fields (`sample_id`, `ticker`, `forecast_time`, `prediction`, `confidence`, `score`, `positive_count`, `negative_count`, `neutral_count`, `total_evidence`, `directional_evidence_count`, `evidence_strength`, `conflict_ratio`, `label`, `model_version`) as a CSV. The default path is `outputs/prediction_results.csv` (relative to the project root) so the dashboard can read it without code changes.
 - If a record raises `ForecastModelError`, the error is caught, logged into that record's `warnings` as a structured entry, and the result for that record is filled with a default `HOLD` prediction and `confidence = 0.5` plus an `INPUT_ERROR` warning. The batch never raises.
 
-`compute_accuracy_and_confusion(results, *, label_key="label") -> dict`:
+`ForecastModel.compute_accuracy_and_confusion(results, *, label_key="label") -> dict`:
 
 - For each result, reads `label` (or the `label` field of the corresponding input record — see below).
 - Builds a 3×3 confusion matrix over `["UP", "DOWN", "HOLD"]` in that order. Row = predicted, column = actual.
@@ -280,7 +280,7 @@ When `confidence_drop` is small (e.g., `< 0.05`) the cited evidence was not load
 | Duplicate `evidence_id`s                            | First occurrence kept; subsequent dropped with `DUPLICATE_EVIDENCE_ID` warning.                    |
 | `expected_direction = "INVALID"`                    | Item ignored, `INVALID_EVIDENCE` warning. With `strict = True`, raises.                            |
 | `forecast_time` missing                            | Raises `ForecastModelError` — hard failure.                                                       |
-| `label` field on input                             | Preserved through to the result; never read by `predict`; read only by the evaluation helper.     |
+| `label` field on input                             | Preserved through to the result; never read by `ForecastModel.predict`; read only by the evaluation helper.     |
 
 ## Risks and Limitations
 
@@ -289,21 +289,21 @@ When `confidence_drop` is small (e.g., `< 0.05`) the cited evidence was not load
 - **[Risk] `support_score` is in the input but ignored in V1** — a future change might want to weight by it. → Mitigation: the field is preserved on every output evidence item, so a V2 model can pick it up without changing the input contract.
 - **[Risk] Confidence saturates at `abs(score) = 5`.** → Mitigation: documented in the spec; the dashboard can show `abs(score)` and `directional_evidence_count` so the user knows when saturation kicks in.
 - **[Risk] The rationale template can lie to a non-technical reader** — e.g., "positive evidence count (1) is greater than negative evidence count (0)" sounds stronger than a single match warrants. → Mitigation: the spec pins the exact template text so the team can add a one-line caveat ("based on a single piece of evidence") in a future change without breaking the contract.
-- **[Risk] `compute_accuracy_and_confusion` requires the `label` to be carried through.** If the upstream pipeline drops `label`, the helper silently returns `n_samples = 0` and `accuracy = 0.0`. → Mitigation: the helper raises `ValueError` if `n_samples` is zero AND the input list is non-empty (a defensive default for a misconfigured pipeline); it returns zero metrics for an empty input list (no false alarms).
-- **[Risk] `predict_without_evidence` could be misused to "cheat" the faithfulness score** — a malicious caller could remove the only counter evidence to make the prediction look more confident. → Mitigation: the function is named clearly; the Faithfulness Evaluator is the only documented caller; the contract explicitly states that the function returns a result computed from the remaining evidence, and `confidence_drop` is signed (positive = confidence went down, negative = confidence went up).
-- **[Risk] `outputs/prediction_results.csv` is overwritten on every `predict_batch` call.** → Mitigation: the default path is configurable; a timestamped filename is documented as a future extension.
+- **[Risk] `ForecastModel.compute_accuracy_and_confusion` requires the `label` to be carried through.** If the upstream pipeline drops `label`, the helper silently returns `n_samples = 0` and `accuracy = 0.0`. → Mitigation: the helper raises `ValueError` if `n_samples` is zero AND the input list is non-empty (a defensive default for a misconfigured pipeline); it returns zero metrics for an empty input list (no false alarms).
+- **[Risk] `ForecastModel.predict_without_evidence` could be misused to "cheat" the faithfulness score** — a malicious caller could remove the only counter evidence to make the prediction look more confident. → Mitigation: the function is named clearly; the Faithfulness Evaluator is the only documented caller; the contract explicitly states that the function returns a result computed from the remaining evidence, and `confidence_drop` is signed (positive = confidence went down, negative = confidence went up).
+- **[Risk] `outputs/prediction_results.csv` is overwritten on every `ForecastModel.predict_batch` call.** → Mitigation: the default path is configurable; a timestamped filename is documented as a future extension.
 
 ## Migration Plan
 
 - Step 1: Land `src/forecast_model.py` and the unit tests behind the existing pipeline. No existing module depends on it, so there is no migration risk.
 - Step 2: Land the golden fixtures under `samples/forecast_model/`.
-- Step 3: The Faithfulness Evaluator (later change) imports `predict`, `predict_without_evidence`, and the rationale template constants from this module.
-- Step 4: The Visualization Dashboard (later change) imports `predict_batch` and the `compute_accuracy_and_confusion` helper.
+- Step 3: The Faithfulness Evaluator (later change) imports `ForecastModel.predict`, `ForecastModel.predict_without_evidence`, and the rationale template constants from this module.
+- Step 4: The Visualization Dashboard (later change) imports `ForecastModel.predict_batch` and the `ForecastModel.compute_accuracy_and_confusion` helper.
 - Rollback: removing the module is a single git revert; no data migration.
 
 ## Open Questions
 
-- Should `compute_accuracy_and_confusion` also accept an explicit `(input_record, result)` pair list, or only the result list with `label` echoed on the result? Current plan: accept BOTH; if a list element is a tuple, the first element is the input record (label lives there), else the element is treated as a result. This matches the Evidence Selector's pattern. Revisit when the dashboard mockups are in.
-- Should `predict_batch` write a `prediction_results.json` with the full per-record objects (including the evidence lists) in addition to the CSV? Current plan: yes, when `output_csv_path` is provided, a sibling `prediction_results.json` is also written. The dashboard prefers JSON for full fidelity and CSV for tabular views.
+- Should `ForecastModel.compute_accuracy_and_confusion` also accept an explicit `(input_record, result)` pair list, or only the result list with `label` echoed on the result? Current plan: accept BOTH; if a list element is a tuple, the first element is the input record (label lives there), else the element is treated as a result. This matches the Evidence Selector's pattern. Revisit when the dashboard mockups are in.
+- Should `ForecastModel.predict_batch` write a `prediction_results.json` with the full per-record objects (including the evidence lists) in addition to the CSV? Current plan: yes, when `output_csv_path` is provided, a sibling `prediction_results.json` is also written. The dashboard prefers JSON for full fidelity and CSV for tabular views.
 - Should the rationale include a "based on N evidence" suffix when `directional_evidence_count == 1`? Current plan: no — that would be a behavior change to the rationale contract, and the spec pins the exact template text. A future change can add a `rationale_qualifier` field without breaking the existing rationale.
 - Should `evidence_strength` be exposed as a percentage (0–100) or a ratio (0–1)? Current plan: ratio. The dashboard can format it.

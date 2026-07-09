@@ -4,7 +4,7 @@ Phase A đã trích xuất và phân loại evidence thành pro/counter/neutral,
 
 ## What Changes
 
-- Gọi `compute_coverage()` (đã có trong `src/evidence_selector.py`) từ pipeline sau bước Evidence Selector.
+- Gọi `EvidenceSelector.compute_coverage()` (đã có trong `src/evidence_selector.py`) từ pipeline sau bước Evidence Selector.
 - Bổ sung 2 cột vào `outputs/faithfulness_results.csv`:
   - `counterevidence_coverage` (float 0.0–1.0): tỉ lệ counterevidence trên tổng directional evidence của sample
   - `counterevidence_detected` (bool): có tìm thấy ít nhất 1 counterevidence không
@@ -23,9 +23,9 @@ Phase A đã trích xuất và phân loại evidence thành pro/counter/neutral,
 
 ## Impact
 
-- **`src/pipeline.py`**: Thêm gọi `compute_coverage()` trong `_run_group()`, bổ sung 2 field vào `faithfulness_row`, cập nhật `FAITHFULNESS_COLUMNS`.
-- **`src/evidence_selector.py`**: Không sửa — `compute_coverage()` đã tồn tại, chỉ cần gọi.
+- **`src/pipeline.py`**: Thêm gọi `EvidenceSelector.compute_coverage()` trong `PipelineRunner._run_group()`, bổ sung 2 field vào `faithfulness_row`, cập nhật `FAITHFULNESS_COLUMNS`.
+- **`src/evidence_selector.py`**: Không sửa — `EvidenceSelector.compute_coverage()` đã tồn tại, chỉ cần gọi.
 - **`src/dashboard/data_loader.py`**: Bổ sung 2 cột mới vào `FAITHFULNESS_COLUMNS` contract.
 - **`src/dashboard/components.py`**: Thêm metric card counterevidence coverage vào `render_confidence_drop_tab`.
-- **`tests/`**: Thêm test cases cho `compute_coverage()` integration trong pipeline và dashboard loader.
+- **`tests/`**: Thêm test cases cho `EvidenceSelector.compute_coverage()` integration trong pipeline và dashboard loader.
 - **Breaking**: `faithfulness_results.csv` schema thêm 2 cột — dashboard cũ sẽ thiếu 2 cột này (cần update `data_loader.py` đồng thời).

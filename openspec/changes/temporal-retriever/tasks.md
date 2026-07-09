@@ -8,13 +8,13 @@
 
 ## 2. Datetime Parsing Helper
 
-- [x] 2.1 Implement `_parse_datetime(value: str) -> datetime` that accepts ISO 8601 strings (with `"T"` or `" "` separator) and rejects everything else with a `ValueError`.
-- [x] 2.2 Implement `_normalize_to_utc(dt: datetime) -> datetime` that converts any timezone-aware datetime to UTC and attaches the UTC offset to any naive datetime (per Decision 5: project-local timezone is UTC).
-- [x] 2.3 Skip a separate `_compare` helper — use Python's native `<=` / `>` directly inside `retrieve_valid_news`. The helper would be a thin wrapper that adds a layer without adding behavior.
+- [x] 2.1 Implement `TimeUtils.parse_datetime(value: str) -> datetime` that accepts ISO 8601 strings (with `"T"` or `" "` separator) and rejects everything else with a `ValueError`.
+- [x] 2.2 Implement `TimeUtils.normalize_to_utc(dt: datetime) -> datetime` that converts any timezone-aware datetime to UTC and attaches the UTC offset to any naive datetime (per Decision 5: project-local timezone is UTC).
+- [x] 2.3 Skip a separate `_compare` helper — use Python's native `<=` / `>` directly inside `TemporalRetriever.retrieve`. The helper would be a thin wrapper that adds a layer without adding behavior.
 
 ## 3. Core Filter Function
 
-- [x] 3.1 Implement `retrieve_valid_news(forecast_time: str, news: List[Dict], ticker: Optional[str] = None) -> RetrievalResult` in `src/retriever.py`.
+- [x] 3.1 Implement `TemporalRetriever.retrieve(forecast_time: str, news: List[Dict], ticker: Optional[str] = None) -> RetrievalResult` in `src/retriever.py`.
 - [x] 3.2 Parse `forecast_time` once at the start; raise `TemporalValidationError` if it is missing or unparseable.
 - [x] 3.3 For each news item, parse `news_time`; on parse failure, append `{"news_id": ..., "reason": "missing_or_malformed_news_time", "raw_value": ...}` to `errors` and skip.
 - [x] 3.4 Compare each parsed `news_dt` against `forecast_dt` using the rule `news_dt <= forecast_dt` for `valid_news` and `news_dt > forecast_dt` for `invalid_future_news`. Preserve input order in both lists.
@@ -58,9 +58,9 @@
 - [x] 7.1 Update `README.md` (or a new `docs/temporal_retriever.md`) with a short usage example:
 
   ```python
-  from src.retriever import retrieve_valid_news
+  from src.retriever import TemporalRetriever
 
-  result = retrieve_valid_news(
+  result = TemporalRetriever().retrieve(
       forecast_time="2025-03-12 09:00",  # naive → interpreted as UTC
       ticker="AAPL",
       news=[
@@ -83,5 +83,5 @@
 
 ## 9. Cleanup
 
-- [x] 9.1 Confirm `src/__init__.py` re-exports `retrieve_valid_news` and `RetrievalResult` for ergonomic imports.
+- [x] 9.1 Confirm `src/__init__.py` re-exports `TemporalRetriever.retrieve` and `RetrievalResult` for ergonomic imports.
 - [x] 9.2 Confirm no future-dated news can leak by running the leakage regression test one final time.

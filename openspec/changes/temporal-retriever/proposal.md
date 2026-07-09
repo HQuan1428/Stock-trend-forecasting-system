@@ -4,7 +4,7 @@ Financial forecasting models that consume news data are vulnerable to **temporal
 
 ## What Changes
 
-- Add a new module `src/retriever.py` exposing `retrieve_valid_news(forecast_time, news, ticker=None)` (or an equivalent pure function with the same contract).
+- Add a new module `src/retriever.py` exposing `TemporalRetriever.retrieve(forecast_time, news, ticker=None)` (or an equivalent pure function with the same contract).
 - Define a deterministic, rule-based temporal filter that splits the input `news` list into `valid_news` and `invalid_future_news` based on `news_time <= forecast_time`.
 - Return a structured result object containing both groups plus counts (`valid_count`, `invalid_future_count`, `total_count`) and a derived `temporal_validity` ratio.
 - Preserve every input news item — including future news — in the output for auditability and dashboard warning; never silently drop items.

@@ -148,7 +148,7 @@ The system SHALL map polarity to `expected_direction` according to the polarity-
 The system SHALL copy `forecast_time` and `news_time` from the input news item into the result object unchanged.
 
 ### Requirement: Batch processing returns one result per input
-The system SHALL provide `extract_evidence_batch(news_items)` that returns a list of result objects with the same length and order as the input list, one per input news item.
+The system SHALL provide `EvidenceExtractor.extract_batch(news_items)` that returns a list of result objects with the same length and order as the input list, one per input news item.
 
 ### Requirement: No temporal filtering, no prediction, no advice
 The system SHALL NOT filter or classify news items based on time, SHALL NOT produce a final prediction, and SHALL NOT generate trading or buy/sell advice.

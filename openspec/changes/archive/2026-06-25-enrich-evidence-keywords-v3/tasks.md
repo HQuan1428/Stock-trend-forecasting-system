@@ -10,10 +10,10 @@ Ordered, single-session tasks. Each produces a verifiable artifact.
 
 ## 2. Source change
 
-- [x] 2.1 Edit `src/evidence_extractor.py`: extend `POSITIVE_KEYWORDS` with 21 V3 additions (V1 and V2 keywords retained).
-- [x] 2.2 Edit `src/evidence_extractor.py`: extend `NEGATIVE_KEYWORDS` with 16 V3 additions (V1 and V2 keywords retained).
+- [x] 2.1 Edit `src/evidence_extractor.py`: extend `EvidenceExtractor.POSITIVE_KEYWORDS` with 21 V3 additions (V1 and V2 keywords retained).
+- [x] 2.2 Edit `src/evidence_extractor.py`: extend `EvidenceExtractor.NEGATIVE_KEYWORDS` with 16 V3 additions (V1 and V2 keywords retained).
 - [x] 2.3 Update the version-3 module docstring comment to point at the new change folder.
-- [x] 2.4 Verify `KEYWORD_TO_POLARITY` is rebuilt automatically (it already is — see lines 98-110 of `src/evidence_extractor.py`).
+- [x] 2.4 Verify `EvidenceExtractor.KEYWORD_TO_POLARITY` is rebuilt automatically (it already is — see lines 98-110 of `src/evidence_extractor.py`).
 - [x] 2.5 Verify `KEYWORDS` is still `POSITIVE_KEYWORDS + NEGATIVE_KEYWORDS` (no edit needed).
 
 ## 3. Test updates
