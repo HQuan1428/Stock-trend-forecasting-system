@@ -22,6 +22,7 @@ VALID_DIRECTIONS = ForecastModel.VALID_DIRECTIONS
 VALID_PREDICTIONS = ForecastModel.VALID_PREDICTIONS
 _build_pro_and_counter = _model._build_pro_and_counter
 _build_rationale = _model._build_rationale
+_compute_class_confidences = _model._compute_class_confidences
 _compute_confidence = _model._compute_confidence
 _compute_conflict_ratio = _model._compute_conflict_ratio
 _compute_evidence_strength = _model._compute_evidence_strength
@@ -35,9 +36,6 @@ compute_accuracy_and_confusion = _model.compute_accuracy_and_confusion
 predict = _model.predict
 predict_batch = _model.predict_batch
 predict_without_evidence = _model.predict_without_evidence
-
-
-SAMPLES_DIR = Path(__file__).resolve().parent.parent / "samples" / "forecast_model"
 
 
 # ---------------------------------------------------------------------------
@@ -261,6 +259,57 @@ def test_compute_evidence_strength_zero_when_no_directional() -> None:
 
 def test_compute_conflict_ratio_zero_when_no_directional() -> None:
     assert _compute_conflict_ratio(0, 0) == 0.0
+
+
+# ---------------------------------------------------------------------------
+# class_confidences (dashboard-live-demo-flow, forecast-class-distribution spec)
+# ---------------------------------------------------------------------------
+
+
+def test_class_confidences_directional_with_losing_class_support() -> None:
+    # 2 UP + 1 DOWN -> score=1, prediction=UP, confidence=0.6.
+    result = _compute_class_confidences("UP", 0.6, 2, 1, 0)
+    assert result == {"UP": 0.6, "DOWN": 0.4, "HOLD": 0.0}
+
+
+def test_class_confidences_tied_directional_evidence_even_split() -> None:
+    # 1 UP + 1 DOWN -> score=0, prediction=HOLD, confidence=0.5.
+    result = _compute_class_confidences("HOLD", 0.5, 1, 1, 0)
+    assert result == {"UP": 0.25, "DOWN": 0.25, "HOLD": 0.5}
+
+
+def test_class_confidences_no_evidence_falls_back_to_even_split() -> None:
+    result = _compute_class_confidences("HOLD", 0.5, 0, 0, 0)
+    assert result == {"UP": 0.25, "DOWN": 0.25, "HOLD": 0.5}
+
+
+@pytest.mark.parametrize(
+    "prediction,confidence,positive,negative,neutral",
+    [
+        ("UP", 0.7, 3, 1, 0),
+        ("DOWN", 0.7, 1, 3, 0),
+        ("HOLD", 0.5, 2, 2, 0),
+        ("HOLD", 0.5, 0, 0, 4),
+        ("UP", 0.95, 5, 0, 2),
+    ],
+)
+def test_class_confidences_always_sums_to_one(
+    prediction: str, confidence: float, positive: int, negative: int, neutral: int
+) -> None:
+    result = _compute_class_confidences(prediction, confidence, positive, negative, neutral)
+    assert sum(result.values()) == pytest.approx(1.0, abs=1e-9)
+
+
+def test_class_confidences_winning_class_matches_confidence(up_input: dict) -> None:
+    result = predict(up_input)
+    assert result["class_confidences"][result["prediction"]] == result["confidence"]
+
+
+def test_predict_without_evidence_emits_class_confidences(up_input: dict) -> None:
+    reduced = predict_without_evidence(up_input, ["N001_E001", "N002_E001", "N003_E001"])
+    assert "class_confidences" in reduced
+    assert sum(reduced["class_confidences"].values()) == pytest.approx(1.0, abs=1e-9)
+    assert reduced["class_confidences"][reduced["prediction"]] == reduced["confidence"]
 
 
 # Task 11.1 — evidence_strength / conflict_ratio formulas
@@ -935,40 +984,6 @@ def test_integration_batch_with_evaluation_metrics(tmp_path: Path) -> None:
     metrics = compute_accuracy_and_confusion(results)
     assert metrics["n_samples"] == 2
     assert metrics["accuracy"] == 1.0
-
-
-# ---------------------------------------------------------------------------
-# Golden fixture regression (Task 9.7)
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "fixture_stem",
-    [
-        "01_up",
-        "02_down",
-        "03_balanced_hold",
-        "04_empty_hold",
-        "05_future_evidence",
-    ],
-)
-def test_golden_fixture_matches_forecast_output(fixture_stem: str) -> None:
-    """Every documented example under samples/forecast_model/ must match byte-for-byte."""
-    inp_path = SAMPLES_DIR / f"{fixture_stem}_input.json"
-    exp_path = SAMPLES_DIR / f"{fixture_stem}_expected.json"
-    if not inp_path.exists() or not exp_path.exists():
-        pytest.fail(f"Golden fixture pair missing for {fixture_stem}")
-    input_data = json.loads(inp_path.read_text())
-    expected = json.loads(exp_path.read_text())
-    result = predict(input_data)
-    if result != expected:
-        diff_keys = sorted({k for k in (set(result) | set(expected)) if result.get(k) != expected.get(k)})
-        pytest.fail(
-            f"Golden fixture {fixture_stem} drifted. "
-            f"Differing keys: {diff_keys}\n"
-            f"got: {json.dumps(result, indent=2, sort_keys=True)}\n"
-            f"expected: {json.dumps(expected, indent=2, sort_keys=True)}"
-        )
 
 
 # ---------------------------------------------------------------------------

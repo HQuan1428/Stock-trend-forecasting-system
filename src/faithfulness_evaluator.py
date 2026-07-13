@@ -578,3 +578,39 @@ class FaithfulnessEvaluator:
             ],
             "per_evidence_results": [],
         }
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "faithfulness_evaluator"
+
+
+def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
+    """Evaluate faithfulness of each sample's forecast against its evidence."""
+    from src.forecast_model import build_forecast_request
+
+    evaluator = FaithfulnessEvaluator()
+    for sample in envelope["samples"]:
+        request = build_forecast_request(sample)
+        sample["faithfulness"] = evaluator.evaluate(request, sample["forecast"])
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Evaluate temporal validity, evidence support, and confidence drop.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())

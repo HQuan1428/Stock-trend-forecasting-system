@@ -86,3 +86,40 @@ class MarketAnalyzer:
             return next_day_return < -cls.RETURN_THRESHOLD
         # HOLD
         return abs(next_day_return) <= cls.RETURN_THRESHOLD
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "market_analyzer"
+
+
+def process(envelope: dict) -> dict:
+    """Compute B3 market consistency + regime for each sample."""
+    analyzer = MarketAnalyzer()
+    for sample in envelope["samples"]:
+        sample["market"] = analyzer.analyze(
+            sample["forecast"]["prediction"],
+            float(sample.get("next_day_return", 0.0)),
+            float(sample.get("price_5d_return", 0.0)),
+        )
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv=None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Compute B3 market consistency and regime per sample.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())

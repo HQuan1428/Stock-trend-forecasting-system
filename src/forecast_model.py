@@ -395,6 +395,9 @@ class ForecastModel:
         confidence = self._compute_confidence(score, directional_evidence_count)
         evidence_strength = self._compute_evidence_strength(score, directional_evidence_count)
         conflict_ratio = self._compute_conflict_ratio(positive_count, negative_count)
+        class_confidences = self._compute_class_confidences(
+            prediction, confidence, positive_count, negative_count, neutral_count
+        )
 
         # --- 7. Evidence lists -----------------------------------------
         partitioned = self._partition_evidence(evidence, warnings)
@@ -417,6 +420,7 @@ class ForecastModel:
             "forecast_time": forecast_time_str,
             "prediction": prediction,
             "confidence": confidence,
+            "class_confidences": class_confidences,
             "score": score,
             "positive_count": positive_count,
             "negative_count": negative_count,
@@ -522,6 +526,37 @@ class ForecastModel:
         if directional == 0:
             return 0.0
         return min(positive_count, negative_count) / max(directional, 1)
+
+    @staticmethod
+    def _compute_class_confidences(
+        prediction: str,
+        confidence: float,
+        positive_count: int,
+        negative_count: int,
+        neutral_count: int,
+    ) -> Dict[str, float]:
+        """Return a deterministic UP/DOWN/HOLD confidence breakdown.
+
+        The winning ``prediction`` keeps ``confidence`` verbatim. The
+        remainder (``1.0 - confidence``) is split between the two other
+        classes proportionally to their own evidence counts
+        (``positive_count`` for UP, ``negative_count`` for DOWN,
+        ``neutral_count`` for HOLD); when both are zero, the remainder
+        is split evenly. This is a rule-based descriptive vote
+        breakdown, NOT a calibrated probability, and always sums to
+        ``1.0``.
+        """
+        counts = {"UP": positive_count, "DOWN": negative_count, "HOLD": neutral_count}
+        others = [c for c in ("UP", "DOWN", "HOLD") if c != prediction]
+        remaining = 1.0 - confidence
+        denom = counts[others[0]] + counts[others[1]]
+        if denom == 0:
+            shares = {others[0]: 0.5, others[1]: 0.5}
+        else:
+            shares = {c: counts[c] / denom for c in others}
+        result = {c: remaining * shares[c] for c in others}
+        result[prediction] = confidence
+        return result
 
     # -----------------------------------------------------------------
     # Pro / counter / raw evidence partition
@@ -776,6 +811,7 @@ class ForecastModel:
             "forecast_time": forecast_time,
             "prediction": "HOLD",
             "confidence": 0.5,
+            "class_confidences": self._compute_class_confidences("HOLD", 0.5, 0, 0, 0),
             "score": 0,
             "positive_count": 0,
             "negative_count": 0,
@@ -846,3 +882,57 @@ class ForecastModel:
             if isinstance(entry, dict):
                 normalized.append(entry)
         return normalized
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "forecast_model"
+
+
+def build_forecast_request(sample: Dict[str, Any]) -> Dict[str, Any]:
+    """Adapt an envelope sample into the shape ``ForecastModel.predict``
+    expects (ported from the old ``PipelineRunner._build_forecast_request``).
+
+    Shared with the downstream faithfulness/sufficiency stages, which
+    need the same request as the ablation "original input".
+    """
+    return {
+        "sample_id": sample["sample_id"],
+        "ticker": sample["ticker"],
+        "forecast_time": sample["forecast_time"],
+        "label": sample.get("label", ""),
+        "evidence": sample["evidence"],
+    }
+
+
+def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
+    """Run the forecast on each sample's evidence.
+
+    Calls ``predict()`` per sample — NOT ``predict_batch`` — because the
+    batch API writes ``outputs/*.csv`` by default and stages must not do
+    file I/O inside ``process``.
+    """
+    model = ForecastModel()
+    for sample in envelope["samples"]:
+        sample["forecast"] = model.predict(build_forecast_request(sample))
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Predict UP/DOWN/HOLD for each sample from its extracted evidence.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())

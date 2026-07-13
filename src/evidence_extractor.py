@@ -461,3 +461,58 @@ class EvidenceExtractor:
         to 3 digits per the spec (e.g. ``N001_E001``).
         """
         return f"{news_id}_E{index:03d}"
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "evidence_extractor"
+
+
+def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract evidence from each sample's ``valid_news``.
+
+    Builds the extractor input shape from the envelope (ported from the
+    old ``PipelineRunner._build_extractor_input``), runs
+    ``extract_batch``, and flattens the per-news evidence lists into one
+    ``evidence`` list per sample, attaching ``news_time`` to every item.
+    """
+    extractor = EvidenceExtractor()
+    for sample in envelope["samples"]:
+        inputs = [
+            {
+                "news_id": str(n["news_id"]),
+                "ticker": sample["ticker"],
+                "forecast_time": sample["forecast_time"],
+                "news_time": str(n["news_time"]),
+                "news_text": str(n.get("news_text", n.get("text", ""))),
+            }
+            for n in sample["valid_news"]
+        ]
+        results = extractor.extract_batch(inputs)
+        evidence: List[Dict[str, Any]] = []
+        for news, result in zip(sample["valid_news"], results):
+            for item in result["evidence"]:
+                item["news_time"] = str(news["news_time"])
+                evidence.append(item)
+        sample["evidence"] = evidence
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Extract rule-based keyword evidence from each sample's valid news.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())

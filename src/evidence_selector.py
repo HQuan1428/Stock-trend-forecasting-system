@@ -437,3 +437,70 @@ class EvidenceSelector:
             "has_counterevidence": counter_count > 0,
             "counterevidence_ratio": ratio,
         }
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "evidence_selector"
+
+
+def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
+    """Classify each sample's evidence as pro/counter/neutral (+ B2 coverage).
+
+    Builds the selector request from the sample's evidence and forecast
+    (ported from the old ``PipelineRunner._run_group`` steps 4/4b), runs
+    ``select_batch`` and ``compute_coverage``, and stores the results
+    under ``selection`` and ``coverage``.
+    """
+    selector = EvidenceSelector()
+    for sample in envelope["samples"]:
+        prediction = sample["forecast"]["prediction"]
+        candidates = [
+            {
+                "news_id": ev["news_id"],
+                "ticker": sample["ticker"],
+                "news_time": ev["news_time"],
+                "evidence_text": ev.get("evidence_text", ""),
+                "polarity": ev.get("polarity"),
+                "expected_direction": ev.get("expected_direction"),
+                "extractor_score": float(ev.get("support_score", 0.0) or 0.0),
+            }
+            for ev in sample["evidence"]
+        ]
+        request = {
+            "ticker": sample["ticker"],
+            "forecast_time": sample["forecast_time"],
+            "prediction": prediction,
+            "confidence": sample["forecast"]["confidence"],
+            "evidence_candidates": candidates,
+        }
+        selection = selector.select_batch([request])[0]
+        expected_labels = {
+            cand["news_id"]: EvidenceSelector.CLASSIFICATION_TABLE.get(
+                (prediction, cand.get("expected_direction", "HOLD")), "neutral"
+            )
+            for cand in candidates
+        }
+        sample["selection"] = selection
+        sample["coverage"] = selector.compute_coverage(selection, expected_labels)
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Classify evidence as pro/counter/neutral and compute B2 coverage.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())

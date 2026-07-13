@@ -257,3 +257,42 @@ class TemporalRetriever:
             return TimeUtils.parse_utc(raw_news_time)
         except ValueError:
             return None
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "retriever"
+
+
+def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
+    """Split each sample's ``news`` into ``valid_news`` / ``invalid_future_news``."""
+    retriever = TemporalRetriever()
+    for sample in envelope["samples"]:
+        result = retriever.retrieve(
+            forecast_time=sample["forecast_time"],
+            news=sample["news"],
+            ticker=sample["ticker"],
+        )
+        sample["valid_news"] = result.valid_news
+        sample["invalid_future_news"] = result.invalid_future_news
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Filter each sample's news by temporal validity.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())

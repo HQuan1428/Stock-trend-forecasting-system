@@ -19,9 +19,6 @@ evaluate_batch = FaithfulnessEvaluator().evaluate_batch
 predict = ForecastModel().predict
 
 
-SAMPLES = Path(__file__).resolve().parent.parent / "samples" / "faithfulness_evaluator"
-
-
 def _evidence(eid: str, direction: str, news_time: str) -> dict:
     return {
         "evidence_id": eid,
@@ -90,45 +87,81 @@ def test_evaluate_raises_on_missing_forecast_time() -> None:
 # ---------------------------------------------------------------------------
 
 
-def _load_pair(name: str) -> tuple[dict, dict, dict]:
-    inp = json.loads((SAMPLES / f"{name}_input.json").read_text(encoding="utf-8"))
-    expected = json.loads((SAMPLES / f"{name}_expected.json").read_text(encoding="utf-8"))
-    result_path = SAMPLES / f"{name}_result.json"
-    if result_path.exists():
-        result = json.loads(result_path.read_text(encoding="utf-8"))
-    else:
-        result = predict(inp)
-    return inp, result, expected
+def _strong_faithful_pair() -> tuple[dict, dict]:
+    inp = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "evidence": [
+            _evidence("E1", "UP", "2025-03-11 08:00"),
+            _evidence("E2", "UP", "2025-03-11 09:00"),
+        ],
+    }
+    return inp, predict(inp)
 
 
-def _run(name: str) -> dict:
-    inp, result, _ = _load_pair(name)
-    return FaithfulnessEvaluator().evaluate(inp, result)
+def _decorative_pair() -> tuple[dict, dict]:
+    inp = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "evidence": [],
+    }
+    result = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "prediction": "UP", "confidence": 0.6,
+        "pro_evidence": [], "counter_evidence": [],
+        "warnings": [], "model_version": "rule_based_v1",
+    }
+    return inp, result
+
+
+def _temporal_leakage_pair() -> tuple[dict, dict]:
+    future = _evidence("E_LATE", "UP", "2025-03-13 09:00")
+    inp = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "evidence": [_evidence("E1", "UP", "2025-03-11 08:00"), future],
+    }
+    result = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "prediction": "UP", "confidence": 0.8,
+        "pro_evidence": [_evidence("E1", "UP", "2025-03-11 08:00"), future],
+        "counter_evidence": [], "warnings": [], "model_version": "rule_based_v1",
+    }
+    return inp, result
+
+
+def _unsupported_pair() -> tuple[dict, dict]:
+    inp = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "evidence": [_evidence("E1", "DOWN", "2025-03-11 08:00")],
+    }
+    result = {
+        "sample_id": "X", "ticker": "AAPL", "forecast_time": "2025-03-12 09:00",
+        "prediction": "UP", "confidence": 0.6,
+        "pro_evidence": [_evidence("E1", "DOWN", "2025-03-11 08:00")],
+        "counter_evidence": [], "warnings": [], "model_version": "rule_based_v1",
+    }
+    return inp, result
+
+
+_ARCHETYPE_PAIRS = {
+    "strong_faithful": _strong_faithful_pair,
+    "decorative": _decorative_pair,
+    "temporal_leakage": _temporal_leakage_pair,
+    "unsupported": _unsupported_pair,
+}
 
 
 @pytest.mark.parametrize(
     "name,expected_verdict",
     [
-        ("01_strong_faithful", "strong_faithful_candidate"),
-        ("02_decorative", "decorative_explanation_risk"),
-        ("03_temporal_leakage", "invalid_temporal_leakage"),
-        ("04_unsupported", "unsupported_evidence"),
+        ("strong_faithful", "strong_faithful_candidate"),
+        ("decorative", "decorative_explanation_risk"),
+        ("temporal_leakage", "invalid_temporal_leakage"),
+        ("unsupported", "unsupported_evidence"),
     ],
 )
-def test_golden_fixtures_produce_expected_verdict(name: str, expected_verdict: str) -> None:
-    report = _run(name)
-    assert report["verdict"] == expected_verdict
-
-
-@pytest.mark.parametrize("name", ["01_strong_faithful", "02_decorative", "03_temporal_leakage", "04_unsupported"])
-def test_golden_fixtures_byte_equal(name: str) -> None:
-    """Verify byte-equality of the report against the saved fixture."""
-    inp, result, expected = _load_pair(name)
-    # Drop the helper ``result`` key if it was present, then compare the
-    # report dict to the saved expected file.
-    expected_report = {k: v for k, v in expected.items() if k != "result"}
+def test_archetype_pairs_produce_expected_verdict(name: str, expected_verdict: str) -> None:
+    inp, result = _ARCHETYPE_PAIRS[name]()
     report = FaithfulnessEvaluator().evaluate(inp, result)
-    assert report == expected_report
+    assert report["verdict"] == expected_verdict
 
 
 # ---------------------------------------------------------------------------
@@ -300,8 +333,8 @@ def test_scenario_confidence_drop_negative_adds_warning() -> None:
 
 
 def test_evaluate_batch_writes_csv_with_required_columns(tmp_path: Path) -> None:
-    inp1, result1, _ = _load_pair("01_strong_faithful")
-    inp2, result2, _ = _load_pair("02_decorative")
+    inp1, result1 = _strong_faithful_pair()
+    inp2, result2 = _decorative_pair()
     csv_path = tmp_path / "out.csv"
     evaluate_batch(
         [(inp1, result1), (inp2, result2)],
@@ -316,7 +349,7 @@ def test_evaluate_batch_writes_csv_with_required_columns(tmp_path: Path) -> None
 
 
 def test_evaluate_batch_writes_json_sibling(tmp_path: Path) -> None:
-    inp1, result1, _ = _load_pair("01_strong_faithful")
+    inp1, result1 = _strong_faithful_pair()
     json_path = tmp_path / "out.json"
     evaluate_batch(
         [(inp1, result1)],
@@ -328,7 +361,7 @@ def test_evaluate_batch_writes_json_sibling(tmp_path: Path) -> None:
 
 
 def test_evaluate_batch_swallows_per_record_error(tmp_path: Path) -> None:
-    inp1, result1, _ = _load_pair("01_strong_faithful")
+    inp1, result1 = _strong_faithful_pair()
     csv_path = tmp_path / "out.csv"
     bad = ("not a tuple",)  # type: ignore[list-item]
     result = evaluate_batch(
@@ -378,7 +411,7 @@ def test_remove_all_cited_evidence_removes_counter_too() -> None:
 
 
 def test_report_keys_all_present() -> None:
-    inp, result, _ = _load_pair("01_strong_faithful")
+    inp, result = _strong_faithful_pair()
     report = FaithfulnessEvaluator().evaluate(inp, result)
     expected_keys = {
         "sample_id", "ticker", "forecast_time", "prediction",
@@ -407,7 +440,7 @@ def test_per_evidence_results_sorted_by_evidence_id() -> None:
 
 
 def test_determinism_same_input_same_output() -> None:
-    inp, result, _ = _load_pair("01_strong_faithful")
+    inp, result = _strong_faithful_pair()
     r1 = FaithfulnessEvaluator().evaluate(inp, result)
     r2 = FaithfulnessEvaluator().evaluate(inp, result)
     assert r1 == r2

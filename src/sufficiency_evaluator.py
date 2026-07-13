@@ -141,3 +141,49 @@ class SufficiencyEvaluator:
         if original_confidence <= 0.0:
             return 0.0
         return min(sufficiency_confidence / original_confidence, 1.0)
+
+
+# ---------------------------------------------------------------------------
+# Envelope stage adapter (see openspec/changes/interactive-stage-cli)
+# ---------------------------------------------------------------------------
+
+STAGE_NAME = "sufficiency_evaluator"
+
+
+def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
+    """Compute B1 sufficiency/counterfactual metrics for each sample.
+
+    ``cited_evidence_ids`` are the news_ids of the selector's pro and
+    counter groups (ported from the old ``PipelineRunner._run_group``).
+    """
+    from src.forecast_model import build_forecast_request
+
+    evaluator = SufficiencyEvaluator()
+    for sample in envelope["samples"]:
+        selection = sample["selection"]
+        cited_ids = {e["news_id"] for e in selection["pro_evidence"]} | {
+            e["news_id"] for e in selection["counterevidence"]
+        }
+        request = build_forecast_request(sample)
+        sample["sufficiency"] = evaluator.evaluate(
+            request, sample["forecast"], cited_ids
+        )
+    envelope["stage"] = STAGE_NAME
+    return envelope
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    from src.stage_io import run_stage_cli
+
+    return run_stage_cli(
+        STAGE_NAME,
+        "Compute B1 sufficiency and counterfactual metrics per sample.",
+        process,
+        argv,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import sys
+
+    sys.exit(main())
