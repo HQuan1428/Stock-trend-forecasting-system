@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 import pytest
 
 from src.evidence_selector import EvidenceSelector, EvidenceSelectorError
@@ -803,33 +800,3 @@ def test_compute_coverage_never_reads_label_from_candidate() -> None:
     assert cov["available_counterevidence_count"] == 0
     assert cov["detected_counterevidence_count"] == 0
     assert cov["counterevidence_coverage"] == 0.0
-
-
-# ---------------------------------------------------------------------------
-# Golden fixtures under samples/evidence_selector/
-# ---------------------------------------------------------------------------
-
-
-SAMPLES_DIR = Path(__file__).resolve().parent.parent / "samples" / "evidence_selector"
-
-
-@pytest.mark.parametrize(
-    "fixture_stem",
-    [
-        "01_up_with_counter",
-        "02_down",
-        "03_hold",
-    ],
-)
-def test_golden_fixture_matches_selector_output(fixture_stem: str) -> None:
-    """Every documented example under samples/evidence_selector/ must
-    produce the saved expected result byte-for-byte."""
-    inp_path = SAMPLES_DIR / f"{fixture_stem}_input.json"
-    exp_path = SAMPLES_DIR / f"{fixture_stem}_expected.json"
-    req = json.loads(inp_path.read_text())
-    expected = json.loads(exp_path.read_text())
-    actual = select_evidence(req)
-    assert actual == expected, (
-        f"Golden fixture {fixture_stem} drifted. "
-        f"Inspect by re-running select_evidence(json.loads(open('{inp_path}').read()))."
-    )

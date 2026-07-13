@@ -1,2 +1,0 @@
-sample_id,news_id,ticker,forecast_time,news_time,leakage_minutes,news_text
-DSH-03,N120_E001,GOOGL,2025-03-14 09:00,2025-03-14 18:00,540.0,Evidence 'N120_E001' has news_time strictly after forecast_time; excluded from scoring.

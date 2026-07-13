@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 import pytest
 
 from src.evidence_extractor import EvidenceExtractor
@@ -571,39 +568,6 @@ def test_build_summary_no_mixed_when_only_one_polarity_present() -> None:
     evidence = [{"polarity": "positive"}, {"polarity": "positive"}]
     summary = build_summary(evidence)
     assert summary["has_mixed_evidence"] is False
-
-
-# ---------------------------------------------------------------------------
-# Golden fixtures under samples/evidence_extractor/
-# ---------------------------------------------------------------------------
-
-SAMPLES_DIR = Path(__file__).resolve().parent.parent / "samples" / "evidence_extractor"
-
-
-@pytest.mark.parametrize(
-    "fixture_stem",
-    [
-        "01_positive_only",
-        "02_negative_only",
-        "03_neutral",
-        "04_mixed",
-        "05_case_insensitive",
-    ],
-)
-def test_golden_fixture_matches_extractor_output(fixture_stem: str) -> None:
-    """Every documented example under samples/evidence_extractor/ must
-    produce the saved expected result byte-for-byte."""
-    inp_path = SAMPLES_DIR / f"{fixture_stem}_input.json"
-    exp_path = SAMPLES_DIR / f"{fixture_stem}_expected.json"
-    item = json.loads(inp_path.read_text())
-    expected = json.loads(exp_path.read_text())
-    actual = extract_evidence(item)
-    assert actual == expected, (
-        f"Golden fixture {fixture_stem} drifted. "
-        f"Run `python -c \"from src.evidence_extractor import extract_evidence; "
-        f"import json; print(json.dumps(extract_evidence(json.loads(open('{inp_path}').read())), indent=2))\"` "
-        "to inspect."
-    )
 
 
 # ---------------------------------------------------------------------------

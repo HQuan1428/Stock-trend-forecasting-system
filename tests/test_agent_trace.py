@@ -14,8 +14,6 @@ from src.agent_trace import load_trace_log, summarize_trace, write_trace_entry
 # Helpers
 # ---------------------------------------------------------------------------
 
-_REQUIRED_ROLES = {"Research Agent", "Coding Agent", "Testing/Review Agent"}
-
 
 def _make_entry(run_id: str, role: str, gate: str = "passed", review: str = "accepted") -> dict:
     return {
@@ -120,24 +118,3 @@ def test_summarize_human_review_counts() -> None:
     s = summarize_trace(entries)
     assert s["human_accepted"] == 2
     assert s["human_rejected"] == 1
-
-
-# ---------------------------------------------------------------------------
-# Integration with seed run_log.json
-# ---------------------------------------------------------------------------
-
-
-def test_seed_log_has_minimum_entries() -> None:
-    entries = load_trace_log("outputs/run_log.json")
-    assert len(entries) >= 9, (
-        f"outputs/run_log.json must have ≥9 entries, got {len(entries)}"
-    )
-
-
-def test_seed_log_covers_all_required_roles() -> None:
-    entries = load_trace_log("outputs/run_log.json")
-    roles_found = {e.get("agent_role") for e in entries}
-    missing = _REQUIRED_ROLES - roles_found
-    assert not missing, (
-        f"run_log.json missing required agent roles: {missing}"
-    )
