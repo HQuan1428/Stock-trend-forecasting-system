@@ -12,7 +12,7 @@ questions:
    the confidence drop?
    ``counterfactual_delta = original_confidence - counterfactual_confidence``
 
-Both use :class:`src.forecast_model.ForecastModel` — no ML, LLM, or
+Both use :class:`src.stages.forecast_model.ForecastModel` — no ML, LLM, or
 external API.
 """
 
@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Set
 
-from src.forecast_model import ForecastModel
+from src.stages.forecast_model import ForecastModel
 
 
 class SufficiencyEvaluator:
@@ -156,7 +156,7 @@ def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
     ``cited_evidence_ids`` are the news_ids of the selector's pro and
     counter groups (ported from the old ``PipelineRunner._run_group``).
     """
-    from src.forecast_model import build_forecast_request
+    from src.stages.forecast_model import build_forecast_request
 
     evaluator = SufficiencyEvaluator()
     for sample in envelope["samples"]:
@@ -173,7 +173,7 @@ def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
-    from src.stage_io import run_stage_cli
+    from src.core.stage_io import run_stage_cli
 
     return run_stage_cli(
         STAGE_NAME,

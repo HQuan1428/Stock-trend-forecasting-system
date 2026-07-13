@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.evidence_selector import EvidenceSelector, EvidenceSelectorError
+from src.stages.evidence_selector import EvidenceSelector, EvidenceSelectorError
 
 _selector = EvidenceSelector()
 CLASSIFICATION_TABLE = EvidenceSelector.CLASSIFICATION_TABLE

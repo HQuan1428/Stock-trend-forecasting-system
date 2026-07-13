@@ -109,7 +109,7 @@ def process(envelope: dict) -> dict:
 
 
 def main(argv=None) -> int:
-    from src.stage_io import run_stage_cli
+    from src.core.stage_io import run_stage_cli
 
     return run_stage_cli(
         STAGE_NAME,

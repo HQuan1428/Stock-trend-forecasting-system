@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from src.faithfulness_evaluator import FaithfulnessEvaluator, FaithfulnessEvaluatorError
-from src.forecast_model import ForecastModel
+from src.stages.faithfulness_evaluator import FaithfulnessEvaluator, FaithfulnessEvaluatorError
+from src.stages.forecast_model import ForecastModel
 
 ABLATION_STRATEGIES = FaithfulnessEvaluator.ABLATION_STRATEGIES
 CSV_COLUMNS = FaithfulnessEvaluator.CSV_COLUMNS

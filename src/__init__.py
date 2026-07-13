@@ -13,34 +13,34 @@ from typing import Any
 
 _EXPORTS = {
     # retriever
-    "TemporalRetriever": "src.retriever",
-    "TimeUtils": "src.retriever",
-    "RetrievalResult": "src.retriever",
-    "TemporalValidationError": "src.retriever",
+    "TemporalRetriever": "src.stages.retriever",
+    "TimeUtils": "src.stages.retriever",
+    "RetrievalResult": "src.stages.retriever",
+    "TemporalValidationError": "src.stages.retriever",
     # evidence_extractor
-    "EvidenceExtractor": "src.evidence_extractor",
+    "EvidenceExtractor": "src.stages.evidence_extractor",
     # evidence_selector
-    "EvidenceSelector": "src.evidence_selector",
-    "EvidenceSelectorError": "src.evidence_selector",
+    "EvidenceSelector": "src.stages.evidence_selector",
+    "EvidenceSelectorError": "src.stages.evidence_selector",
     # forecast_model
-    "ForecastModel": "src.forecast_model",
-    "ForecastModelError": "src.forecast_model",
+    "ForecastModel": "src.stages.forecast_model",
+    "ForecastModelError": "src.stages.forecast_model",
     # faithfulness_evaluator / faithfulness_metrics
-    "FaithfulnessEvaluator": "src.faithfulness_evaluator",
-    "FaithfulnessEvaluatorError": "src.faithfulness_evaluator",
-    "FaithfulnessMetrics": "src.faithfulness_metrics",
-    "VERDICTS": "src.faithfulness_metrics",
+    "FaithfulnessEvaluator": "src.stages.faithfulness_evaluator",
+    "FaithfulnessEvaluatorError": "src.stages.faithfulness_evaluator",
+    "FaithfulnessMetrics": "src.stages.faithfulness_metrics",
+    "VERDICTS": "src.stages.faithfulness_metrics",
     # sufficiency (B1) / market (B3)
-    "SufficiencyEvaluator": "src.sufficiency_evaluator",
-    "MarketAnalyzer": "src.market_analyzer",
+    "SufficiencyEvaluator": "src.stages.sufficiency_evaluator",
+    "MarketAnalyzer": "src.stages.market_analyzer",
     # shared data contracts + validators
-    "NewsRecord": "src.schema",
-    "EvidenceItem": "src.schema",
-    "ForecastResult": "src.schema",
-    "FaithfulnessResult": "src.schema",
-    "PipelineResult": "src.schema",
-    "REQUIRED_SAMPLE_KEYS": "src.schema",
-    "validate_sample": "src.schema",
+    "NewsRecord": "src.core.schema",
+    "EvidenceItem": "src.core.schema",
+    "ForecastResult": "src.core.schema",
+    "FaithfulnessResult": "src.core.schema",
+    "PipelineResult": "src.core.schema",
+    "REQUIRED_SAMPLE_KEYS": "src.core.schema",
+    "validate_sample": "src.core.schema",
 }
 
 __all__ = sorted(_EXPORTS)

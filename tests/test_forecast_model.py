@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from src.forecast_model import ForecastModel, ForecastModelError
+from src.stages.forecast_model import ForecastModel, ForecastModelError
 
 _model = ForecastModel()
 CSV_COLUMNS = ForecastModel.CSV_COLUMNS
@@ -896,7 +896,7 @@ def test_compute_accuracy_and_confusion_accepts_input_record_pairs() -> None:
 
 def test_integration_end_to_end_through_extractor_and_selector(tmp_path: Path) -> None:
     """`extract_evidence` → mocked selector → `predict` → well-formed result."""
-    from src.evidence_extractor import EvidenceExtractor
+    from src.stages.evidence_extractor import EvidenceExtractor
 
     news_time = "2025-03-11 08:30"
     raw = {
@@ -994,11 +994,11 @@ def test_integration_batch_with_evaluation_metrics(tmp_path: Path) -> None:
 def test_module_does_not_import_extractor_or_selector() -> None:
     """Forecast Model must not import from the Evidence Extractor or Selector."""
     import importlib
-    from src import forecast_model
+    from src.stages import forecast_model
 
     importlib.reload(forecast_model)
     src_text = Path(forecast_model.__file__).read_text()
-    assert "from src.evidence_extractor" not in src_text
-    assert "from src.evidence_selector" not in src_text
-    assert "import src.evidence_extractor" not in src_text
-    assert "import src.evidence_selector" not in src_text
+    assert "from src.stages.evidence_extractor" not in src_text
+    assert "from src.stages.evidence_selector" not in src_text
+    assert "import src.stages.evidence_extractor" not in src_text
+    assert "import src.stages.evidence_selector" not in src_text

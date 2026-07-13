@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-from src.schema import validate_sample
+from src.core.schema import validate_sample
 
 EXIT_INVALID_INPUT = 2
 

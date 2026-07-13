@@ -1,10 +1,10 @@
-"""Unit tests for src.market_analyzer (B3)."""
+"""Unit tests for src.stages.market_analyzer (B3)."""
 
 from __future__ import annotations
 
 import pytest
 
-from src.market_analyzer import MarketAnalyzer
+from src.stages.market_analyzer import MarketAnalyzer
 
 REGIME_THRESHOLD = MarketAnalyzer.REGIME_THRESHOLD
 RETURN_THRESHOLD = MarketAnalyzer.RETURN_THRESHOLD

@@ -16,7 +16,7 @@ from typing import Any, Dict, List
 import pandas as pd
 
 from src.export_csv import compute_leakage_minutes, faithfulness_label
-from src.schema import validate_sample
+from src.core.schema import validate_sample
 
 DEFAULT_ENVELOPE_PATH = "outputs/08_market.json"
 

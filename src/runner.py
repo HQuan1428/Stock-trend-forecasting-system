@@ -19,10 +19,11 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from src import (
+from src import export_csv
+from src.core.stage_io import EXIT_INVALID_INPUT, EnvelopeError, dump_envelope
+from src.stages import (
     evidence_extractor,
     evidence_selector,
-    export_csv,
     faithfulness_evaluator,
     forecast_model,
     ingest,
@@ -30,7 +31,6 @@ from src import (
     retriever,
     sufficiency_evaluator,
 )
-from src.stage_io import EXIT_INVALID_INPUT, EnvelopeError, dump_envelope
 
 # (stage_name, envelope filename, process function) in chain order.
 STAGES: Tuple[Tuple[str, str, Callable[[Dict[str, Any]], Dict[str, Any]]], ...] = (

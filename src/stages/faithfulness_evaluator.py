@@ -14,7 +14,7 @@ logistic regression, deep-learning model, or external API. It does NOT
 read raw ``news_text`` or price data. It does NOT re-extract or
 re-classify evidence. It re-invokes ``ForecastModel.predict_without_evidence``
 to produce the post-ablation prediction, and re-uses the pure metric
-methods from :class:`src.faithfulness_metrics.FaithfulnessMetrics` for
+methods from :class:`src.stages.faithfulness_metrics.FaithfulnessMetrics` for
 the math.
 
 The module exposes:
@@ -37,7 +37,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
-from src.faithfulness_metrics import FaithfulnessMetrics
+from src.stages.faithfulness_metrics import FaithfulnessMetrics
 
 
 class FaithfulnessEvaluatorError(ValueError):
@@ -439,7 +439,7 @@ class FaithfulnessEvaluator:
         warnings: List[str] = []
         try:
             # Imported lazily to avoid a circular import at module load.
-            from src.forecast_model import ForecastModel, ForecastModelError
+            from src.stages.forecast_model import ForecastModel, ForecastModelError
         except Exception as exc:  # pragma: no cover - defensive
             return (
                 {"prediction": "HOLD", "confidence": 0.5},
@@ -589,7 +589,7 @@ STAGE_NAME = "faithfulness_evaluator"
 
 def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
     """Evaluate faithfulness of each sample's forecast against its evidence."""
-    from src.forecast_model import build_forecast_request
+    from src.stages.forecast_model import build_forecast_request
 
     evaluator = FaithfulnessEvaluator()
     for sample in envelope["samples"]:
@@ -600,7 +600,7 @@ def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
-    from src.stage_io import run_stage_cli
+    from src.core.stage_io import run_stage_cli
 
     return run_stage_cli(
         STAGE_NAME,

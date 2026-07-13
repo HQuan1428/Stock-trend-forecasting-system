@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from src.schema import REQUIRED_SAMPLE_KEYS, validate_sample
-from src.stage_io import EnvelopeError, dump_envelope, load_envelope
+from src.core.schema import REQUIRED_SAMPLE_KEYS, validate_sample
+from src.core.stage_io import EnvelopeError, dump_envelope, load_envelope
 
 
 def _base_sample() -> dict:

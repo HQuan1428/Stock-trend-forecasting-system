@@ -100,7 +100,7 @@ def test_intermediate_file_reusable_by_standalone_cli(
     full_run: Path, tmp_path: Path
 ) -> None:
     """outputs/03_evidence.json fed to the forecast CLI reproduces 04_forecast.json."""
-    from src import forecast_model
+    from src.stages import forecast_model
 
     out = tmp_path / "04_again.json"
     code = forecast_model.main(

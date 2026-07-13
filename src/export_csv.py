@@ -28,7 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.stage_io import EXIT_INVALID_INPUT, EnvelopeError, load_envelope
+from src.core.stage_io import EXIT_INVALID_INPUT, EnvelopeError, load_envelope
 
 STAGE_NAME = "export_csv"
 

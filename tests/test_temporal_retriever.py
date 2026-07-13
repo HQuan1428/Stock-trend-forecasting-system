@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.retriever import RetrievalResult, TemporalRetriever, TemporalValidationError
+from src.stages.retriever import RetrievalResult, TemporalRetriever, TemporalValidationError
 
 _retriever = TemporalRetriever()
 

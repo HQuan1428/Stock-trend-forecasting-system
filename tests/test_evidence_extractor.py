@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.evidence_extractor import EvidenceExtractor
+from src.stages.evidence_extractor import EvidenceExtractor
 
 _extractor = EvidenceExtractor()
 EXTRACTION_METHOD = EvidenceExtractor.EXTRACTION_METHOD

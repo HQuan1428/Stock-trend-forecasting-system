@@ -40,7 +40,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.retriever import TimeUtils
+from src.stages.retriever import TimeUtils
 
 
 class EvidenceSelectorError(ValueError):
@@ -490,7 +490,7 @@ def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
-    from src.stage_io import run_stage_cli
+    from src.core.stage_io import run_stage_cli
 
     return run_stage_cli(
         STAGE_NAME,

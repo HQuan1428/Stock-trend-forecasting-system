@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 
 import pytest
 
-from src.faithfulness_metrics import VERDICTS, FaithfulnessMetrics
-from src.faithfulness_evaluator import FaithfulnessEvaluator
+from src.stages.faithfulness_metrics import VERDICTS, FaithfulnessMetrics
+from src.stages.faithfulness_evaluator import FaithfulnessEvaluator
 
 calculate_confidence_drop = FaithfulnessMetrics.calculate_confidence_drop
 calculate_dataset_temporal_validity = FaithfulnessMetrics.calculate_dataset_temporal_validity

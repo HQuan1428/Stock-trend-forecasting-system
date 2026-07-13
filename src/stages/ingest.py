@@ -11,7 +11,7 @@ preserving first-appearance order, and emits the initial envelope:
 
 Uses only the stdlib ``csv`` module — no pandas.
 
-CLI: ``python -m src.ingest --input data/sample_dataset.csv -o 01_samples.json``
+CLI: ``python -m src.stages.ingest --input data/sample_dataset.csv -o 01_samples.json``
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.stage_io import (
+from src.core.stage_io import (
     EXIT_INVALID_INPUT,
     EnvelopeError,
     build_stage_parser,

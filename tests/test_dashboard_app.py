@@ -42,7 +42,7 @@ def test_live_demo_selection_helpers() -> None:
 
 def test_verdict_banner_text_is_vietnamese_and_complete() -> None:
     from src.dashboard.metrics import VERDICT_BANNERS
-    from src.faithfulness_metrics import VERDICTS
+    from src.stages.faithfulness_metrics import VERDICTS
 
     # Every internal verdict must have a banner mapping.
     assert set(VERDICT_BANNERS) == set(VERDICTS)

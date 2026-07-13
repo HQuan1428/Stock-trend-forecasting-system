@@ -1,4 +1,4 @@
-"""Unit tests for src.agent_trace (B4)."""
+"""Unit tests for src.core.agent_trace (B4)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.agent_trace import load_trace_log, summarize_trace, write_trace_entry
+from src.core.agent_trace import load_trace_log, summarize_trace, write_trace_entry
 
 
 # ---------------------------------------------------------------------------

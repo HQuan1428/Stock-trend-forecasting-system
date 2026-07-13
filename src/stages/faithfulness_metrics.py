@@ -18,9 +18,9 @@ metric methods that together form the contract documented in
 - ``classify_faithfulness``
 
 The orchestrator that owns ablation, warning collection, and the
-``FaithfulnessReport`` dict lives in ``src/faithfulness_evaluator.py``.
+``FaithfulnessReport`` dict lives in ``src/stages/faithfulness_evaluator.py``.
 
-The class reuses :class:`src.retriever.TimeUtils` so temporal
+The class reuses :class:`src.stages.retriever.TimeUtils` so temporal
 comparisons are consistent across the pipeline.
 """
 
@@ -29,7 +29,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-from src.retriever import TimeUtils
+from src.stages.retriever import TimeUtils
 
 
 VERDICTS = frozenset(

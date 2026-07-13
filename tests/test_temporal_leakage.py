@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from src.retriever import TemporalRetriever
+from src.stages.retriever import TemporalRetriever
 
 _retriever = TemporalRetriever()
 

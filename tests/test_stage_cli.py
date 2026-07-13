@@ -13,7 +13,8 @@ from pathlib import Path
 
 import pytest
 
-from src import (
+from src.core.schema import validate_sample
+from src.stages import (
     evidence_extractor,
     evidence_selector,
     faithfulness_evaluator,
@@ -23,7 +24,6 @@ from src import (
     retriever,
     sufficiency_evaluator,
 )
-from src.schema import validate_sample
 
 CHAIN = [
     retriever,

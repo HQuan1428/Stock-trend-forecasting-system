@@ -23,7 +23,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 import pandas as pd
 import streamlit as st
 
-from src.agent_trace import load_trace_log, summarize_trace
+from src.core.agent_trace import load_trace_log, summarize_trace
 from src.dashboard import charts, components, metrics
 from src.dashboard.data_loader import (
     DashboardData,
@@ -223,7 +223,7 @@ def render_b_metrics(data: DashboardData) -> None:
     if not entries:
         st.info(
             f"Chưa có trace log tại `{TRACE_LOG_PATH}`. Tạo entry bằng "
-            "`src.agent_trace.write_trace_entry` trong quá trình phát triển."
+            "`src.core.agent_trace.write_trace_entry` trong quá trình phát triển."
         )
         return
     summary = summarize_trace(entries)

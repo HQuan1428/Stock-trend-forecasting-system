@@ -282,7 +282,7 @@ def process(envelope: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
-    from src.stage_io import run_stage_cli
+    from src.core.stage_io import run_stage_cli
 
     return run_stage_cli(
         STAGE_NAME,
