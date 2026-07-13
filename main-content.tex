@@ -1,0 +1,246 @@
+% ============================================================
+% main-content.tex
+% Nội dung báo cáo — được \input từ main.tex
+% ============================================================
+
+\definecolor{accent}{RGB}{46,110,158}
+
+\newtcolorbox{ratio}[1][]{
+  breakable, enhanced, colback=backcolour, colframe=accent,
+  boxrule=0.6pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fontupper=\small\itshape, #1
+}
+
+\newcommand{\rationale}[2]{%
+  \begin{ratio}\textbf{\upshape #1:} #2\end{ratio}%
+}
+
+\section{Giới thiệu bài toán và động lực}
+
+\textbf{Câu hỏi nghiên cứu trung tâm} (trích ChuDe1.md): khi một mô hình dự báo stock movement từ tin tức, evidence mà nó đưa ra có \textbf{thật sự quyết định} prediction không, hay chỉ là lời giải thích gắn vào \textit{sau khi} đã ra quyết định?
+
+Hệ thống nhận vào \texttt{ticker}, \texttt{forecast\_time}, tin tức trước thời điểm dự báo; trả về \texttt{prediction} (UP/DOWN/HOLD), \texttt{confidence}, evidence được dùng, rationale, và các metric kiểm chứng evidence. Đây \textbf{không phải} hệ thống giao dịch thật — trọng tâm là học cách áp dụng Agentic AI vào vòng đời phát triển phần mềm (đặc tả → thiết kế → hiện thực → kiểm thử → đánh giá → trực quan hoá → phản biện giới hạn), không phải tối ưu lợi nhuận.
+
+\section{Research gap: accuracy chưa đủ, cần faithful evidence}
+
+Một mô hình có thể đạt accuracy cao trong khi: (1) dùng tin tức \textbf{tương lai} lọt vào input (temporal leakage); (2) đưa ra evidence nghe hợp lý nhưng nếu xoá đi, prediction vẫn không đổi (evidence ``trang trí''); (3) bỏ qua counterevidence — chỉ trích tin ủng hộ.
+
+Khoảng cách giữa \textbf{prediction accuracy} và \textbf{explanation faithfulness} không phải lý thuyết suông — thực nghiệm trên hệ thống này chứng minh nó có thật: accuracy tổng thể \textbf{74\%}, nhưng recall riêng nhãn DOWN chỉ \textbf{34.4\%}. Nếu chỉ nhìn accuracy tổng, con số này bị coi là "mô hình yếu". Nhìn qua faithfulness metric (Mục 8, Case study 3) mới thấy nguyên nhân là \textbf{chính đáng}: hệ thống thà bỏ evidence tương lai còn hơn leak dữ liệu — đánh đổi accuracy lấy temporal validity một cách có chủ ý, không phải lỗi thuật toán. Đây chính là lý do đồ án đo faithfulness như một trục độc lập với accuracy, thay vì chỉ báo cáo một con số duy nhất.
+
+\section{Thiết kế Agentic SDLC và OpenSpec}
+
+Mọi thay đổi trong hệ thống đi qua quy trình \textbf{OpenSpec} 3 bước: \texttt{/opsx:propose} (sinh \texttt{proposal.md} + \texttt{design.md} + \texttt{tasks.md} + \texttt{spec.md}) → con người review và duyệt → \texttt{/opsx:apply} (implement theo \texttt{tasks.md}) → \texttt{/opsx:archive} (archive change, đồng bộ spec chính). Dự án có \textbf{11 OpenSpec change active} + \textbf{2 change đã archive} (\texttt{enrich-evidence-keywords-v2/v3}) trong \path{openspec/changes/}.
+
+\textbf{3 vai trò AI agent bắt buộc} (B4), ghi vết vào \path{outputs/run_log.json}:
+
+\begin{itemize}
+  \item \textbf{Research Agent} — phân tích gap, viết \texttt{proposal.md}/\texttt{design.md} (12/40 entry).
+  \item \textbf{Coding Agent} — implement theo spec đã duyệt (18/40 entry).
+  \item \textbf{Testing/Review Agent} — viết test, chạy pipeline thật để verify số liệu, không chỉ đọc code (10/40 entry).
+\end{itemize}
+
+Mỗi entry có 6 field bắt buộc: \texttt{run\_id}, \texttt{agent\_role}, \texttt{task}, \texttt{output}, \texttt{human\_review} (accepted/rejected), \texttt{quality\_gate} (passed/failed). \textbf{Con người không duyệt spec thì Coding Agent không được implement} — đây là control point chính, không phải review code sau khi xong.
+
+\textbf{Quality gate hoạt động thật, không hình thức}: trace log 40 entry có \textbf{pass rate 90\%} — 4 lần "failed" là 4 bug thật bị Testing/Review Agent bắt bằng cách \textit{chạy pipeline trên dữ liệu thật}, không phải đọc code tĩnh:
+
+\begin{table}[H]
+\centering
+\caption{4 lần quality gate thất bại thật trong lịch sử dự án}
+\begin{tabularx}{\textwidth}{|X|X|X|}
+\hline
+\textbf{Vấn đề bị bắt} & \textbf{Cách phát hiện} & \textbf{Ai fix} \\ \hline
+Keyword dictionary V1 quá thưa $\to$ accuracy 27\% & Chạy pipeline, so số liệu CSV & Coding Agent (V2 keywords) \\ \hline
+V2 vẫn còn 51/100 sample false-HOLD & So label thật với prediction & Coding Agent (V3 keywords) \\ \hline
+\texttt{sufficiency\_score} sai khi không có cited evidence & Test edge case & Coding Agent (patch) \\ \hline
+\texttt{IndexError} dashboard sau refactor OOP & Chạy dashboard thật lúc verify & Coding Agent (patch) \\ \hline
+\end{tabularx}
+\end{table}
+
+Chi tiết đầy đủ 3 vai trò × mỗi phase nằm trong \path{openspec/changes/phase-b4-agentic-sdlc-maturity/reflection.md}.
+
+\section{Mô tả dữ liệu}
+
+\path{data/sample_dataset.csv}: \textbf{144 dòng}, group theo \texttt{(ticker, forecast\_time)} thành \textbf{100 sample}. Cột bắt buộc: \texttt{news\_id, ticker, forecast\_time, news\_time, news\_text, label}; cột tuỳ chọn cho B3: \texttt{next\_day\_return, price\_5d\_return, volume\_change} (thiếu thì mặc định 0.0).
+
+\begin{table}[H]
+\centering
+\caption{Thống kê dataset}
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\textbf{Phân bố ticker} & AAPL 53, AMZN 33, GOOGL 29, META 29 (144 dòng) \\ \hline
+\textbf{Phân bố nhãn (100 group)} & UP 41, DOWN 32, HOLD 27 \\ \hline
+\textbf{Temporal leakage} & 21 dòng có \texttt{news\_time > forecast\_time} (21/100 group không còn valid news nào) \\ \hline
+\end{tabularx}
+\end{table}
+
+Timestamp: ISO-8601, naive = UTC (quy ước ngành tài chính). \texttt{next\_day\_return}/\texttt{price\_5d\_return} là dữ liệu \textbf{mô phỏng} (hash-seeded theo \texttt{ticker+forecast\_time} để deterministic) — dataset không có giá thị trường thật (phù hợp phạm vi academic prototype, không claim điểm cộng C1/C2).
+
+\section{Mô tả pipeline kỹ thuật}
+
+Chuỗi \textbf{9 stage tương tác được} — mỗi stage chạy CLI riêng (\texttt{python -m src.<stage>}) hoặc chạy trọn chuỗi qua orchestrator mỏng \texttt{src/runner.py}. Dữ liệu trao đổi là \textbf{accumulating JSON envelope} — mỗi stage chỉ bổ sung field theo namespace riêng, không xoá field stage trước.
+
+\begin{singlespace}
+\begin{lstlisting}[numbers=none]
+data/sample_dataset.csv (144 rows, 100 groups)
+  -> ingest.py            01_samples.json     group theo (ticker, forecast_time)
+  -> retriever.py         02_retrieved.json   TemporalRetriever: valid/invalid_future_news
+  -> evidence_extractor   03_evidence.json    EvidenceExtractor: evidence + polarity
+  -> forecast_model       04_forecast.json    ForecastModel: prediction + confidence
+  -> evidence_selector    05_selected.json    EvidenceSelector: pro/counter/neutral (+B2)
+  -> faithfulness_eval    06_faithfulness.json  temporal_validity, evidence_support, drop
+  -> sufficiency_eval     07_sufficiency.json   sufficiency_score, counterfactual_delta (B1)
+  -> market_analyzer      08_market.json        market_consistent, regime (B3)
+  -> export_csv.py        6 CSV ket qua
+  -> dashboard/app.py     Streamlit read-only, doc 08_market.json, 6 tab (A7)
+\end{lstlisting}
+\end{singlespace}
+
+\texttt{runner.py} gọi đúng hàm \texttt{process(envelope)->envelope} mà CLI rời cũng gọi — \textbf{một code path duy nhất}, hỗ trợ \texttt{--stop-after} để dừng sớm demo. Schema validate ở ranh giới mỗi stage (\path{src/schema.py}) — input hỏng dừng ngay exit code 2, không lan dữ liệu sai xuống dưới.
+
+\rationale{Quyết định thiết kế}{``CLI rời từng stage thay vì orchestrator monolithic: giá trị nằm ở việc quan sát được dữ liệu biến đổi qua từng bước.'' (\path{openspec/changes/interactive-stage-cli/design.md})}
+
+\textbf{Vấn đề kỹ thuật từng stage} (chi tiết đầy đủ trong \path{TECHNICAL_ISSUES.md}):
+
+\begin{itemize}
+  \item \textbf{Temporal Retriever (A3)} — chặn leakage bằng luật nhị phân $news\_time \le forecast\_time$; bất đối xứng xử lý lỗi (news\_time hỏng $\to$ bỏ qua item, forecast\_time hỏng $\to$ raise); parse UTC tập trung tại \texttt{TimeUtils} để tránh lệch quy ước giữa các module.
+  \item \textbf{Evidence Extractor (A4)} — dictionary 34 positive + 46 negative keyword (3 vòng mở rộng V1$\to$V2$\to$V3 sau khi phát hiện V1 chỉ match \textasciitilde5\% text); token-gap 15 ký tự bắt biến thể cụm từ (``weak iPhone sales'' khớp ``weak sales''); overlap resolution ưu tiên match dài nhất.
+  \item \textbf{Forecast Model (A5)} — vote rule-based (\texttt{score = positive − negative}), confidence $=0.5+\min(|score|{\times}0.1, 0.45)$ không chia theo total\_evidence (tránh thổi phồng confidence khi chỉ có 1 evidence); \texttt{predict\_without\_evidence} tách riêng nhưng dùng chung \texttt{\_predict\_core} với \texttt{predict} để không lệch logic.
+  \item \textbf{Evidence Selector (A4 mở rộng, B2)} — bảng tra cứu cố định $(prediction, expected\_direction) \to$ pro/counter/neutral; counterevidence coverage suy nhãn kỳ vọng từ chính bảng tra cứu (không cần annotate tay); flag \texttt{invalid\_future\_evidence} làm lớp phòng thủ thứ 2 cho leakage.
+  \item \textbf{Faithfulness Evaluator (A6)} — ablation bắt buộc gọi lại \texttt{ForecastModel.predict\_without\_evidence} (không tự suy diễn); mặc định chỉ xoá pro-evidence (phép thử mạnh nhất); \texttt{faithfulness\_score} composite ghi rõ là heuristic hiển thị, \texttt{confidence\_drop} mới là tín hiệu chính.
+  \item \textbf{Sufficiency Evaluator (B1)} — tách khỏi Evidence Selector, chỉ nhận tập \texttt{cited\_evidence\_ids}; edge case rỗng $\to$ \texttt{sufficiency\_score=0.0}.
+  \item \textbf{Market Analyzer (B3)} — dữ liệu synthetic hash-seeded (deterministic dù giả lập); ngưỡng 0.5\%/2\% cố định, tài liệu hoá lý do chọn.
+  \item \textbf{Agent Trace (B4)} — schema JSON cố định, append-safe, \texttt{load\_trace\_log} không bao giờ raise.
+  \item \textbf{Dashboard (A7)} — cache theo \texttt{mtime} file để tự làm mới sau khi chạy lại pipeline; toggle ablation chỉ hiển thị số đã tính sẵn, không re-run model.
+\end{itemize}
+
+\section{Metric và cách đánh giá}
+
+\begin{singlespace}
+\begin{lstlisting}[numbers=none]
+# A6 - Faithfulness
+temporal_validity = 1.0 neu moi cited evidence co news_time <= forecast_time (rong -> 1.0)
+evidence_support   = mean(support_score); 1.0 khop huong, 0.5 mot ben HOLD, 0.0 nguoc huong
+confidence_drop    = original_confidence - confidence_after_removal (goi ForecastModel that)
+faithfulness_label = HIGH   neu temporal_validity>=1.0 va confidence_drop>=0.20
+                     MEDIUM neu temporal_validity>=1.0 va confidence_drop>=0.05
+                     LOW    con lai (temporal fail luon override)
+
+# B1 - Sufficiency + Counterfactual
+sufficiency_score     = min(sufficiency_confidence/original_confidence, 1.0), 0.0 neu rong
+counterfactual_delta  = original_confidence - counterfactual_confidence (thay cited->neutral)
+
+# B2 - Counterevidence coverage
+counterevidence_coverage = detected_counterevidence_count / available_counterevidence_count
+
+# B3 - Market consistency + regime
+market_consistent (nguong +-0.5% next_day_return); regime bull/bear/sideways (nguong +-2% 5d_return)
+\end{lstlisting}
+\end{singlespace}
+
+Tất cả metric \textbf{deterministic, rule-based} — không LLM/FinBERT/transformer. Ablation (confidence\_drop, sufficiency, counterfactual) đều tái sử dụng \texttt{ForecastModel.predict}/\texttt{predict\_without\_evidence} thật, không viết lại thuật toán vote ở nơi khác — đảm bảo không có 2 nguồn sự thật lệch nhau.
+
+\section{Kết quả thực nghiệm và visualization}
+
+\begin{singlespace}
+\begin{lstlisting}[numbers=none, caption={Confusion matrix trên toàn bộ dataset — Accuracy 74\%}]
+              Predicted: DOWN  HOLD   UP
+Actual UP  :             0     4    37   -> recall 90.2%
+Actual DOWN:            11    21     0   -> recall 34.4%  (giai thich: Case study 3)
+Actual HOLD:             1    26     0   -> recall 96.3%
+\end{lstlisting}
+\end{singlespace}
+
+\begin{table}[H]
+\centering
+\caption{Kết quả tổng hợp các metric}
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+Evidence trích xuất & 130 item (79 group có valid news); 107 pro / 23 counter \\ \hline
+Faithfulness & temporal\_validity mean 1.00; evidence\_support mean 0.933; confidence\_drop mean 0.189, max 0.50; 49 HIGH / 51 LOW \\ \hline
+Counterevidence coverage (B2) & 22/100 group phát hiện được counterevidence; coverage trung bình 0.22 \\ \hline
+Sufficiency (B1) & sufficiency\_score mean 0.790; 79/100 group = 1.0, 21/100 group = 0.0 (trùng 21 group bị leakage lọc sạch); counterfactual\_delta mean 0.056 \\ \hline
+Market consistency (B3) & consistency rate 27\% (dữ liệu synthetic); regime: sideways 52, bull 26, bear 22 \\ \hline
+\end{tabularx}
+\end{table}
+
+\textbf{Dashboard} (\path{streamlit run src/dashboard/app.py}) đọc duy nhất \path{outputs/08_market.json}, read-only tuyệt đối, \textbf{6 tab}: Live Demo (kịch bản §11.1, toggle remove-cited-evidence), Overview (prediction distribution, accuracy theo ticker), Evidence (bảng 130 row filter được), Faithfulness (scatter confidence\_drop + radar 5 trục), Temporal Leakage (banner + bảng 21 case), B-metrics (B1+B2+B3+B4 gộp 1 tab, 4 mục con).
+
+\section{Phân tích case đúng/sai}
+
+Ba case lấy trực tiếp từ \path{outputs/08_market.json} lần chạy hiện tại.
+
+\textbf{Đúng — faithful, có counterevidence (AAPL 2025-03-19, label=UP):}
+\begin{singlespace}
+\begin{lstlisting}[numbers=none]
+"record level" (UP,pro) + "signs a" (UP,pro) + "delays production" (DOWN,counter)
+score = 2-1 = 1 -> UP (dung). counterevidence_detected=True, coverage=1.00
+\end{lstlisting}
+\end{singlespace}
+
+\textbf{Sai — miss keyword (META 2025-03-17, label=UP, pred=HOLD):}
+\begin{singlespace}
+\begin{lstlisting}[numbers=none]
+"Meta resolves a European privacy case with a smaller than feared penalty"
+-> khong khop keyword nao -> neutral -> score=0 -> HOLD (sai). Limitation L1, khong phai loi logic.
+\end{lstlisting}
+\end{singlespace}
+
+\textbf{Sai — do đúng nguyên tắc leakage (AAPL 2025-03-13, label=DOWN, pred=HOLD):}
+\begin{singlespace}
+\begin{lstlisting}[numbers=none]
+Tin duy nhat: "Apple supplier warns of softer iPhone... orders" news_time 11:15 > forecast 09:00
+-> LEAKAGE, bi loc -> valid_news=[] -> score=0 -> HOLD (sai nhung dung nguyen tac)
+\end{lstlisting}
+\end{singlespace}
+
+Case 3 giải thích trực tiếp vì sao recall DOWN chỉ 34.4\% (Mục 2, 7): 21/32 group label=DOWN có tin duy nhất rơi vào \texttt{invalid\_future\_news}, bị Retriever lọc sạch trước khi tới Forecast Model — đánh đổi có chủ ý, không phải lỗi.
+
+\section{Limitations và hướng phát triển}
+
+\begin{table}[H]
+\centering
+\caption{Hạn chế hiện tại và hướng phát triển}
+\begin{tabularx}{\textwidth}{|l|X|X|}
+\hline
+\textbf{\#} & \textbf{Limitation} & \textbf{Hướng phát triển} \\ \hline
+L1 & Keyword matching bỏ sót paraphrase (``resolves...smaller than feared'') & Learned lexicon / embedding similarity thay substring, có version pinning \\ \hline
+L2 & Vote model trọng số đều, không recency weighting & \texttt{selector\_score = extractor\_score × keyword\_strength × recency\_weight} (đã là extension point sẵn trong design) \\ \hline
+L3 & Market data mô phỏng (hash-seeded) & Tích hợp Alpha Vantage/Yahoo Finance thật (thuộc phạm vi điểm cộng C1) \\ \hline
+L4 & Counterevidence coverage thấp (22\%), do đặc điểm dataset & Mở rộng dataset đa dạng hướng tin hơn, không phải sửa code \\ \hline
+L5 & Không NLP nâng cao, rule-based thuần & FinBERT/LLM cho polarity (điểm cộng C2), giữ ablation logic hiện có làm baseline so sánh \\ \hline
+L6 & Chuỗi 9 stage tuần tự, đơn tiến trình, fail-fast toàn cục & Không ưu tiên — fail-fast có chủ ý cho hệ thống đo lường khoa học; chỉ cần nếu mở rộng dataset lớn hơn nhiều bậc \\ \hline
+\end{tabularx}
+\end{table}
+
+\section{Phụ lục: prompt, agent trace, test cases}
+
+\textbf{Prompt/quy trình sinh code}: mọi thay đổi đi qua slash-command OpenSpec — \texttt{/opsx:propose "<mô tả gap>"} sinh proposal/design/spec, \texttt{/opsx:apply} implement theo \texttt{tasks.md}, \texttt{/opsx:archive} archive + sync spec chính. Không có prompt tự do ngoài quy trình này cho code chạm vào \texttt{src/}.
+
+\begin{table}[H]
+\centering
+\caption{Trích outputs/run\_log.json (agent trace, 40 entry)}
+\begin{tabularx}{\textwidth}{|l|l|X|l|}
+\hline
+\textbf{run\_id} & \textbf{role} & \textbf{task} & \textbf{gate} \\ \hline
+R015 & Testing/Review & Phát hiện accuracy sập 27\% do keyword V1 thưa & failed \\ \hline
+R017 & Coding & Implement V2 keyword dictionary & passed \\ \hline
+R033 & Testing/Review & Phát hiện IndexError dashboard sau refactor OOP & failed \\ \hline
+R036 & Coding & Xoá pipeline.py, dựng chuỗi 9-stage envelope & passed \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test suite — 438 test, theo module}
+\begin{tabularx}{\textwidth}{|X|l|X|l|}
+\hline
+Forecast Model & 70 & Evidence Extractor & 58 \\ \hline
+Evidence Selector & 53 & Faithfulness Metrics & 37 \\ \hline
+Faithfulness Evaluator & 25 & Temporal Retriever & 22 \\ \hline
+Schema Validation & 13 & Sufficiency Evaluator & 12 \\ \hline
+Dashboard Metrics & 12 & Market Analyzer & 10 \\ \hline
+Agent Trace & 9 & Stage CLI / Runner & 8 + 8 \\ \hline
+Dashboard Data Loader & 7 & Dashboard Charts & 5 \\ \hline
+Temporal Leakage & 4 & Dashboard App & 4 \\ \hline
+\end{tabularx}
+\end{table}
