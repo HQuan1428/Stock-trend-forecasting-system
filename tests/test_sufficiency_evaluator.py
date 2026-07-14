@@ -21,14 +21,21 @@ _FORECAST_TIME = "2025-03-12T09:00:00"
 
 
 def _make_evidence(news_id: str, direction: str, idx: int = 0) -> Dict[str, Any]:
+    pos_p, neg_p, neu_p = (
+        (0.85, 0.10, 0.05) if direction == "UP"
+        else (0.10, 0.85, 0.05) if direction == "DOWN"
+        else (0.15, 0.15, 0.70)
+    )
+    polarity = "positive" if direction == "UP" else "negative" if direction == "DOWN" else "neutral"
     return {
         "evidence_id": f"{news_id}_ev{idx}",
         "news_id": news_id,
         "news_time": "2025-03-11T08:00:00",
         "evidence_text": f"Evidence for {news_id}",
-        "polarity": "positive" if direction == "UP" else "negative",
+        "polarity": polarity,
         "expected_direction": direction,
-        "support_score": 0.8,
+        "support_score": pos_p if direction == "UP" else neg_p if direction == "DOWN" else neu_p,
+        "sentiment_probs": {"positive": pos_p, "negative": neg_p, "neutral": neu_p},
     }
 
 
@@ -146,11 +153,15 @@ def test_empty_cited_ids_gives_sufficiency_zero_and_no_counterfactual_change() -
     original_confidence = float(result["confidence"])
     evaluator = SufficiencyEvaluator()
     out = evaluator.evaluate(req, result, set())
-    # No cited evidence → sufficiency runs with [] evidence → HOLD with 0.5
-    assert out["sufficiency_confidence"] == pytest.approx(0.5)
+    # V3: sufficiency with no cited evidence runs ``predict`` against an
+    # empty ``evidence`` list. The exact softmax value depends on the
+    # Attention checkpoint (we commit random-init weights for now);
+    # the qualitative contract is just ``sufficiency_score == 0.0``
+    # (no citation means no faithfulness signal) and ``counterfactual_delta == 0``
+    # (nothing to perturb).
     assert out["sufficiency_score"] == 0.0
-    # Nothing perturbed → counterfactual_delta == 0
     assert out["counterfactual_delta"] == pytest.approx(0.0)
+    assert 0.0 < out["sufficiency_confidence"] <= 1.0
 
 
 def test_all_evidence_cited_sufficiency_score_approx_one() -> None:

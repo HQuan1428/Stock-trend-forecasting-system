@@ -65,11 +65,17 @@ src/stages/retriever.py          → 02_retrieved.json     TemporalRetriever.ret
     │  TimeUtils = single source of truth UTC parsing
     ▼
 src/stages/evidence_extractor.py → 03_evidence.json      EvidenceExtractor.extract_batch()
-    │  Keyword matching (rule-based, V1/V2/V3 dictionary) → polarity + expected_direction
-    │  POSITIVE_KEYWORDS / NEGATIVE_KEYWORDS là single source of truth cho polarity
+    │  V3: FinBERT (ProsusAI/finbert, frozen, lazy-load ~400MB) → polarity + sentiment_probs
+    │  Mỗi evidence item có thêm `sentiment_probs = {positive, negative, neutral}`
+    │  → single source of truth cho polarity model mới
     ▼
 src/stages/forecast_model.py     → 04_forecast.json      ForecastModel.predict()
-    │  Rule-based voting: score = positive_count - negative_count
+    │  V3: Attention Evidence Aggregator (PyTorch, trainable qua
+    │  scripts/train_evidence_aggregator.py) — checkpoint commit ở
+    │  models/evidence_aggregator_v1.pt. Forward: 7-dim evidence
+    │  feature → proj → attention pooling → concat 2 price features
+    │  → head MLP → softmax 3 class. Seed reproducibility (không strict
+    │  byte-deterministic).
     │  confidence = 0.5 + min(abs(score)*0.1, 0.45)
     │  build_forecast_request() dùng chung cho faithfulness/sufficiency stage
     ▼
@@ -113,7 +119,14 @@ Nếu implementation và spec không khớp → cập nhật spec hoặc hỏi t
 ## Key Invariants
 
 - **Temporal validity là bất khả xâm phạm**: `news_time > forecast_time` → loại. Retriever lọc trước, Forecast Model lọc thêm lần nữa (defense in depth).
-- **Không có ML/LLM/external API** trong baseline. Toàn bộ V1 là deterministic, rule-based.
+- **Forecast Model V3 dùng Attention Evidence Aggregator (PyTorch)**:
+      trọng số là hằng số đóng băng trong `models/evidence_aggregator_v1.pt`
+      (commit vào repo), train qua `scripts/train_evidence_aggregator.py`
+      trên Colab T4 hoặc local CPU. Runtime gọi `model.eval() + torch.no_grad()
+      + torch.manual_seed(42)` → seed-reproducible trong tolerance `1e-6`
+      float, KHÔNG strict byte-deterministic. Evidence Extractor dùng
+      FinBERT (ProsusAI/finbert, frozen, lazy-load). Không có external API
+      lúc runtime.
 - `EvidenceExtractor.POSITIVE_KEYWORDS` và `NEGATIVE_KEYWORDS` là single source of truth — downstream đọc trực tiếp attr này, không tự định nghĩa lại polarity.
 - Timestamp parsing dùng chung `src.stages.retriever.TimeUtils` (`parse_datetime` / `normalize_to_utc` / `parse_utc`) — không tự viết lại logic parse ISO-8601/UTC ở module khác.
 - **Deterministic byte-for-byte**: cùng input → cùng output (JSON và CSV). `process()` phải pure — không I/O file, không phụ thuộc thời gian thực.

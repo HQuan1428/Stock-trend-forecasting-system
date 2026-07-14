@@ -2,3 +2,14 @@ pytest
 streamlit
 plotly
 pandas
+numpy
+pyarrow
+python-dotenv
+kaggle
+# Forecast Model V3 — FinBERT (ProsusAI/finbert) + PyTorch Attention
+# Evidence Aggregator. Loaded lazily by ``src/finbert_sentiment.py`` and
+# ``src/stages/forecast_model.py`` so importing the modules is cheap; the
+# runtime pipeline calls them once the user has the local Hugging Face
+# cache (~400MB) populated.
+torch
+transformers
