@@ -22,7 +22,7 @@ DEFAULT_ENVELOPE_PATH = "outputs/08_market.json"
 
 RUN_HINT = (
     "Chưa có dữ liệu. Hãy chạy pipeline trước: "
-    "`python -m src.runner --input data/sample_dataset.csv --output-dir outputs`"
+    "`python -m src.runner --input data/real_dataset.csv --output-dir outputs`"
 )
 
 

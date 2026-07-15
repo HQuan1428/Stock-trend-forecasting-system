@@ -27,7 +27,8 @@ from typing import Any, Dict, List, Optional
 class NewsRecord:
     """One raw row from the input CSV.
 
-    Mirrors the schema of ``data/sample_dataset.csv``:
+    Mirrors the schema shared by ``data/sample_dataset.csv`` and
+    ``data/real_dataset.csv``:
     ``news_id, ticker, forecast_time, news_time, news_text, label``.
     """
 

@@ -8,8 +8,11 @@ output directory, followed by the six result CSVs.
 This module re-implements NO stage logic; it is glue only.
 
 CLI:
-    python -m src.runner --input data/sample_dataset.csv --output-dir outputs
+    python -m src.runner --input data/real_dataset.csv --output-dir outputs
     python -m src.runner --input ... --output-dir ... --stop-after forecast_model
+
+``data/sample_dataset.csv`` (offline, has deliberate temporal-leakage rows)
+remains the fixture for the test suite and works identically with ``--input``.
 """
 
 from __future__ import annotations

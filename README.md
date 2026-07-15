@@ -16,9 +16,18 @@ pip install -r requirements.txt
 ### End-to-end (thin runner)
 
 ```bash
-python -m src.runner --input data/sample_dataset.csv --output-dir outputs
+python3 scripts/fetch_real_data.py   # một lần, cần mạng — tạo data/real_dataset.csv
+python -m src.runner --input data/real_dataset.csv --output-dir outputs
 # dừng sớm sau một stage:
-python -m src.runner --input data/sample_dataset.csv --output-dir outputs --stop-after forecast_model
+python -m src.runner --input data/real_dataset.csv --output-dir outputs --stop-after forecast_model
+```
+
+`data/sample_dataset.csv` (144 dòng, có cả tin hợp lệ và tin vi phạm thời
+gian) vẫn còn trong repo — dùng offline, không cần mạng, và là fixture bắt
+buộc cho test suite/regression temporal-leakage:
+
+```bash
+python -m src.runner --input data/sample_dataset.csv --output-dir outputs
 ```
 
 Runner chạy chuỗi stage in-process (cùng hàm `process()` mà CLI rời dùng),
@@ -32,7 +41,7 @@ Output của stage này là input của stage sau — có thể `cat`/chỉnh fi
 giữa các bước:
 
 ```bash
-python -m src.ingest --input data/sample_dataset.csv -o outputs/01_samples.json
+python -m src.ingest --input data/real_dataset.csv -o outputs/01_samples.json
 python -m src.retriever --input outputs/01_samples.json -o outputs/02_retrieved.json
 python -m src.evidence_extractor --input outputs/02_retrieved.json -o outputs/03_evidence.json
 python -m src.forecast_model --input outputs/03_evidence.json -o outputs/04_forecast.json

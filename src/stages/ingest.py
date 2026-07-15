@@ -11,7 +11,7 @@ preserving first-appearance order, and emits the initial envelope:
 
 Uses only the stdlib ``csv`` module — no pandas.
 
-CLI: ``python -m src.stages.ingest --input data/sample_dataset.csv -o 01_samples.json``
+CLI: ``python -m src.stages.ingest --input data/real_dataset.csv -o 01_samples.json``
 """
 
 from __future__ import annotations

@@ -1,131 +1,401 @@
 sample_id,ticker,forecast_time,news_id,news_time,news_text,evidence_text,polarity,expected_direction,evidence_role,support_score,is_cited,is_temporally_valid
-AAPL_2025-03-12_0900,AAPL,2025-03-12 09:00,1,2025-03-11 08:00,Apple reports stronger than expected iPhone demand in India,stronger than expected,positive,UP,pro,1.0,True,True
-AAPL_2025-03-12_0900,AAPL,2025-03-12 09:00,101,2025-03-11 06:30,Apple beats expectations on services revenue in the quarterly period,beats expectations,positive,UP,pro,1.0,True,True
-AAPL_2025-03-12_0900,AAPL,2025-03-12 09:00,102,2025-03-11 14:00,Apple faces a formal regulatory review from European digital authorities,faces a,negative,DOWN,counter,1.0,True,True
-AMZN_2025-03-12_0900,AMZN,2025-03-12 09:00,3,2025-03-12 09:00,Amazon keeps full year guidance unchanged after a mixed retail update,,neutral,HOLD,pro,0.5,True,True
-META_2025-03-12_0900,META,2025-03-12 09:00,4,2025-03-10 14:20,Meta announces faster growth in Reels advertising engagement,faster growth,positive,UP,pro,1.0,True,True
-GOOGL_2025-03-13_0900,GOOGL,2025-03-13 09:00,6,2025-03-12 16:45,Google Cloud signs a large AI infrastructure contract with a bank,signs a,positive,UP,pro,1.0,True,True
-AMZN_2025-03-13_0900,AMZN,2025-03-13 09:00,7,2025-03-12 07:50,Amazon Web Services launches new cost efficient AI chips for customers,launches,positive,UP,pro,1.0,True,True
-AMZN_2025-03-13_0900,AMZN,2025-03-13 09:00,7,2025-03-12 07:50,Amazon Web Services launches new cost efficient AI chips for customers,cost efficient,positive,UP,pro,1.0,True,True
-AMZN_2025-03-13_0900,AMZN,2025-03-13 09:00,123,2025-03-12 06:30,Amazon signs a new enterprise agreement with a European financial institution,signs a,positive,UP,pro,1.0,True,True
-AMZN_2025-03-13_0900,AMZN,2025-03-13 09:00,124,2025-03-12 14:00,Amazon delays production of new logistics machinery by two fiscal periods,delays production,negative,DOWN,counter,1.0,True,True
-META_2025-03-13_0900,META,2025-03-13 09:00,8,2025-03-13 09:00,Meta says ad pricing is stable while spending trends remain normal,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-03-14_0900,AAPL,2025-03-14 09:00,9,2025-03-13 13:30,Apple receives approval to expand its services payment platform in Europe,receives,positive,UP,pro,1.0,True,True
-AAPL_2025-03-14_0900,AAPL,2025-03-14 09:00,103,2025-03-13 06:30,Apple wins a new distribution agreement with a media conglomerate,wins a,positive,UP,pro,1.0,True,True
-AAPL_2025-03-14_0900,AAPL,2025-03-14 09:00,104,2025-03-13 14:00,Apple is fined by German data authorities over privacy handling practices,is fined,negative,DOWN,counter,1.0,True,True
-AMZN_2025-03-14_0900,AMZN,2025-03-14 09:00,11,2025-03-13 18:10,Amazon warehouse workers in two states vote to authorize a strike,vote to authorize a strike,negative,DOWN,pro,1.0,True,True
-AMZN_2025-03-14_0900,AMZN,2025-03-14 09:00,131,2025-03-13 06:45,Amazon misses expectations on operating margin in the quarterly results,misses expectations,negative,DOWN,pro,1.0,True,True
-AMZN_2025-03-14_0900,AMZN,2025-03-14 09:00,132,2025-03-13 13:30,Amazon signs a new cloud agreement with a national healthcare organization,signs a,positive,UP,counter,1.0,True,True
-META_2025-03-14_0900,META,2025-03-14 09:00,12,2025-03-13 09:30,Meta opens a new data center but keeps capital expenditure outlook unchanged,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-03-17_0900,AAPL,2025-03-17 09:00,13,2025-03-17 09:00,Apple unveils a minor software update with no revenue impact expected,,neutral,HOLD,pro,0.5,True,True
-GOOGL_2025-03-17_0900,GOOGL,2025-03-17 09:00,14,2025-03-15 12:00,Google expands Gemini features for enterprise productivity customers,expands,positive,UP,pro,1.0,True,True
-META_2025-03-17_0900,META,2025-03-17 09:00,16,2025-03-16 20:10,Meta resolves a European privacy case with a smaller than feared penalty,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-03-18_0900,AAPL,2025-03-18 09:00,17,2025-03-17 10:05,Apple delays production of a new headset model due to weak demand,delays production,negative,DOWN,pro,1.0,True,True
-AAPL_2025-03-18_0900,AAPL,2025-03-18 09:00,125,2025-03-17 06:45,Apple misses expectations on iPhone unit deliveries in a channel review,misses expectations,negative,DOWN,pro,1.0,True,True
-AAPL_2025-03-18_0900,AAPL,2025-03-18 09:00,126,2025-03-17 13:30,Apple signs a content licensing deal with a European media organization,signs a,positive,UP,counter,1.0,True,True
-GOOGL_2025-03-18_0900,GOOGL,2025-03-18 09:00,18,2025-03-18 09:00,Google schedules its developer conference without changing financial targets,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-03-18_0900,AMZN,2025-03-18 09:00,19,2025-03-17 06:40,Amazon Prime signups accelerate during a seasonal shopping campaign,accelerate,positive,UP,pro,1.0,True,True
-AAPL_2025-03-19_0900,AAPL,2025-03-19 09:00,21,2025-03-18 19:30,Apple services revenue reaches a record level in an internal briefing,record level,positive,UP,pro,1.0,True,True
-AAPL_2025-03-19_0900,AAPL,2025-03-19 09:00,105,2025-03-18 06:30,Apple signs a new enterprise software deal with a banking institution,signs a,positive,UP,pro,1.0,True,True
-AAPL_2025-03-19_0900,AAPL,2025-03-19 09:00,106,2025-03-18 14:00,Apple delays production on a next generation component by one fiscal quarter,delays production,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-03-19_0900,GOOGL,2025-03-19 09:00,22,2025-03-18 08:25,Google loses a small cloud customer but says backlog remains steady,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-03-19_0900,AMZN,2025-03-19 09:00,23,2025-03-19 09:00,Amazon announces a neutral update to delivery fees for marketplace sellers,,neutral,HOLD,pro,0.5,True,True
-META_2025-03-19_0900,META,2025-03-19 09:00,24,2025-03-18 07:55,Meta reports stronger advertiser retention among small businesses,stronger,positive,UP,pro,1.0,True,True
-META_2025-03-19_0900,META,2025-03-19 09:00,24,2025-03-18 07:55,Meta reports stronger advertiser retention among small businesses,advertiser retention,positive,UP,pro,1.0,True,True
-GOOGL_2025-03-20_0900,GOOGL,2025-03-20 09:00,26,2025-03-19 21:00,Google search ad auctions show better conversion rates for retailers,better conversion,positive,UP,pro,1.0,True,True
-AMZN_2025-03-20_0900,AMZN,2025-03-20 09:00,27,2025-03-19 15:40,Amazon pauses a grocery expansion plan to review store profitability,pauses,negative,DOWN,pro,1.0,True,True
-AMZN_2025-03-20_0900,AMZN,2025-03-20 09:00,133,2025-03-19 06:45,Amazon cuts guidance on retail revenue citing headwinds in consumer goods,cuts guidance,negative,DOWN,pro,1.0,True,True
-AMZN_2025-03-20_0900,AMZN,2025-03-20 09:00,134,2025-03-19 13:30,Amazon wins a public sector contract from a regional government authority,wins a,positive,UP,counter,1.0,True,True
-META_2025-03-20_0900,META,2025-03-20 09:00,28,2025-03-20 09:00,Meta rolls out an interface redesign that analysts expect to be neutral,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-03-21_0900,AAPL,2025-03-21 09:00,29,2025-03-20 06:15,Apple increases iPad production after education orders improve,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-03-21_0900,AAPL,2025-03-21 09:00,107,2025-03-20 06:30,Apple record profit posted in the digital content division this period,record profit,positive,UP,counter,1.0,True,True
-AAPL_2025-03-21_0900,AAPL,2025-03-21 09:00,108,2025-03-20 14:00,Apple reports softer orders from key component suppliers in the period,softer orders,negative,DOWN,counter,1.0,True,True
-AMZN_2025-03-21_0900,AMZN,2025-03-21 09:00,31,2025-03-20 11:35,Amazon reports faster AWS migration demand from healthcare clients,demand from,positive,UP,pro,1.0,True,True
-META_2025-03-21_0900,META,2025-03-21 09:00,32,2025-03-20 18:50,Meta pauses hiring in one AI hardware unit to control costs,pauses,negative,DOWN,pro,1.0,True,True
-AAPL_2025-03-24_0900,AAPL,2025-03-24 09:00,33,2025-03-24 09:00,Apple confirms a routine supplier audit with no material findings,,neutral,HOLD,pro,0.5,True,True
-GOOGL_2025-03-24_0900,GOOGL,2025-03-24 09:00,34,2025-03-23 08:45,Google announces a cloud margin improvement program,improvement,positive,UP,pro,1.0,True,True
-META_2025-03-24_0900,META,2025-03-24 09:00,36,2025-03-23 15:20,Meta says Threads user growth accelerated during the weekend,accelerated,positive,UP,pro,1.0,True,True
-AAPL_2025-03-25_0900,AAPL,2025-03-25 09:00,37,2025-03-24 13:10,Apple cuts the price of older iPhone models to clear inventory,cuts the price,negative,DOWN,pro,1.0,True,True
-AAPL_2025-03-25_0900,AAPL,2025-03-25 09:00,127,2025-03-24 06:45,Apple cuts guidance on hardware revenue citing shifting consumer priorities,cuts guidance,negative,DOWN,pro,1.0,True,True
-AAPL_2025-03-25_0900,AAPL,2025-03-25 09:00,128,2025-03-24 13:30,Apple wins a patent case allowing it to proceed with new accessory sales,wins a,positive,UP,counter,1.0,True,True
-GOOGL_2025-03-25_0900,GOOGL,2025-03-25 09:00,38,2025-03-25 09:00,Google publishes a transparency report with no major business changes,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-03-25_0900,AMZN,2025-03-25 09:00,39,2025-03-24 09:30,Amazon robotics upgrades reduce fulfillment center processing time,upgrade,positive,UP,pro,1.0,True,True
-AAPL_2025-03-26_0900,AAPL,2025-03-26 09:00,41,2025-03-25 22:05,Apple wins a patent dispute related to wearable health sensors,wins a,positive,UP,pro,1.0,True,True
-AAPL_2025-03-26_0900,AAPL,2025-03-26 09:00,109,2025-03-25 06:30,Apple raises shipment outlook for the next quarter on confirmed orders,raises shipment outlook,positive,UP,pro,1.0,True,True
-AAPL_2025-03-26_0900,AAPL,2025-03-26 09:00,110,2025-03-25 14:00,Apple misses expectations on hardware revenue in a preliminary industry report,misses expectations,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-03-26_0900,GOOGL,2025-03-26 09:00,42,2025-03-25 17:25,Google employees protest changes to AI review procedures,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-03-26_0900,AMZN,2025-03-26 09:00,43,2025-03-26 09:00,Amazon opens a logistics hub and keeps cost savings forecast unchanged,,neutral,HOLD,pro,0.5,True,True
-META_2025-03-26_0900,META,2025-03-26 09:00,44,2025-03-25 06:30,Meta receives positive analyst commentary on ad targeting efficiency,receives,positive,UP,pro,1.0,True,True
-META_2025-03-26_0900,META,2025-03-26 09:00,44,2025-03-25 06:30,Meta receives positive analyst commentary on ad targeting efficiency,positive analyst,positive,UP,pro,1.0,True,True
-GOOGL_2025-03-27_0900,GOOGL,2025-03-27 09:00,46,2025-03-26 12:05,Google unveils new ad tools that improve campaign automation,automation,positive,UP,pro,1.0,True,True
-AMZN_2025-03-27_0900,AMZN,2025-03-27 09:00,47,2025-03-26 19:55,Amazon sellers complain about rising fulfillment fees before the holiday season,complain about,negative,DOWN,pro,1.0,True,True
-AMZN_2025-03-27_0900,AMZN,2025-03-27 09:00,135,2025-03-26 06:45,Amazon faces a fee structure inquiry from a regulatory body in the EU,faces a,negative,DOWN,pro,1.0,True,True
-AMZN_2025-03-27_0900,AMZN,2025-03-27 09:00,136,2025-03-26 13:30,Amazon signs a logistics deal with a pharmaceutical distribution company,signs a,positive,UP,counter,1.0,True,True
-META_2025-03-27_0900,META,2025-03-27 09:00,48,2025-03-27 09:00,Meta announces a moderation policy update with limited revenue impact,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-03-28_0900,AAPL,2025-03-28 09:00,49,2025-03-27 08:15,Apple adds a major carrier partnership for iPhone financing,carrier partnership,positive,UP,pro,1.0,True,True
-AAPL_2025-03-28_0900,AAPL,2025-03-28 09:00,111,2025-03-27 06:30,Apple raises guidance for the year after a strong holiday period,raises guidance,positive,UP,pro,1.0,True,True
-AAPL_2025-03-28_0900,AAPL,2025-03-28 09:00,112,2025-03-27 14:00,Apple cuts guidance on wearables segment following muted market feedback,cuts guidance,negative,DOWN,counter,1.0,True,True
-AMZN_2025-03-28_0900,AMZN,2025-03-28 09:00,51,2025-03-27 16:20,Amazon MGM signs a streaming content deal expected to lift engagement,signs a,positive,UP,pro,1.0,True,True
-META_2025-03-28_0900,META,2025-03-28 09:00,52,2025-03-27 05:45,Meta Reality Labs losses widen beyond analyst expectations,losses widen,negative,DOWN,pro,1.0,True,True
-META_2025-03-28_0900,META,2025-03-28 09:00,141,2025-03-27 06:45,Meta misses expectations on total revenue per user in the North American region,misses expectations,negative,DOWN,pro,1.0,True,True
-META_2025-03-28_0900,META,2025-03-28 09:00,142,2025-03-27 13:30,Meta wins a court ruling allowing payment features to proceed in India,wins a,positive,UP,counter,1.0,True,True
-AAPL_2025-03-31_0900,AAPL,2025-03-31 09:00,53,2025-03-31 09:00,Apple issues a regular security patch for iOS devices,,neutral,HOLD,pro,0.5,True,True
-GOOGL_2025-03-31_0900,GOOGL,2025-03-31 09:00,54,2025-03-30 18:30,Google wins a long term mapping contract with an automotive group,wins a,positive,UP,pro,1.0,True,True
-META_2025-03-31_0900,META,2025-03-31 09:00,56,2025-03-30 10:25,Meta launches a new creator monetization tool with strong early adoption,launches,positive,UP,pro,1.0,True,True
-META_2025-03-31_0900,META,2025-03-31 09:00,56,2025-03-30 10:25,Meta launches a new creator monetization tool with strong early adoption,adoption,positive,UP,pro,1.0,True,True
-AAPL_2025-04-01_0900,AAPL,2025-04-01 09:00,57,2025-03-31 20:15,Apple supplier Foxlink raises shipment outlook for premium devices,raises shipment outlook,positive,UP,pro,1.0,True,True
-AAPL_2025-04-01_0900,AAPL,2025-04-01 09:00,113,2025-03-31 06:30,Apple positive analyst note published following a capital markets update,positive analyst,positive,UP,pro,1.0,True,True
-AAPL_2025-04-01_0900,AAPL,2025-04-01 09:00,114,2025-03-31 14:00,Apple is fined by a regulatory body over third party payment processing fees,is fined,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-04-01_0900,GOOGL,2025-04-01 09:00,58,2025-03-31 07:35,Google faces criticism over AI search summaries from major publishers,criticism,negative,DOWN,pro,1.0,True,True
-GOOGL_2025-04-01_0900,GOOGL,2025-04-01 09:00,137,2025-03-31 06:45,Google misses expectations on total ad revenue in a preliminary channel check,misses expectations,negative,DOWN,pro,1.0,True,True
-GOOGL_2025-04-01_0900,GOOGL,2025-04-01 09:00,138,2025-03-31 13:30,Google signs a default search agreement with a new mobile device partner,signs a,positive,UP,counter,1.0,True,True
-AMZN_2025-04-01_0900,AMZN,2025-04-01 09:00,59,2025-04-01 09:00,Amazon changes packaging rules in a way analysts view as neutral,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-04-02_0900,AAPL,2025-04-02 09:00,61,2025-04-01 11:10,Apple announces stronger App Store developer revenue sharing trends,stronger,positive,UP,pro,1.0,True,True
-AAPL_2025-04-02_0900,AAPL,2025-04-02 09:00,115,2025-04-01 06:30,Apple strong sales reported in the refurbished device category this quarter,strong sales,positive,UP,pro,1.0,True,True
-AAPL_2025-04-02_0900,AAPL,2025-04-02 09:00,116,2025-04-01 14:00,Apple faces a formal data privacy inquiry from a European digital regulator,faces a,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-04-02_0900,GOOGL,2025-04-02 09:00,62,2025-04-02 09:00,Google updates Workspace pricing with limited expected churn,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-04-02_0900,AMZN,2025-04-02 09:00,63,2025-04-01 14:45,Amazon cuts corporate travel spending as part of a cost discipline plan,,neutral,HOLD,pro,0.5,True,True
-META_2025-04-02_0900,META,2025-04-02 09:00,64,2025-04-01 09:20,Meta ad dashboard shows slower conversion rates for gaming advertisers,slower,negative,DOWN,pro,1.0,True,True
-META_2025-04-02_0900,META,2025-04-02 09:00,143,2025-04-01 06:45,Meta cuts guidance on ad revenue citing seasonal budget reallocations,cuts guidance,negative,DOWN,pro,1.0,True,True
-META_2025-04-02_0900,META,2025-04-02 09:00,144,2025-04-01 13:30,Meta signs a content agreement with an international sports organization,signs a,positive,UP,counter,1.0,True,True
-GOOGL_2025-04-03_0900,GOOGL,2025-04-03 09:00,66,2025-04-02 16:30,Google Cloud backlog expands after several enterprise AI deals,backlog expands,positive,UP,pro,1.0,True,True
-AMZN_2025-04-03_0900,AMZN,2025-04-03 09:00,67,2025-04-02 08:55,Amazon opens preorders for a popular smart home device refresh,preorders,positive,UP,pro,1.0,True,True
-META_2025-04-03_0900,META,2025-04-03 09:00,68,2025-04-03 09:00,Meta hosts an investor education session without changing guidance,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-04-04_0900,AAPL,2025-04-04 09:00,69,2025-04-03 12:40,Apple reports stable wearables demand after a quiet product cycle,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-04-04_0900,AMZN,2025-04-04 09:00,71,2025-04-03 18:05,Amazon receives positive analyst coverage on advertising revenue growth,receives,positive,UP,pro,1.0,True,True
-AMZN_2025-04-04_0900,AMZN,2025-04-04 09:00,71,2025-04-03 18:05,Amazon receives positive analyst coverage on advertising revenue growth,positive analyst,positive,UP,pro,1.0,True,True
-META_2025-04-04_0900,META,2025-04-04 09:00,72,2025-04-03 07:15,Meta launches improved AI translation for creators in emerging markets,launches,positive,UP,pro,1.0,True,True
-AAPL_2025-04-07_0900,AAPL,2025-04-07 09:00,73,2025-04-07 09:00,Apple hosts a developer workshop with no expected earnings effect,,neutral,HOLD,pro,0.5,True,True
-GOOGL_2025-04-07_0900,GOOGL,2025-04-07 09:00,74,2025-04-06 14:20,Google's Pixel sales improve after a promotional campaign,,neutral,HOLD,pro,0.5,True,True
-META_2025-04-07_0900,META,2025-04-07 09:00,76,2025-04-06 19:30,Meta is fined for content moderation failures in a key market,fined for,negative,DOWN,pro,1.0,True,True
-AAPL_2025-04-08_0900,AAPL,2025-04-08 09:00,77,2025-04-07 08:45,Apple receives stronger enterprise Mac orders from a large retailer,receives,positive,UP,pro,1.0,True,True
-AAPL_2025-04-08_0900,AAPL,2025-04-08 09:00,77,2025-04-07 08:45,Apple receives stronger enterprise Mac orders from a large retailer,stronger,positive,UP,pro,1.0,True,True
-AAPL_2025-04-08_0900,AAPL,2025-04-08 09:00,117,2025-04-07 06:30,Apple reports faster growth in subscription tiers versus industry peers,faster growth,positive,UP,pro,1.0,True,True
-AAPL_2025-04-08_0900,AAPL,2025-04-08 09:00,118,2025-04-07 14:00,Apple delays production of a new device model by two fiscal quarters,delays production,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-04-08_0900,GOOGL,2025-04-08 09:00,78,2025-04-07 21:15,Google says Android licensing revenue remains in line with plan,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-04-08_0900,AMZN,2025-04-08 09:00,79,2025-04-08 09:00,Amazon Prime Video releases a schedule update with neutral subscriber impact,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-04-09_0900,AAPL,2025-04-09 09:00,81,2025-04-08 15:05,Apple expands its buyback authorization in a board announcement,expands,positive,UP,pro,1.0,True,True
-AAPL_2025-04-09_0900,AAPL,2025-04-09 09:00,119,2025-04-08 06:30,Apple reports stronger than expected unit deliveries in the fiscal period,stronger than expected,positive,UP,pro,1.0,True,True
-AAPL_2025-04-09_0900,AAPL,2025-04-09 09:00,120,2025-04-08 14:00,Apple misses expectations on Mac revenue in a channel distribution report,misses expectations,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-04-09_0900,GOOGL,2025-04-09 09:00,82,2025-04-09 09:00,Google changes the layout of search results without clear monetization impact,,neutral,HOLD,pro,0.5,True,True
-AMZN_2025-04-09_0900,AMZN,2025-04-09 09:00,83,2025-04-08 06:50,Amazon pharmacy service reports faster prescription delivery adoption,adoption,positive,UP,pro,1.0,True,True
-META_2025-04-09_0900,META,2025-04-09 09:00,84,2025-04-08 16:40,Meta advertisers praise improved measurement tools for small campaigns,praise,positive,UP,pro,1.0,True,True
-GOOGL_2025-04-10_0900,GOOGL,2025-04-10 09:00,86,2025-04-09 13:35,Google wins approval to expand a data center campus,wins a,positive,UP,pro,1.0,True,True
-AMZN_2025-04-10_0900,AMZN,2025-04-10 09:00,87,2025-04-10 09:00,Amazon announces routine updates to seller documentation,,neutral,HOLD,pro,0.5,True,True
-META_2025-04-10_0900,META,2025-04-10 09:00,88,2025-04-09 05:25,Meta signs a partnership to bring AI assistants into business messaging,signs a,positive,UP,pro,1.0,True,True
-AAPL_2025-04-11_0900,AAPL,2025-04-11 09:00,89,2025-04-10 19:40,Apple faces reports of overheating issues in a new laptop line,overheating,negative,DOWN,pro,1.0,True,True
-AAPL_2025-04-11_0900,AAPL,2025-04-11 09:00,129,2025-04-10 06:45,Apple faces a margin inquiry from an investment firm in the annual period,faces a,negative,DOWN,pro,1.0,True,True
-AAPL_2025-04-11_0900,AAPL,2025-04-11 09:00,130,2025-04-10 13:30,Apple signs a joint agreement with an East Asian digital services group,signs a,positive,UP,counter,1.0,True,True
-AMZN_2025-04-11_0900,AMZN,2025-04-11 09:00,91,2025-04-10 10:10,Amazon reports stronger grocery basket sizes after loyalty discounts,stronger,positive,UP,pro,1.0,True,True
-META_2025-04-11_0900,META,2025-04-11 09:00,92,2025-04-11 09:00,Meta updates community standards with no expected advertiser reaction,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-04-14_0900,AAPL,2025-04-14 09:00,93,2025-04-13 11:55,Apple secures a supply agreement for advanced display panels,secures,positive,UP,pro,1.0,True,True
-AAPL_2025-04-14_0900,AAPL,2025-04-14 09:00,93,2025-04-13 11:55,Apple secures a supply agreement for advanced display panels,supply agreement,positive,UP,pro,1.0,True,True
-AAPL_2025-04-14_0900,AAPL,2025-04-14 09:00,121,2025-04-13 06:30,Apple record level of App Store billings achieved in the fiscal quarter,record level,positive,UP,pro,1.0,True,True
-AAPL_2025-04-14_0900,AAPL,2025-04-14 09:00,122,2025-04-13 14:00,Apple cuts guidance on annual revenue following a challenging retail period,cuts guidance,negative,DOWN,counter,1.0,True,True
-GOOGL_2025-04-14_0900,GOOGL,2025-04-14 09:00,94,2025-04-13 17:05,Google loses an appeal in a competition case involving app payments,loses an appeal,negative,DOWN,pro,1.0,True,True
-GOOGL_2025-04-14_0900,GOOGL,2025-04-14 09:00,139,2025-04-13 06:45,Google cuts guidance on cloud growth following budget reviews among clients,cuts guidance,negative,DOWN,pro,1.0,True,True
-GOOGL_2025-04-14_0900,GOOGL,2025-04-14 09:00,140,2025-04-13 13:30,Google wins a government cloud agreement with an Asia Pacific public agency,wins a,positive,UP,counter,1.0,True,True
-META_2025-04-14_0900,META,2025-04-14 09:00,96,2025-04-13 09:10,Meta reports steady daily active users with no surprise in engagement,,neutral,HOLD,pro,0.5,True,True
-AAPL_2025-04-15_0900,AAPL,2025-04-15 09:00,97,2025-04-15 09:00,Apple announces a recycling initiative that analysts view as financially neutral,,neutral,HOLD,pro,0.5,True,True
-GOOGL_2025-04-15_0900,GOOGL,2025-04-15 09:00,98,2025-04-14 08:30,Google Cloud introduces discounted security bundles for enterprise customers,introduces,positive,UP,pro,1.0,True,True
-AMZN_2025-04-15_0900,AMZN,2025-04-15 09:00,99,2025-04-14 20:25,Amazon advertising marketplace shows strong sponsored product demand,advertising marketplace,positive,UP,pro,1.0,True,True
+AAPL_2022-06-06_0900,AAPL,2022-06-06 09:00,R0000,2022-06-03 00:00,"4 Top Stock Trades for Monday: SPY, AAPL, LULU, MU",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-06-09_0900,AAPL,2022-06-09 09:00,R0001,2022-06-08 00:00,"Top Stock Market News For Today June 8, 2022",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-06-15_0900,AAPL,2022-06-15 09:00,R0002,2022-06-14 00:00,Tech Turbulence: 1 Growth Stock to Buy on the Dip and Hold,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-06-21_0900,AAPL,2022-06-21 09:00,R0003,2022-06-20 00:00,Should iShares Russell Top 200 ETF (IWL) Be on Your Investing Radar?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-06-27_0900,AAPL,2022-06-27 09:00,R0004,2022-06-26 00:00,Market Plunge 2022: 3 Absolute Bargains Begging to Be Bought,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-07-05_0900,AAPL,2022-07-05 09:00,R0005,2022-07-01 00:00,"Berkshire Hathaway buys 9.9 mln more Occidental shares, has 17.4% stake",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-07-08_0900,AAPL,2022-07-08 09:00,R0006,2022-07-07 00:00,Is There Any Hope for Bed Bath & Beyond?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-07-14_0900,AAPL,2022-07-14 09:00,R0007,2022-07-13 00:00,Stay Focused on the $180 Price Target for Apple Stock,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-07-20_0900,AAPL,2022-07-20 09:00,R0008,2022-07-19 00:00,JPMorgan adds former J&J chief Gorsky to board,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-07-26_0900,AAPL,2022-07-26 09:00,R0009,2022-07-25 00:00,Tech investors may be overvaluing moats,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-08-01_0900,AAPL,2022-08-01 09:00,R0010,2022-07-30 00:00,2 Leading Tech Stocks to Buy in 2022 and Beyond,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-08-08_0900,AAPL,2022-08-08 09:00,R0011,2022-08-05 00:00,Why I Own Qualcomm Stock,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-08-11_0900,AAPL,2022-08-11 09:00,R0012,2022-08-10 00:00,3 Stocks That Could Help Make You Richer,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-08-17_0900,AAPL,2022-08-17 09:00,R0013,2022-08-16 00:00,3 Painfully Common Investing Mistakes to Avoid Right Now,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-08-22_0900,AAPL,2022-08-22 09:00,R0014,2022-08-21 00:00,2 Reasons Why Skyworks Solutions Is Due to Outperform,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-08-29_0900,AAPL,2022-08-29 09:00,R0015,2022-08-28 00:00,My Top FAANG Stock to Buy for the Second Half of 2022 (and Beyond),,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-09-06_0900,AAPL,2022-09-06 09:00,R0016,2022-09-02 00:00,US STOCKS-Wall Street rises after mixed August jobs report,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-09-08_0900,AAPL,2022-09-08 09:00,R0017,2022-09-07 00:00,Here's My Favorite Warren Buffett Stock (It May Surprise You),,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-09-14_0900,AAPL,2022-09-14 09:00,R0018,2022-09-13 00:00,"HBO reclaims its Emmy crown with 'Succession,' 'White Lotus' wins",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-09-19_0900,AAPL,2022-09-19 09:00,R0019,2022-09-18 00:00,Meta Platforms Stock: Bear vs. Bull,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-09-27_0900,AAPL,2022-09-27 09:00,R0020,2022-09-26 00:00,"Technology Sector Update for 09/26/2022: PLTK, INTC, AAPL, XLK, SOXX",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-10-03_0900,AAPL,2022-10-03 09:00,R0021,2022-10-01 00:00,Amazon's Second Selling Bonanza of 2022: Who Benefits?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-10-10_0900,AAPL,2022-10-10 09:00,R0022,2022-10-08 00:00,Poshmark Gets Bought Out; Chipotle Roars Ahead,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-10-17_0900,AAPL,2022-10-17 09:00,R0023,2022-10-14 00:00,"Banks Are Now as Leveraged as They Were Before the Great Recession, but Don't Panic",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-10-20_0900,AAPL,2022-10-20 09:00,R0024,2022-10-19 00:00,"1 Growth Stock Set to Soar 1,000%, According to Cathie Wood",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-10-26_0900,AAPL,2022-10-26 09:00,R0025,2022-10-25 00:00,Why Is Everyone Talking About Apple?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-10-31_0900,AAPL,2022-10-31 09:00,R0026,2022-10-30 00:00,Chinese cities brace for wave of Foxconn workers from COVID-hit Zhengzhou,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-11-07_0900,AAPL,2022-11-07 09:00,R0027,2022-11-06 00:00,"GLOBAL MARKETS-Asia stocks resilient as Wall St slips, China trade disappoints",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-11-14_0900,AAPL,2022-11-14 09:00,R0028,2022-11-11 00:00,"Nasdaq, S&P 500 end sharply higher, fueled by inflation optimism",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-11-18_0900,AAPL,2022-11-18 09:00,R0029,2022-11-17 00:00,Better Buy After Earnings: Target (TGT) Vs. Walmart (WMT) Stock,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-11-25_0900,AAPL,2022-11-25 09:00,R0030,2022-11-23 00:00,Should SPDR Portfolio S&P 500 Growth ETF (SPYG) Be on Your Investing Radar?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-11-30_0900,AAPL,2022-11-30 09:00,R0031,2022-11-29 00:00,Is Apple a Must-Own Stock in 2023?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-12-06_0900,AAPL,2022-12-06 09:00,R0032,2022-12-05 00:00,Apple explores moving some iPad production to India - CNBC,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-12-12_0900,AAPL,2022-12-12 09:00,R0033,2022-12-10 00:00,Twitter to relaunch Twitter Blue at higher price for Apple users,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-12-19_0900,AAPL,2022-12-19 09:00,R0034,2022-12-16 00:00,"U.S. Intensifies Crackdown on Chinese Firms, Blacklists Chipmaker YMTC",,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-12-23_0900,AAPL,2022-12-23 09:00,R0035,2022-12-22 00:00,5 Surprising Strategies for Building Wealth in the Stock Market,,neutral,HOLD,pro,0.5,True,True
+AAPL_2022-12-29_0900,AAPL,2022-12-29 09:00,R0036,2022-12-28 00:00,5 Unstoppable Metaverse Stocks to Buy in 2023,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-01-03_0900,AAPL,2023-01-03 09:00,R0037,2023-01-02 00:00,3 Dividend-Paying Tech Stocks to Buy in January,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-01-09_0900,AAPL,2023-01-09 09:00,R0038,2023-01-08 00:00,Can Shiba Inu Reach $1 in 2023?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-01-17_0900,AAPL,2023-01-17 09:00,R0039,2023-01-13 00:00,Is It the Right Time to Buy Apple Stock?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-01-19_0900,AAPL,2023-01-19 09:00,R0040,2023-01-18 00:00,Better Buy in 2023: Apple Stock vs. Amazon Stock,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-01-26_0900,AAPL,2023-01-26 09:00,R0041,2023-01-25 00:00,The Coming AI Revolution: 5 Companies at the Forefront,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-01-31_0900,AAPL,2023-01-31 09:00,R0042,2023-01-30 00:00,"Amazon, Alphabet, Apple, Intel and Microsoft are part of Zacks Earnings Preview",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-02-06_0900,AAPL,2023-02-06 09:00,R0043,2023-02-05 00:00,Foxconn's January sales surge as China COVID disruption shaken off,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-02-13_0900,AAPL,2023-02-13 09:00,R0044,2023-02-10 00:00,US STOCKS-Futures fall amid rising yields; Lyft sinks on dour profit outlook,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-02-17_0900,AAPL,2023-02-17 09:00,R0045,2023-02-16 00:00,Grading Berkshire Hathaway's Q4 Trades,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-02-22_0900,AAPL,2023-02-22 09:00,R0046,2023-02-21 00:00,What Tech Crash? 5 Tech ETFs Up Double-Digit Past Month,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-02-27_0900,AAPL,2023-02-27 09:00,R0047,2023-02-26 00:00,"Warren Buffett's, Bill Ackman's, and Michael Burry's Portfolios All Have 1 Thing In Common",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-03-06_0900,AAPL,2023-03-06 09:00,R0048,2023-03-04 00:00,Validea Guru Fundamental Report for AAPL - 3/4/2023,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-03-13_0900,AAPL,2023-03-13 09:00,R0049,2023-03-11 00:00,What Will Change at Berkshire Hathaway Once Warren Buffett Is No Longer in Charge?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-03-20_0900,AAPL,2023-03-20 09:00,R0050,2023-03-17 00:00,Better Growth Stock: Nvidia vs. Apple,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-03-23_0900,AAPL,2023-03-23 09:00,R0051,2023-03-22 00:00,3 Blue-Chip Dividend Stocks That Generate Gobs of Shareholder Value,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-03-29_0900,AAPL,2023-03-29 09:00,R0052,2023-03-28 00:00,Wall Street ends down with fall in tech shares,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-04-03_0900,AAPL,2023-04-03 09:00,R0053,2023-04-02 00:00,3 Tech Stocks I Love Right Now,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-04-10_0900,AAPL,2023-04-10 09:00,R0054,2023-04-07 00:00,Stock Split Watch: Is Costco Next?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-04-14_0900,AAPL,2023-04-14 09:00,R0055,2023-04-13 00:00,"Dow Movers: TRV, AAPL",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-04-19_0900,AAPL,2023-04-19 09:00,R0056,2023-04-18 00:00,Apple craze draws long queues at opening of first India store,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-04-25_0900,AAPL,2023-04-25 09:00,R0057,2023-04-24 00:00,Prediction: These 3 Tech Stocks Will Be Worth More Than $3 Trillion by 2030,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-05-01_0900,AAPL,2023-05-01 09:00,R0058,2023-04-29 00:00,The 3 Best Vanguard ETFs for May 2023,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-05-08_0900,AAPL,2023-05-08 09:00,R0059,2023-05-05 00:00,This Company Grew Revenue for Shareholders More Than Apple or Microsoft Over the Last Decade,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-05-12_0900,AAPL,2023-05-12 09:00,R0060,2023-05-11 00:00,My Top 3 Growth Stock Picks for May 2023,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-05-17_0900,AAPL,2023-05-17 09:00,R0061,2023-05-16 00:00,This Stock Market Indicator Has Never Been Worse. Here's What Could Be Coming.,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-05-23_0900,AAPL,2023-05-23 09:00,R0062,2023-05-22 00:00,Warren Buffett's Portfolio Is More Concentrated Than Ever: 3 Stocks Make Up 63% of Invested Assets,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-05-30_0900,AAPL,2023-05-30 09:00,R0063,2023-05-27 00:00,Walmart's Grocery Success and Other Retail News,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-06-05_0900,AAPL,2023-06-05 09:00,R0064,2023-06-03 00:00,Two Dow Stocks to Buy in June and Hold for the Next Decade,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-06-12_0900,AAPL,2023-06-12 09:00,R0065,2023-06-09 00:00,"Apple's Headset: A Stock Price Catalyst or a $3,500 Tech Toy?",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-06-20_0900,AAPL,2023-06-20 09:00,R0066,2023-06-17 00:00,Japan to open up Apple- and Google-dominated phone apps to competition,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-06-26_0900,AAPL,2023-06-26 09:00,R0067,2023-06-23 00:00,"If You Invested $10,000 in Berkshire Hathaway in 1997, This Is How Much You Would Have Today",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-06-30_0900,AAPL,2023-06-30 09:00,R0068,2023-06-29 00:00,Apple's Bull Run And Why It's Different,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-07-05_0900,AAPL,2023-07-05 09:00,R0069,2023-07-04 00:00,Meta to launch Twitter challenger app Threads,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-07-10_0900,AAPL,2023-07-10 09:00,R0070,2023-07-09 00:00,Can Shiba Inu Reach $1?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-07-17_0900,AAPL,2023-07-17 09:00,R0071,2023-07-15 00:00,"Tesla Isn't Leading Autonomous Driving, This Company Is",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-07-21_0900,AAPL,2023-07-21 09:00,R0072,2023-07-20 00:00,Guru Fundamental Report for AAPL - Warren Buffett,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-07-27_0900,AAPL,2023-07-27 09:00,R0073,2023-07-26 00:00,Toast Sets New Standard in Restaurant Management Platforms,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-08-01_0900,AAPL,2023-08-01 09:00,R0074,2023-07-31 00:00,Foxconn unit to sign $194 mln components plant deal with India's Tamil Nadu-source,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-08-07_0900,AAPL,2023-08-07 09:00,R0075,2023-08-06 00:00,2 Warren Buffett Stocks to Hold Forever,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-08-14_0900,AAPL,2023-08-14 09:00,R0076,2023-08-11 00:00,"GQG Partners adds Nvidia, Amazon, Apple in Q2",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-08-17_0900,AAPL,2023-08-17 09:00,R0077,2023-08-16 00:00,7 Stocks to Buy as Back to School Spending Increases,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-08-23_0900,AAPL,2023-08-23 09:00,R0078,2023-08-22 00:00,Is SPDR MSCI USA StrategicFactors ETF (QUS) a Strong ETF Right Now?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-08-28_0900,AAPL,2023-08-28 09:00,R0079,2023-08-27 00:00,Better Growth Stock: Apple vs. AMD,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-09-05_0900,AAPL,2023-09-05 09:00,R0080,2023-09-02 00:00,EXCLUSIVE-SoftBank's Arm to ask for $47 to $51 per share in IPO -sources,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-09-08_0900,AAPL,2023-09-08 09:00,R0081,2023-09-07 00:00,Why Intel Rose Today Even as Chip Stocks Were Down,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-09-14_0900,AAPL,2023-09-14 09:00,R0082,2023-09-13 00:00,Better Growth Stock: Apple vs. Microsoft,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-09-19_0900,AAPL,2023-09-19 09:00,R0083,2023-09-18 00:00,"Keep on Buying Apple Stock as Initial iPhone 15 Pre-Orders Look Strong, Says Top Analyst",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-09-25_0900,AAPL,2023-09-25 09:00,R0084,2023-09-23 00:00,Tim Cook and Apple Are Running Circles Around Mark Zuckerberg's Metaverse Vision,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-10-02_0900,AAPL,2023-10-02 09:00,R0085,2023-09-29 00:00,Hopes rise for IPO recovery after September deal rush,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-10-05_0900,AAPL,2023-10-05 09:00,R0086,2023-10-04 00:00,Here's the Latest Must-See News From These 2 Dow Jones Stocks,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-10-11_0900,AAPL,2023-10-11 09:00,R0087,2023-10-10 00:00,US STOCKS-Wall Street gains as Fed officials strike dovish tone,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-10-16_0900,AAPL,2023-10-16 09:00,R0088,2023-10-15 00:00,The ‘Millionaire Playbook’ for Easy Profits in the AI Boom,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-10-23_0900,AAPL,2023-10-23 09:00,R0089,2023-10-21 00:00,3 Top Stocks To Buy Now and Hold Forever,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-10-27_0900,AAPL,2023-10-27 09:00,R0090,2023-10-26 00:00,Is WisdomTree U.S. Quality Dividend Growth ETF (DGRW) a Strong ETF Right Now?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-11-02_0900,AAPL,2023-11-02 09:00,R0091,2023-11-01 00:00,The Wealth Builder’s Toolkit: Top 3 Stocks to Supercharge Your Portfolio,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-11-07_0900,AAPL,2023-11-07 09:00,R0092,2023-11-06 00:00,"Analyzing the S&P 500 index, NASDAQ and the Russell 2000 charts",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-11-13_0900,AAPL,2023-11-13 09:00,R0093,2023-11-11 00:00,Firing on All Cylinders Indeed,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-11-20_0900,AAPL,2023-11-20 09:00,R0094,2023-11-17 00:00,"After Hours Most Active for Nov 17, 2023 : MMM, QQQ, MATV, AAPL, NU, VCSH, MSFT, STRO, AMZN, KEY, VZ, BAC",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-11-24_0900,AAPL,2023-11-24 09:00,R0095,2023-11-22 00:00,Apple Stock (NASDAQ:AAPL): Can Siri Keep Up in the ChatGPT Age?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-11-29_0900,AAPL,2023-11-29 09:00,R0096,2023-11-28 00:00,AAPL Quantitative Stock Analysis,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-12-05_0900,AAPL,2023-12-05 09:00,R0097,2023-12-04 00:00,"US STOCKS-Wall St rally loses steam as data-heavy week looms, yields rise",,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-12-12_0900,AAPL,2023-12-12 09:00,R0098,2023-12-11 00:00,Can Shiba Inu Reach $0.01?,,neutral,HOLD,pro,0.5,True,True
+AAPL_2023-12-18_0900,AAPL,2023-12-18 09:00,R0099,2023-12-16 04:00,Apple To Halt Sale Of Watch Series 9 And Ultra 2,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-10_0900,AMZN,2023-03-10 09:00,R0100,2023-03-09 00:00,The 7 Best Tech Stocks to Buy in March,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-14_0900,AMZN,2023-03-14 09:00,R0101,2023-03-13 00:00,Prediction: These 3 Stocks Will Be in the Dow by 2030,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-16_0900,AMZN,2023-03-16 09:00,R0102,2023-03-15 00:00,3 Stocks That Will Benefit Most From Cooling Inflation,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-20_0900,AMZN,2023-03-20 09:00,R0103,2023-03-18 00:00,3 Incredible Growth Stocks You'll Regret Not Buying on the Dip,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-22_0900,AMZN,2023-03-22 09:00,R0104,2023-03-21 00:00,Why Amazon Stock Rallied on Tuesday,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-24_0900,AMZN,2023-03-24 09:00,R0105,2023-03-23 00:00,Netflix (NFLX) Chooses Jon Spaihts to Pen Gears of War Movie,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-27_0900,AMZN,2023-03-27 09:00,R0106,2023-03-26 00:00,"Amazon Layoffs: The Good, The Bad, and The Ugly",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-03-30_0900,AMZN,2023-03-30 09:00,R0107,2023-03-29 00:00,Why Amazon Stock Was Moving Higher Today,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-03_0900,AMZN,2023-04-03 09:00,R0108,2023-03-31 00:00,Top and Flop ETFs of March,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-04_0900,AMZN,2023-04-04 09:00,R0109,2023-04-03 00:00,Can These 2 Pet Stocks Escape the Doghouse?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-10_0900,AMZN,2023-04-10 09:00,R0110,2023-04-06 00:00,The 3 Best Bargain Stocks to Buy for April 2023,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-10_0900,AMZN,2023-04-10 09:00,R0111,2023-04-08 00:00,"This Warren Buffett ETF Could Take You From $5,000 to $87,000 With Next to No Effort",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-12_0900,AMZN,2023-04-12 09:00,R0112,2023-04-11 00:00,"Pinpoint 200% Gains in Six Months, Even in a Bear Market",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-17_0900,AMZN,2023-04-17 09:00,R0113,2023-04-14 00:00,Upexi CEO Marshall Allan Was Buying Shares Ahead Of Latest Cygnet and Texas Wellness Deals,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-17_0900,AMZN,2023-04-17 09:00,R0114,2023-04-16 00:00,Warren Buffett Owns 2 Stocks in the $1 Trillion Club. Are They No-Brainer Buys Now?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-20_0900,AMZN,2023-04-20 09:00,R0115,2023-04-19 00:00,JMP Securities Reiterates Amazon.com (AMZN) Market Outperform Recommendation,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-24_0900,AMZN,2023-04-24 09:00,R0116,2023-04-23 00:00,What To Expect From Microsoft Stock In Q3?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-04-27_0900,AMZN,2023-04-27 09:00,R0117,2023-04-26 00:00,"US STOCKS-Nasdaq climbs as investors cheer Microsoft, Alphabet results",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-01_0900,AMZN,2023-05-01 09:00,R0118,2023-04-28 00:00,US STOCKS-Wall St climbs as strong earnings offset Amazon drag,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-02_0900,AMZN,2023-05-02 09:00,R0119,2023-05-01 00:00,Here's the Most Shocking Thing About Amazon's Earnings Report,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-08_0900,AMZN,2023-05-08 09:00,R0120,2023-05-05 00:00,Will Amazon's Profit Margins Ever Return to Pre-Pandemic Levels?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-09_0900,AMZN,2023-05-09 09:00,R0121,2023-05-08 00:00,"Technology Sector Update for 05/08/2023: AAPL, AMZN, ZS",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-12_0900,AMZN,2023-05-12 09:00,R0122,2023-05-11 00:00,2 Reasons to Buy Amazon Stock That You Don't Already Know About,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-15_0900,AMZN,2023-05-15 09:00,R0123,2023-05-14 00:00,Validea's Top 5 Consumer Discretionary Stocks Based On Joel Greenblatt - 5/14/2023,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-17_0900,AMZN,2023-05-17 09:00,R0124,2023-05-16 00:00,"GLOBAL MARKETS-Wall St ends lower, Treasury yields climb as debt ceiling talks in spotlight",lower,negative,DOWN,pro,1.0,True,True
+AMZN_2023-05-22_0900,AMZN,2023-05-22 09:00,R0125,2023-05-19 00:00,Hedge Funds Are Buying These AI Stocks,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-23_0900,AMZN,2023-05-23 09:00,R0126,2023-05-22 00:00,Meta hit with record $1.3 bln fine over data transfers,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-25_0900,AMZN,2023-05-25 09:00,R0127,2023-05-24 00:00,Should iShares S&P 100 ETF (OEF) Be on Your Investing Radar?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-30_0900,AMZN,2023-05-30 09:00,R0128,2023-05-27 00:00,I Tried Asking ChatGPT to Help Me Invest So You Don't Have to,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-05-31_0900,AMZN,2023-05-31 09:00,R0129,2023-05-30 00:00,Streaming's Stalwarts Are Losing Viewers to Newcomers. Here's What Investors Should Know.,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-02_0900,AMZN,2023-06-02 09:00,R0130,2023-06-01 00:00,Better Buy: Amazon Stock vs. Microsoft Stock,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-05_0900,AMZN,2023-06-05 09:00,R0131,2023-06-04 00:00,Is Buying Nvidia Stock a Sneaky Crypto Play?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-09_0900,AMZN,2023-06-09 09:00,R0132,2023-06-08 00:00,"S&P 500, Nasdaq set to edge up as yields slip after jobless claims data",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-12_0900,AMZN,2023-06-12 09:00,R0133,2023-06-10 00:00,"The Good News From Chewy, Five Below, MongoDB, and Lululemon",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-14_0900,AMZN,2023-06-14 09:00,R0134,2023-06-13 00:00,"US STOCKS-S&P 500, Nasdaq hit fresh 1-yr highs as inflation data boosts rate pause hopes",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-20_0900,AMZN,2023-06-20 09:00,R0135,2023-06-17 00:00,4 Reasons to Buy This Tesla Rival Hand Over Fist,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-20_0900,AMZN,2023-06-20 09:00,R0136,2023-06-19 00:00,Is the Bear Market Over? Big Tech Already Told You the Answer,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-23_0900,AMZN,2023-06-23 09:00,R0137,2023-06-22 00:00,US STOCKS-Wall Street ends higher as Powell wraps up testimony,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-27_0900,AMZN,2023-06-27 09:00,R0138,2023-06-26 00:00,Is Amazon Stock a Buy?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-06-29_0900,AMZN,2023-06-29 09:00,R0139,2023-06-28 00:00,Looking for a Market-Beating Growth ETF? Check Out VUG,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-03_0900,AMZN,2023-07-03 09:00,R0140,2023-07-01 00:00,Don't Really Understand Microchips? Benefit From AI Trends Through These Other Top Stocks.,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-05_0900,AMZN,2023-07-05 09:00,R0141,2023-07-04 00:00,Amazon Begins Rolling Out Its Custom Electric Delivery Vans From Rivian In Europe,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-07_0900,AMZN,2023-07-07 09:00,R0142,2023-07-06 00:00,A Bull Market Is Coming: 1 Remarkable Growth Stock Has Billionaire Investors Betting Big,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-10_0900,AMZN,2023-07-10 09:00,R0143,2023-07-09 00:00,My 1 Growth Stock to Buy and Hold in a Market Downturn,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-13_0900,AMZN,2023-07-13 09:00,R0144,2023-07-12 00:00,Will Target Stock Recover To Highs Seen Prior To Inflation Shock?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-17_0900,AMZN,2023-07-17 09:00,R0145,2023-07-14 00:00,7 Hypergrowth Stocks That AI Is Loving in July,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-18_0900,AMZN,2023-07-18 09:00,R0146,2023-07-17 00:00,"This Important Economic Indicator Is Dropping Like a Rock, and It's Great News for These 2 Stocks",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-21_0900,AMZN,2023-07-21 09:00,R0147,2023-07-20 00:00,3 AI Stocks for Getting Rich in 2023,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-24_0900,AMZN,2023-07-24 09:00,R0148,2023-07-22 00:00,"3 Reasons to Buy Amazon Stock, None of Which Are Related to AI",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-26_0900,AMZN,2023-07-26 09:00,R0149,2023-07-25 00:00,3 AI Stocks Still Worth Buying for the Long Haul,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-07-31_0900,AMZN,2023-07-31 09:00,R0150,2023-07-28 00:00,"Got $1,000? 2 Warren Buffett Stocks to Buy Hand Over Fist",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-01_0900,AMZN,2023-08-01 09:00,R0151,2023-07-31 00:00,"US STOCKS-Wall St set to open higher, eyes monthly gain on U.S. soft landing hopes",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-03_0900,AMZN,2023-08-03 09:00,R0152,2023-08-02 00:00,Apple Stock: Buy or Sell Ahead of This Week's Earnings Report?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-07_0900,AMZN,2023-08-07 09:00,R0153,2023-08-05 00:00,Baird Maintains Amazon.com (AMZN) Outperform Recommendation,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-10_0900,AMZN,2023-08-10 09:00,R0154,2023-08-09 00:00,"This Nvidia-Backed Startup Is Ready to Take on Microsoft, Amazon, and Google",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-14_0900,AMZN,2023-08-14 09:00,R0155,2023-08-11 00:00,ETF Lessons to Learn from Berkshire Earnings,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-15_0900,AMZN,2023-08-15 09:00,R0156,2023-08-14 00:00,Amazon's devices chief David Limp to retire after 13 years,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-18_0900,AMZN,2023-08-18 09:00,R0157,2023-08-17 00:00,"US STOCKS-Wall Street ends lower on healthcare losses, interest rate jitters",lower,negative,DOWN,pro,1.0,True,True
+AMZN_2023-08-21_0900,AMZN,2023-08-21 09:00,R0158,2023-08-19 00:00,"1 Formerly High-Flying E-Commerce Stock That's a Terrific Value, or a Terrible Value Trap",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-23_0900,AMZN,2023-08-23 09:00,R0159,2023-08-22 00:00,A Bull Market Is Coming: 2 Magnificent Stock-Split Growth Stocks to Buy Hand Over Fist and Never Sell,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-28_0900,AMZN,2023-08-28 09:00,R0160,2023-08-25 00:00,"Notable Friday Option Activity: GOOGL, AMZN, MRNA",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-28_0900,AMZN,2023-08-28 09:00,R0161,2023-08-27 00:00,"The 1 Thing You Need to Know About China's 25,000-Satellite Space Project",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-08-31_0900,AMZN,2023-08-31 09:00,R0162,2023-08-30 00:00,A Bull Market is Coming. 2 Stocks You Won't Regret Buying Now.,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-05_0900,AMZN,2023-09-05 09:00,R0163,2023-09-02 00:00,3 Things About Amazon That Smart Investors Know,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-05_0900,AMZN,2023-09-05 09:00,R0164,2023-09-04 00:00,3 Appealing AI Stocks to Snatch Up at Current Levels,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-08_0900,AMZN,2023-09-08 09:00,R0165,2023-09-07 00:00,XLK ETF: This Long-Term Winner Still Looks Attractive,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-11_0900,AMZN,2023-09-11 09:00,R0166,2023-09-10 00:00,A Bull Market Is (Still) Coming: Here Are 3 Spectacular Stocks to Buy Sooner Rather Than Later,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-13_0900,AMZN,2023-09-13 09:00,R0167,2023-09-12 00:00,"US STOCKS-Wall St inches lower as Oracle slides, investors await inflation data",lower,negative,DOWN,pro,1.0,True,True
+AMZN_2023-09-18_0900,AMZN,2023-09-18 09:00,R0168,2023-09-15 00:00,The 3 Most Undervalued Sleeper Stocks to Buy in September 2023,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-19_0900,AMZN,2023-09-19 09:00,R0169,2023-09-18 00:00,Get a 48% Dividend from TSLA Stock — Here’s How,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-21_0900,AMZN,2023-09-21 09:00,R0170,2023-09-20 00:00,"AstraZeneca refused to pay full bonus to US remote worker, lawsuit claims",lawsuit,negative,DOWN,pro,1.0,True,True
+AMZN_2023-09-25_0900,AMZN,2023-09-25 09:00,R0171,2023-09-23 00:00,3 Reasons This Sleeping Giant Is About To Wake Up,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-27_0900,AMZN,2023-09-27 09:00,R0172,2023-09-26 00:00,"Technology Sector Update for 09/26/2023: SOUN, AMZN, TSLA, HPE",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-09-29_0900,AMZN,2023-09-29 09:00,R0173,2023-09-28 00:00,Wedbush Reiterates Amazon.com (AMZN) Outperform Recommendation,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-02_0900,AMZN,2023-10-02 09:00,R0174,2023-10-01 00:00,This Segment You Didn't Know About Is Amazon's Secret Weapon,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-05_0900,AMZN,2023-10-05 09:00,R0175,2023-10-04 00:00,"US STOCKS-Wall St gains after fresh jobs data, Treasury yields retreat",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-09_0900,AMZN,2023-10-09 09:00,R0176,2023-10-06 00:00,"5 Top Growth Stocks to Buy Now, According to Analysts – October 2023",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-10_0900,AMZN,2023-10-10 09:00,R0177,2023-10-09 00:00,2 Buffett Stocks to Buy and Hold Forever,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-13_0900,AMZN,2023-10-13 09:00,R0178,2023-10-12 00:00,US STOCKS-Futures rise as Treasury yields retreat ahead of inflation data,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-16_0900,AMZN,2023-10-16 09:00,R0179,2023-10-14 00:00,The FTC Is Suing Amazon: Here's What Investors Need to Know,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-18_0900,AMZN,2023-10-18 09:00,R0180,2023-10-17 00:00,Truist Securities Maintains Amazon.com (AMZN) Buy Recommendation,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-27_0900,AMZN,2023-10-27 09:00,R0181,2023-10-26 00:00,Should iShares Russell 1000 Growth ETF (IWF) Be on Your Investing Radar?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-10-31_0900,AMZN,2023-10-31 09:00,R0182,2023-10-30 00:00,2 fallen cybersecurity stocks for patient bargain hunters,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-03_0900,AMZN,2023-11-03 09:00,R0183,2023-11-02 00:00,"1 Green Flag for Amazon in 2023, and 1 Red Flag",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-06_0900,AMZN,2023-11-06 09:00,R0184,2023-11-05 00:00,"Artificial Intelligence (AI) Executive Order: These 2 Points in the White House's Plan Could Affect Amazon, Microsoft, and Alphabet the Most",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-09_0900,AMZN,2023-11-09 09:00,R0185,2023-11-08 00:00,The S&P 500 Soared 5.9% Last Week -- But These 2 Stocks Absolutely Crushed It,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-13_0900,AMZN,2023-11-13 09:00,R0186,2023-11-10 00:00,Booking.com settles Italian tax dispute with 94-million euro payment,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-14_0900,AMZN,2023-11-14 09:00,R0187,2023-11-13 00:00,"Walmart, Target's and Amazon are part of Zacks Earnings Preview",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-17_0900,AMZN,2023-11-17 09:00,R0188,2023-11-16 00:00,Disney (DIS) Partners With Dapper Labs to Launch NFT Platform,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-20_0900,AMZN,2023-11-20 09:00,R0189,2023-11-18 00:00,Beat the Nasdaq? This Dividend Stock Has Actually Done It,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-22_0900,AMZN,2023-11-22 09:00,R0190,2023-11-21 00:00,Walmart bets on parcel stations for quick deliveries to propel holiday sales,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-27_0900,AMZN,2023-11-27 09:00,R0191,2023-11-24 00:00,Is This The Best Time to Buy C3.ai Stock?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-11-28_0900,AMZN,2023-11-28 09:00,R0192,2023-11-27 00:00,"Is Amazon (AMZN) a Solid Growth Stock? 3 Reasons to Think ""Yes""",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-01_0900,AMZN,2023-12-01 09:00,R0193,2023-11-30 00:00,"Pre-Market Most Active for Nov 30, 2023 : IMGN, VFS, SQQQ, INCY, AMZN, TQQQ",,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-04_0900,AMZN,2023-12-04 09:00,R0194,2023-12-03 00:00,2 Phenomenal Growth Stocks to Buy Right Now,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-06_0900,AMZN,2023-12-06 09:00,R0195,2023-12-05 00:00,EU clears up to 1.2 bln euros of aid for cloud computing,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-11_0900,AMZN,2023-12-11 09:00,R0196,2023-12-08 00:00,3 Warren Buffett Stocks You Can Buy in December and Hold Forever,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-12_0900,AMZN,2023-12-12 09:00,R0197,2023-12-11 00:00,The Top 5 Tech Stocks for Millennials,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-14_0900,AMZN,2023-12-14 09:00,R0198,2023-12-13 00:00,Is Amazon Stock a Buy Now?,,neutral,HOLD,pro,0.5,True,True
+AMZN_2023-12-18_0900,AMZN,2023-12-18 09:00,R0199,2023-12-16 00:00,"3 ""Magnificent Seven"" Artificial Intelligence (AI) Stocks Will Leapfrog Apple to Join the $3 Trillion Club, According to 1 Wall Street Analyst",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-01-03_0900,GOOGL,2022-01-03 09:00,R0200,2022-01-01 00:00,2 No-Brainer Stocks Down 27% to 35% to Buy for 2022,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-01-12_0900,GOOGL,2022-01-12 09:00,R0201,2022-01-11 00:00,Will Investors See a Tech Sector Market Top in 2022?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-01-19_0900,GOOGL,2022-01-19 09:00,R0202,2022-01-18 00:00,Once Top-Ranked IBM’s Been Relegated Among the Second-Tier Outsourcers,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-01-26_0900,GOOGL,2022-01-26 09:00,R0203,2022-01-25 00:00,Skillz Could Benefit From Falling Ad Prices,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-02-02_0900,GOOGL,2022-02-02 09:00,R0204,2022-02-01 00:00,Why We Are Raising Our Price Estimate For Apple Stock,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-02-09_0900,GOOGL,2022-02-09 09:00,R0205,2022-02-08 00:00,3 Top Cryptocurrencies to Watch in February,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-02-16_0900,GOOGL,2022-02-16 09:00,R0206,2022-02-15 00:00,5 Leading Tech Stocks to Buy in 2022 and Beyond,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-02-24_0900,GOOGL,2022-02-24 09:00,R0207,2022-02-23 00:00,3 Top Stocks That Just Went on Sale,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-03-03_0900,GOOGL,2022-03-03 09:00,R0208,2022-03-02 00:00,Can Sundial Growers Get Back to $1 in 2022?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-03-14_0900,GOOGL,2022-03-14 09:00,R0209,2022-03-11 00:00,Pass on Alphabet Stock Trades for Now,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-03-21_0900,GOOGL,2022-03-21 09:00,R0210,2022-03-19 00:00,Shareholders Shouldn't Worry: Netflix Is Still a Growth Stock,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-03-28_0900,GOOGL,2022-03-28 09:00,R0211,2022-03-26 00:00,Apple vs. an S&P 500 ETF: Which Is the Better First Investment?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-04-04_0900,GOOGL,2022-04-04 09:00,R0212,2022-04-03 00:00,"Tesla, Amazon, and Alphabet Stock Splits: Which 3 Companies Could Split Next?",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-04-11_0900,GOOGL,2022-04-11 09:00,R0213,2022-04-10 00:00,Why Alphabet's Acquisition of Mandiant Is a Smart Move,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-04-18_0900,GOOGL,2022-04-18 09:00,R0214,2022-04-17 00:00,Is Alphabet Stock a Buy Right Now?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-04-25_0900,GOOGL,2022-04-25 09:00,R0215,2022-04-24 00:00,"Weekly Preview: Earnings To Watch This Week (AAPL, AMZN, FB, GOOG, MSFT)",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-05-02_0900,GOOGL,2022-05-02 09:00,R0216,2022-05-01 00:00,Better Buy: Microsoft vs. Alphabet,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-05-09_0900,GOOGL,2022-05-09 09:00,R0217,2022-05-08 00:00,Apple's Services Business Has Never Been More Important,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-05-16_0900,GOOGL,2022-05-16 09:00,R0218,2022-05-15 00:00,1 Investment I'm Stocking Up On if the Market Crashes,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-05-24_0900,GOOGL,2022-05-24 09:00,R0219,2022-05-23 00:00,Buy This FAANG Stock During the Tech Sell-Off,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-06-01_0900,GOOGL,2022-06-01 09:00,R0220,2022-05-31 00:00,"Alphabet, Amazon, and Tesla Are Doing Stock Splits: What That Means for Investors",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-06-09_0900,GOOGL,2022-06-09 09:00,R0221,2022-06-08 00:00,Cash Is King for These 2 Big Tech Companies,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-06-16_0900,GOOGL,2022-06-16 09:00,R0222,2022-06-15 00:00,"Apple Stock Is Worth Buying, Regardless of the WWDC Event",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-06-23_0900,GOOGL,2022-06-23 09:00,R0223,2022-06-22 00:00,Why Are All These Top Stocks Splitting Their Stocks?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-07-01_0900,GOOGL,2022-07-01 09:00,R0224,2022-06-30 00:00,"Why Pinterest, Roku, and Etsy Plunged Today",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-07-07_0900,GOOGL,2022-07-07 09:00,R0225,2022-07-06 00:00,"Down 65%, Is This Cloud Provider a Screaming Buy?",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-07-14_0900,GOOGL,2022-07-14 09:00,R0226,2022-07-13 00:00,"Wall Street Says Not to Buy These Stocks, But Here's Why I Am",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-07-21_0900,GOOGL,2022-07-21 09:00,R0227,2022-07-20 00:00,Shopify (SHOP) Expected to Beat Earnings Estimates: Can the Stock Move Higher?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-07-28_0900,GOOGL,2022-07-28 09:00,R0228,2022-07-27 00:00,2 Types of Tech Stocks to Buy After Google and Microsoft Save the Market,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-08-04_0900,GOOGL,2022-08-04 09:00,R0229,2022-08-03 00:00,3 Nasdaq 100 Stocks to Buy Hand Over Fist in August,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-08-11_0900,GOOGL,2022-08-11 09:00,R0230,2022-08-10 00:00,Starbucks' Success With Cold Drinks Is Just the Tip of the Iceberg in Market News,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-08-18_0900,GOOGL,2022-08-18 09:00,R0231,2022-08-17 00:00,Inflation and Market News,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-08-26_0900,GOOGL,2022-08-26 09:00,R0232,2022-08-25 00:00,"Got $5,000? 3 Tech Stocks to Buy and Hold for the Long Term",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-09-02_0900,GOOGL,2022-09-02 09:00,R0233,2022-09-01 00:00,5 Best Stocks to Buy Now in September,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-09-09_0900,GOOGL,2022-09-09 09:00,R0234,2022-09-08 00:00,1 High-Conviction Growth Stock Down Over 46% to Buy Now,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-09-16_0900,GOOGL,2022-09-16 09:00,R0235,2022-09-15 00:00,7 Stocks to Buy for Safety in This Volatile Market,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-09-26_0900,GOOGL,2022-09-26 09:00,R0236,2022-09-23 00:00,Has Netflix Stock Bottomed Out?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-10-03_0900,GOOGL,2022-10-03 09:00,R0237,2022-09-30 00:00,The Next Big Thing in Tech? 7 Quantum Computing Stocks to Bet On.,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-10-10_0900,GOOGL,2022-10-10 09:00,R0238,2022-10-07 00:00,"XLC, GOOG, VZ, NFLX: Large Inflows Detected at ETF",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-10-17_0900,GOOGL,2022-10-17 09:00,R0239,2022-10-14 00:00,"Have $1,000? These 2 Stocks Could Be Bargain Buys for 2022 and Beyond",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-10-24_0900,GOOGL,2022-10-24 09:00,R0240,2022-10-22 00:00,Dividend Stocks That Do More Than Just Boost Their Payout,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-10-31_0900,GOOGL,2022-10-31 09:00,R0241,2022-10-29 00:00,What to Watch as the Big Tech Companies Report Earnings,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-11-07_0900,GOOGL,2022-11-07 09:00,R0242,2022-11-05 00:00,2 FAANG Stocks to Buy Like There's No Tomorrow,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-11-14_0900,GOOGL,2022-11-14 09:00,R0243,2022-11-12 00:00,3 Stocks You'll Be Glad You Bought at These Prices,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-11-21_0900,GOOGL,2022-11-21 09:00,R0244,2022-11-19 00:00,Is DigitalOcean Stock a Buy Now?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-11-28_0900,GOOGL,2022-11-28 09:00,R0245,2022-11-26 00:00,2 Stocks Under $100 You Can Buy and Hold Forever,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-12-05_0900,GOOGL,2022-12-05 09:00,R0246,2022-12-03 00:00,Stock Split Watch: Is Chipotle Next?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-12-12_0900,GOOGL,2022-12-12 09:00,R0247,2022-12-10 00:00,"Fintel's 10 Biggest Short Positions for December, Revealed Here",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-12-19_0900,GOOGL,2022-12-19 09:00,R0248,2022-12-17 00:00,"Big Tech is Designing Chips Too, Should Semiconductor Investors Worry?",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2022-12-27_0900,GOOGL,2022-12-27 09:00,R0249,2022-12-24 00:00,Talking About Top Stocks,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-01-03_0900,GOOGL,2023-01-03 09:00,R0250,2022-12-31 00:00,7 Nuclear Fusion Stocks to Buy Before the Next Breakthrough,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-01-09_0900,GOOGL,2023-01-09 09:00,R0251,2023-01-07 00:00,A Fresh Face-Off on the Market Cap Game Show,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-01-17_0900,GOOGL,2023-01-17 09:00,R0252,2023-01-15 00:00,3 Fantastic Stocks That Could Soar in the Coming Bull Market,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-01-23_0900,GOOGL,2023-01-23 09:00,R0253,2023-01-22 00:00,10 Top AI Stocks to Buy Now for the Next 10 Years,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-01-30_0900,GOOGL,2023-01-30 09:00,R0254,2023-01-29 00:00,2 FAANG Stocks Investors Should Buy Hand Over Fist for 2023,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-02-06_0900,GOOGL,2023-02-06 09:00,R0255,2023-02-05 00:00,The 7 Most Promising AI Stocks to Buy in February,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-02-13_0900,GOOGL,2023-02-13 09:00,R0256,2023-02-12 00:00,"Wall St Week Ahead-Last year's laggards lead U.S. stocks' 2023 rebound, for now",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-02-21_0900,GOOGL,2023-02-21 09:00,R0257,2023-02-20 00:00,2 Reddit Stocks to Buy and Hold for Years,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-02-28_0900,GOOGL,2023-02-28 09:00,R0258,2023-02-27 00:00,"Is Dell Technologies (DELL) a Buy, Sell, or Hold?",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-03-08_0900,GOOGL,2023-03-08 09:00,R0259,2023-03-07 00:00,Better Ad Tech Stock: The Trade Desk vs. Magnite,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-03-15_0900,GOOGL,2023-03-15 09:00,R0260,2023-03-14 00:00,"Why Alphabet, Shopify, and Meta Platforms Stocks All Rallied on Tuesday",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-03-22_0900,GOOGL,2023-03-22 09:00,R0261,2023-03-21 00:00,7 Best Stocks to Buy After the Market Crashes,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-03-30_0900,GOOGL,2023-03-30 09:00,R0262,2023-03-29 00:00,7 Growth Stocks That Are Crushing the Market in 2023,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-04-06_0900,GOOGL,2023-04-06 09:00,R0263,2023-04-05 00:00,Why Amazon Stock Tumbled Wednesday Morning,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-04-13_0900,GOOGL,2023-04-13 09:00,R0264,2023-04-12 00:00,Alphabet vs. Microsoft: Which Is the Better AI Stock to Buy Right Now?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-04-20_0900,GOOGL,2023-04-20 09:00,R0265,2023-04-19 00:00,"Technology Sector Update for 04/19/2023: META, GOOG, GOOGL, AAPL, GFS, IBM",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-04-27_0900,GOOGL,2023-04-27 09:00,R0266,2023-04-26 00:00,Why Do Tech Stocks Go Down When Interest Rates Rise?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-05-04_0900,GOOGL,2023-05-04 09:00,R0267,2023-05-03 00:00,"UBER Q1 Earnings & Revenues Exceed Expectations, Improve Y/Y",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-05-11_0900,GOOGL,2023-05-11 09:00,R0268,2023-05-10 00:00,Crypto vs Stocks: Which is the Better Investment in 2023? We Compare 3 of Each,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-05-18_0900,GOOGL,2023-05-18 09:00,R0269,2023-05-17 00:00,Google CEO Sundar Pichai Predicts That This Profession Will Be Most Revolutionized By AI,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-05-25_0900,GOOGL,2023-05-25 09:00,R0270,2023-05-24 00:00,This ETF Is a Good Buy If You Believe in the Future of Artificial Intelligence,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-06-01_0900,GOOGL,2023-06-01 09:00,R0271,2023-05-31 00:00,"Apple, Alphabet, Meta, and Microsoft Have All Done Major Share Buybacks This Year -- Should You Join Them?",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-06-09_0900,GOOGL,2023-06-09 09:00,R0272,2023-06-08 00:00,Why Zuck’s AI Strategy May Be the Secret Sauce That META Stock Needs,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-06-20_0900,GOOGL,2023-06-20 09:00,R0273,2023-06-16 00:00,Is It Too Late to Buy C3.ai (NYSE:AI) Stock?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-06-26_0900,GOOGL,2023-06-26 09:00,R0274,2023-06-23 00:00,Does Generative AI Finally Make GitLab Stock a Buy?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-06-30_0900,GOOGL,2023-06-30 09:00,R0275,2023-06-29 00:00,BIDU vs. GOOG: Which Stock Should Value Investors Buy Now?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-07-07_0900,GOOGL,2023-07-07 09:00,R0276,2023-07-06 00:00,"The ""Motley Fool Money"" Half-Year Review",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-07-17_0900,GOOGL,2023-07-17 09:00,R0277,2023-07-14 00:00,How to Simplify the AI Investment Thesis,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-07-24_0900,GOOGL,2023-07-24 09:00,R0278,2023-07-21 00:00,Better Bull Market Buy: Microsoft vs. Alphabet Stock,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-07-31_0900,GOOGL,2023-07-31 09:00,R0279,2023-07-28 00:00,Google Unveils Advanced AI Model To Train Robots For Real-World Tasks,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-08-07_0900,GOOGL,2023-08-07 09:00,R0280,2023-08-04 00:00,The Big Risk Facing AI Stocks That Investors Can't Afford to Ignore,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-08-14_0900,GOOGL,2023-08-14 09:00,R0281,2023-08-12 00:00,Elon Musk's Bold Move: Betting Tesla's Future on Artificial Intelligence,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-08-21_0900,GOOGL,2023-08-21 09:00,R0282,2023-08-19 00:00,2 Artificial Intelligence (AI) Growth Stocks That Could Join Apple Stock in the $3 Trillion Club by 2030,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-08-28_0900,GOOGL,2023-08-28 09:00,R0283,2023-08-26 00:00,4 Premier Growth Stocks You'll Regret Not Buying in the Wake of the Nasdaq Bear Market Dip,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-09-05_0900,GOOGL,2023-09-05 09:00,R0284,2023-09-02 00:00,6 Spectacular Growth Stocks to Buy Now in September and Hold for the Long Term,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-09-11_0900,GOOGL,2023-09-11 09:00,R0285,2023-09-09 00:00,"Google CEO Sundar Pichai Says AI Could Be ""Bigger Than the Internet"": 3 Stocks to Buy and Hold If He's Right",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-09-18_0900,GOOGL,2023-09-18 09:00,R0286,2023-09-16 00:00,These 2 Dividend Stocks Are Investing in This Niche Industry. Should You Do the Same?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-09-25_0900,GOOGL,2023-09-25 09:00,R0287,2023-09-23 00:00,Google's Startling Admission Confirms What Investors Have Long Suspected,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-10-02_0900,GOOGL,2023-10-02 09:00,R0288,2023-09-30 00:00,Why YouTube Is the Real Threat to Disney,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-10-09_0900,GOOGL,2023-10-09 09:00,R0289,2023-10-07 00:00,The Future of Work: 3 Ways Automation and AI Will Change the Job Market,automation,positive,UP,pro,1.0,True,True
+GOOGL_2023-10-16_0900,GOOGL,2023-10-16 09:00,R0290,2023-10-14 00:00,Amazon Stock: Bear vs. Bull,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-10-23_0900,GOOGL,2023-10-23 09:00,R0291,2023-10-21 00:00,Why Tesla's Quarter Was Worse Than You Think,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-10-30_0900,GOOGL,2023-10-30 09:00,R0292,2023-10-28 00:00,2 Incredible Growth Stocks to Buy for the Dawning Artificial Intelligence (AI) Revolution,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-11-06_0900,GOOGL,2023-11-06 09:00,R0293,2023-11-04 00:00,4 Unique Growth Stocks You'll Regret Not Buying in the Wake of the Nasdaq Bear Market Dip,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-11-13_0900,GOOGL,2023-11-13 09:00,R0294,2023-11-11 00:00,The 3 Priciest Magnificent Seven Stocks: Worth the Splurge?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-11-20_0900,GOOGL,2023-11-20 09:00,R0295,2023-11-18 00:00,2 Top Tech Stocks Ready for a Bull Run,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-11-27_0900,GOOGL,2023-11-27 09:00,R0296,2023-11-25 00:00,Earnings Winners: 3 Stocks Gaining Momentum After Smashing Q3 Results,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-12-04_0900,GOOGL,2023-12-04 09:00,R0297,2023-12-02 00:00,"2 Reasons to Buy Alphabet, and 1 Reason to Sell",,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-12-11_0900,GOOGL,2023-12-11 09:00,R0298,2023-12-09 00:00,Is C3.ai Stock a Buy Right Now?,,neutral,HOLD,pro,0.5,True,True
+GOOGL_2023-12-18_0900,GOOGL,2023-12-18 09:00,R0299,2023-12-16 00:00,3 Top Stocks of 2023 That Will Shine Again in 2024,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-04-27_0900,MSFT,2022-04-27 09:00,R0300,2022-04-26 00:00,"Stock Market News for Apr 26, 2022",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-05-03_0900,MSFT,2022-05-03 09:00,R0301,2022-05-02 00:00,Activision shares rise after Buffett reveals Berkshire's 9.5% stake,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-05-10_0900,MSFT,2022-05-10 09:00,R0302,2022-05-09 00:00,US STOCKS-S&P 500 hits one-year low as higher bond yields pressure growth stocks,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-05-16_0900,MSFT,2022-05-16 09:00,R0303,2022-05-15 00:00,Why Zoom Stock Can Rebound Despite a Recent Slide,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-05-23_0900,MSFT,2022-05-23 09:00,R0304,2022-05-21 00:00,Want to Get Richer? 5 Top Stocks to Buy Now and Hold Forever,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-05-27_0900,MSFT,2022-05-27 09:00,R0305,2022-05-26 00:00,Nasdaq Bear Market: 3 Stock-Split Stocks to Buy Even as the Market Sinks,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-06-03_0900,MSFT,2022-06-03 09:00,R0306,2022-06-02 00:00,Microsoft (MSFT) Releases Surface Laptop Go 2 Starting at $599,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-06-09_0900,MSFT,2022-06-09 09:00,R0307,2022-06-08 00:00,Microsoft cuts Russia operations due to Ukraine invasion - Bloomberg News,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-06-15_0900,MSFT,2022-06-15 09:00,R0308,2022-06-14 00:00,Microsoft (MSFT) Gains As Market Dips: What You Should Know,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-06-21_0900,MSFT,2022-06-21 09:00,R0309,2022-06-20 00:00,Tencent forms 'extended reality' unit as metaverse race gathers steam - sources,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-06-27_0900,MSFT,2022-06-27 09:00,R0310,2022-06-26 00:00,Tech Rebound: 2 Growth Stocks You'll Wish You'd Bought on the Dip,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-07-05_0900,MSFT,2022-07-05 09:00,R0311,2022-07-02 00:00,The 3 Best Warren Buffett Stocks in the First Half of 2022: Are They Buys Now?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-07-11_0900,MSFT,2022-07-11 09:00,R0312,2022-07-09 00:00,Why Are Billionaire Investors Pouring Into This Tiny Tech Stock?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-07-15_0900,MSFT,2022-07-15 09:00,R0313,2022-07-14 00:00,Everbridge (EVBG) Launches Digital Operations Platform Module,launches,positive,UP,pro,1.0,True,True
+MSFT_2022-07-21_0900,MSFT,2022-07-21 09:00,R0314,2022-07-20 00:00,Microsoft Teams down for thousands of users,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-07-27_0900,MSFT,2022-07-27 09:00,R0315,2022-07-26 00:00,US STOCKS-Wall Street falls as Walmart warning rattles retail sector,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-08-03_0900,MSFT,2022-08-03 09:00,R0316,2022-08-02 00:00,S&P 500 ends see-saw session lower as Pelosi visits Taiwan,lower,negative,DOWN,pro,1.0,True,True
+MSFT_2022-08-09_0900,MSFT,2022-08-09 09:00,R0317,2022-08-08 00:00,3 Reasons You Should Own Individual Stocks Over ETFs,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-08-15_0900,MSFT,2022-08-15 09:00,R0318,2022-08-14 00:00,INSIGHT-Caste in California: Tech giants confront ancient Indian hierarchy,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-08-22_0900,MSFT,2022-08-22 09:00,R0319,2022-08-20 00:00,Things Just Got Tougher for Peloton,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-08-29_0900,MSFT,2022-08-29 09:00,R0320,2022-08-26 00:00,Why Okta Stock Was Down on Friday,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-09-01_0900,MSFT,2022-09-01 09:00,R0321,2022-08-31 00:00,"The Zacks Analyst Blog Highlights General Motors, Ford , Honda, Toyota and Stellantis",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-09-07_0900,MSFT,2022-09-07 09:00,R0322,2022-09-06 00:00,Should You Invest in the iShares Expanded TechSoftware Sector ETF (IGV)?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-09-13_0900,MSFT,2022-09-13 09:00,R0323,2022-09-12 00:00,"US STOCKS-Wall Street hits more than two-week high on energy, tech gains",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-09-20_0900,MSFT,2022-09-20 09:00,R0324,2022-09-19 00:00,Uber says hacker working with Lapsus$ responsible for cybersecurity incident,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-09-26_0900,MSFT,2022-09-26 09:00,R0325,2022-09-25 00:00,This Stock Market Investment Strategy Made Money 100% of the Time Over the Last Century,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-10-03_0900,MSFT,2022-10-03 09:00,R0326,2022-10-01 00:00,"FOCUS-Tencent shifts focus to majority deals, overseas gaming assets for growth-sources",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-10-10_0900,MSFT,2022-10-10 09:00,R0327,2022-10-07 00:00,3 Nasdaq 100 Stocks to Buy Hand Over Fist in October,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-10-14_0900,MSFT,2022-10-14 09:00,R0328,2022-10-13 00:00,Like Dividends? 3 Tech Titans Paying Investors Handsomely,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-10-20_0900,MSFT,2022-10-20 09:00,R0329,2022-10-19 00:00,"US STOCKS-Rise in yields weighs on stocks, overshadows earnings",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-10-26_0900,MSFT,2022-10-26 09:00,R0330,2022-10-25 00:00,"The Zacks Analyst Blog Highlights Alphabet, Microsoft, Apple and Amazon",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-11-01_0900,MSFT,2022-11-01 09:00,R0331,2022-10-31 00:00,Earnings Erase $350B From Big Tech: 5 ETFs With Strength,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-11-07_0900,MSFT,2022-11-07 09:00,R0332,2022-11-06 00:00,Wall Street Still Mad for Microsoft Stock (NASDAQ: MSFT),,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-11-14_0900,MSFT,2022-11-14 09:00,R0333,2022-11-12 00:00,7 No-Brainer Blue-Chip Stocks to Buy for 2023 and Beyond,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-11-21_0900,MSFT,2022-11-21 09:00,R0334,2022-11-18 00:00,10 Best Tech Stocks to Buy Now in November (High Conviction),,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-11-25_0900,MSFT,2022-11-25 09:00,R0335,2022-11-24 00:00,Why Is Microsoft (MSFT) Up 7% Since Last Earnings Report?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-12-01_0900,MSFT,2022-12-01 09:00,R0336,2022-11-30 00:00,"After Hours Most Active for Nov 30, 2022 : SABR, NYCB, PBF, LUMN, FHN, T, AAPL, INTC, AQN, MSFT, LYFT, CMCSA",,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-12-07_0900,MSFT,2022-12-07 09:00,R0337,2022-12-06 00:00,Time to Buy These 2 Blue Chip Stocks Going into 2023?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-12-12_0900,MSFT,2022-12-12 09:00,R0338,2022-12-11 00:00,1 Super Stock Down 91% You'll Wish You'd Bought on the Dip,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-12-19_0900,MSFT,2022-12-19 09:00,R0339,2022-12-17 00:00,Cheap Stocks To Buy Now? 2 Tech Stocks To Know,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-12-27_0900,MSFT,2022-12-27 09:00,R0340,2022-12-23 00:00,Better Buy: Microsoft Stock vs. Apple Stock,,neutral,HOLD,pro,0.5,True,True
+MSFT_2022-12-30_0900,MSFT,2022-12-30 09:00,R0341,2022-12-29 00:00,BC Partners to acquire account-based marketing firm Madison Logic,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-01-06_0900,MSFT,2023-01-06 09:00,R0342,2023-01-05 00:00,Better Software Stock: Zoom vs. Microsoft,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-01-12_0900,MSFT,2023-01-12 09:00,R0343,2023-01-11 00:00,5 Tech ETFs Riding High on Sectors' Comeback to Start 2023,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-01-18_0900,MSFT,2023-01-18 09:00,R0344,2023-01-17 00:00,Analysts Estimate Microsoft (MSFT) to Report a Decline in Earnings: What to Look Out for,decline,negative,DOWN,pro,1.0,True,True
+MSFT_2023-01-24_0900,MSFT,2023-01-24 09:00,R0345,2023-01-23 00:00,Investors Are Betting on Tech Again,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-01-30_0900,MSFT,2023-01-30 09:00,R0346,2023-01-28 00:00,Nasdaq Bear Market: 3 Reasons to Buy Alphabet in 2023,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-02-06_0900,MSFT,2023-02-06 09:00,R0347,2023-02-03 00:00,"Noteworthy Friday Option Activity: CLX, MSFT, COP",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-02-13_0900,MSFT,2023-02-13 09:00,R0348,2023-02-10 00:00,Steer Clear of GOOG Stock Following AI Event Flop,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-02-17_0900,MSFT,2023-02-17 09:00,R0349,2023-02-16 00:00,Alphabet Stock: Bull vs. Bear,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-02-23_0900,MSFT,2023-02-23 09:00,R0350,2023-02-22 00:00,7 Dividend-Paying Tech Stocks for Long-Term Growth,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-03-02_0900,MSFT,2023-03-02 09:00,R0351,2023-03-01 00:00,3 AI Stocks That Are Revolutionizing Agriculture,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-03-08_0900,MSFT,2023-03-08 09:00,R0352,2023-03-07 00:00,CrowdStrike (CRWD) Rides on Growing Cyber Security Demand,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-03-14_0900,MSFT,2023-03-14 09:00,R0353,2023-03-13 00:00,Twitter rival Koo integrates ChatGPT to help users create content,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-03-20_0900,MSFT,2023-03-20 09:00,R0354,2023-03-18 00:00,7 Best Stocks to Buy for a Sideways Market,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-03-27_0900,MSFT,2023-03-27 09:00,R0355,2023-03-24 00:00,3 Reasons Microsoft Stock Is a No-Brainer to Buy and Hold,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-03-31_0900,MSFT,2023-03-31 09:00,R0356,2023-03-30 00:00,"US STOCKS-Futures rise as bank fears ebb, focus shifts to key inflation data",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-04-10_0900,MSFT,2023-04-10 09:00,R0357,2023-04-06 00:00,Oppenheimer Maintains Microsoft (MSFT) Outperform Recommendation,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-04-13_0900,MSFT,2023-04-13 09:00,R0358,2023-04-12 00:00,4 Generative AI Tech Stocks to Buy as ChatGPT Gains Momentum,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-04-19_0900,MSFT,2023-04-19 09:00,R0359,2023-04-18 00:00,How the Top Names and Concentration in the S&P 500 Evolved Over 20 Years,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-04-25_0900,MSFT,2023-04-25 09:00,R0360,2023-04-24 00:00,Russia's Sberbank releases ChatGPT rival GigaChat,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-05-01_0900,MSFT,2023-05-01 09:00,R0361,2023-04-30 00:00,AI Winners Aren't Who You Think,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-05-08_0900,MSFT,2023-05-08 09:00,R0362,2023-05-05 00:00,Microsoft Is the Clear Leader in the AI Space -- Will Alphabet Ever Catch Up?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-05-15_0900,MSFT,2023-05-15 09:00,R0363,2023-05-12 00:00,IRBO: This Diversified AI ETF Gives Investors Many Shots on Goal,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-05-22_0900,MSFT,2023-05-22 09:00,R0364,2023-05-20 00:00,Is It Time to Buy Golf Stocks?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-05-30_0900,MSFT,2023-05-30 09:00,R0365,2023-05-26 00:00,"Alphabet CEO Sundar Pichai Commits to ""AI Pact"": What Does This Really Mean?",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-06-02_0900,MSFT,2023-06-02 09:00,R0366,2023-06-01 00:00,"Time to Buy These ""Trillion Dollar"" Stocks for More Upside",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-06-09_0900,MSFT,2023-06-09 09:00,R0367,2023-06-08 00:00,Big Tech Is Outpacing Small-Caps Amid Market Rally,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-06-16_0900,MSFT,2023-06-16 09:00,R0368,2023-06-15 00:00,Navigating Risks in AI Small Cap Investments: Beyond the Hype,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-06-22_0900,MSFT,2023-06-22 09:00,R0369,2023-06-21 00:00,3 Semiconductor Stocks to Invest in as Demand for AI Chips Surges,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-06-28_0900,MSFT,2023-06-28 09:00,R0370,2023-06-27 00:00,Microsoft Stock: Bear vs. Bull,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-07-03_0900,MSFT,2023-07-03 09:00,R0371,2023-07-02 00:00,7 High-Profit Stocks to Buy to Cash in on Inflation,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-07-10_0900,MSFT,2023-07-10 09:00,R0372,2023-07-08 00:00,Is the DoorDash Wage Change Good for the Company?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-07-17_0900,MSFT,2023-07-17 09:00,R0373,2023-07-14 00:00,Warren Buffett May Have Just Scored a Cool $1 Billion Profit From a Single Stock. Here's How.,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-07-21_0900,MSFT,2023-07-21 09:00,R0374,2023-07-20 00:00,7 Long-Term Stocks That Are Screaming Buys Right Now: July 2023,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-07-27_0900,MSFT,2023-07-27 09:00,R0375,2023-07-26 00:00,"Stock Market News for Jul 26, 2023",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-08-02_0900,MSFT,2023-08-02 09:00,R0376,2023-08-01 00:00,PREVIEW-Apple heads for largest Q3 revenue drop since 2016 as iPhone sales slow,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-08-08_0900,MSFT,2023-08-08 09:00,R0377,2023-08-07 00:00,Bull of the Day: NVIDIA (NVDA),,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-08-14_0900,MSFT,2023-08-14 09:00,R0378,2023-08-13 00:00,Guru Fundamental Report for MSFT - Warren Buffett,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-08-21_0900,MSFT,2023-08-21 09:00,R0379,2023-08-18 00:00,Should WisdomTree U.S. Total Dividend ETF (DTD) Be on Your Investing Radar?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-08-25_0900,MSFT,2023-08-25 09:00,R0380,2023-08-24 00:00,"US STOCKS-S&P 500, Nasdaq set to open higher after Nvidia's blowout forecast",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-08-31_0900,MSFT,2023-08-31 09:00,R0381,2023-08-30 00:00,Will Microsoft or Apple Win the Race to Be Worth $5 Trillion?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-09-06_0900,MSFT,2023-09-06 09:00,R0382,2023-09-05 00:00,Alphabet (GOOGL) Adds Latest Feature to Google Keep App,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-09-12_0900,MSFT,2023-09-12 09:00,R0383,2023-09-11 00:00,The 7 Best Tech Stocks to Buy to Capitalize on the AI Revolution,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-09-18_0900,MSFT,2023-09-18 09:00,R0384,2023-09-17 00:00,2 Growth Stocks I'm Buying Till I'm Blue in the Face,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-09-25_0900,MSFT,2023-09-25 09:00,R0385,2023-09-23 00:00,"Got $3,000? 3 Tech Stocks to Buy and Hold for the Long Term",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-10-02_0900,MSFT,2023-10-02 09:00,R0386,2023-09-29 00:00,AI Stocks To Buy In October 2023? 2 To Know,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-10-05_0900,MSFT,2023-10-05 09:00,R0387,2023-10-04 00:00,"US STOCKS-Futures subdued ahead of jobs data, Treasury yields surge",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-10-11_0900,MSFT,2023-10-11 09:00,R0388,2023-10-10 00:00,Is John Hancock Multifactor Large Cap ETF (JHML) a Strong ETF Right Now?,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-10-17_0900,MSFT,2023-10-17 09:00,R0389,2023-10-16 00:00,Stocks Gain on Diplomatic Efforts to Contain the Israeli-Hamas Conflict,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-10-23_0900,MSFT,2023-10-23 09:00,R0390,2023-10-22 00:00,GLOBAL MARKETS-Asia shares wary on Middle East as tech earnings loom,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-10-30_0900,MSFT,2023-10-30 09:00,R0391,2023-10-28 00:00,MarketBeat Week in Review – 10/23 - 10/27,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-11-06_0900,MSFT,2023-11-06 09:00,R0392,2023-11-04 00:00,"Is Microsoft, Amazon, or Alphabet the Best Stock in This $1.5 Trillion Industry?",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-11-13_0900,MSFT,2023-11-13 09:00,R0393,2023-11-11 00:00,Apple Stock: Bull vs. Bear,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-11-20_0900,MSFT,2023-11-20 09:00,R0394,2023-11-17 00:00,"After Hours Most Active for Nov 17, 2023 : MMM, QQQ, MATV, AAPL, NU, VCSH, MSFT, STRO, AMZN, KEY, VZ, BAC",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-11-24_0900,MSFT,2023-11-24 09:00,R0395,2023-11-22 00:00,"US STOCKS-Wall St rises on peak rate bets, downbeat earnings cap gains",,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-11-29_0900,MSFT,2023-11-29 09:00,R0396,2023-11-28 00:00,MSFT Quantitative Stock Analysis,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-12-05_0900,MSFT,2023-12-05 09:00,R0397,2023-12-04 00:00,Amazon's (AMZN) Cloud Clientele Expands as Trip.com Picks AWS,expands,positive,UP,pro,1.0,True,True
+MSFT_2023-12-11_0900,MSFT,2023-12-11 09:00,R0398,2023-12-10 00:00,Guru Fundamental Report for MSFT,,neutral,HOLD,pro,0.5,True,True
+MSFT_2023-12-18_0900,MSFT,2023-12-18 09:00,R0399,2023-12-16 02:00,"Some Potential 2024 Winners Reside in QQQ, QQQM",,neutral,HOLD,pro,0.5,True,True

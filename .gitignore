@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Real-data ingestion cache (scripts/fetch_real_data.py) — large downloaded
+# parquet/JSON files, regenerated on demand, never committed.
+data/raw_cache/
+outputs_smoke_real/

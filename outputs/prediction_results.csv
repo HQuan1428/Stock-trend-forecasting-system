@@ -1,101 +1,396 @@
 sample_id,ticker,forecast_time,prediction,confidence,score,label,is_correct,rationale,cited_evidence_count,valid_news_count,invalid_future_news_count
-AAPL_2025-03-12_0900,AAPL,2025-03-12 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-03-12_0900,GOOGL,2025-03-12 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AMZN_2025-03-12_0900,AMZN,2025-03-12 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-03-12_0900,META,2025-03-12 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-03-13_0900,AAPL,2025-03-13 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-GOOGL_2025-03-13_0900,GOOGL,2025-03-13 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-03-13_0900,AMZN,2025-03-13 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (3) is greater than negative evidence count (1).,3,3,0
-META_2025-03-13_0900,META,2025-03-13 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-03-14_0900,AAPL,2025-03-14 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-03-14_0900,GOOGL,2025-03-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AMZN_2025-03-14_0900,AMZN,2025-03-14 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-META_2025-03-14_0900,META,2025-03-14 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-03-17_0900,AAPL,2025-03-17 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-GOOGL_2025-03-17_0900,GOOGL,2025-03-17 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-03-17_0900,AMZN,2025-03-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-META_2025-03-17_0900,META,2025-03-17 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-03-18_0900,AAPL,2025-03-18 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-GOOGL_2025-03-18_0900,GOOGL,2025-03-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-03-18_0900,AMZN,2025-03-18 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-03-18_0900,META,2025-03-18 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AAPL_2025-03-19_0900,AAPL,2025-03-19 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-03-19_0900,GOOGL,2025-03-19 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-03-19_0900,AMZN,2025-03-19 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-03-19_0900,META,2025-03-19 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-03-20_0900,AAPL,2025-03-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-GOOGL_2025-03-20_0900,GOOGL,2025-03-20 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-03-20_0900,AMZN,2025-03-20 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-META_2025-03-20_0900,META,2025-03-20 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-03-21_0900,AAPL,2025-03-21 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced.,3,3,0
-GOOGL_2025-03-21_0900,GOOGL,2025-03-21 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AMZN_2025-03-21_0900,AMZN,2025-03-21 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-03-21_0900,META,2025-03-21 09:00,DOWN,0.6,-1,HOLD,False,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
-AAPL_2025-03-24_0900,AAPL,2025-03-24 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-GOOGL_2025-03-24_0900,GOOGL,2025-03-24 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-03-24_0900,AMZN,2025-03-24 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-META_2025-03-24_0900,META,2025-03-24 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-03-25_0900,AAPL,2025-03-25 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-GOOGL_2025-03-25_0900,GOOGL,2025-03-25 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-03-25_0900,AMZN,2025-03-25 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-03-25_0900,META,2025-03-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AAPL_2025-03-26_0900,AAPL,2025-03-26 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-03-26_0900,GOOGL,2025-03-26 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-03-26_0900,AMZN,2025-03-26 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-03-26_0900,META,2025-03-26 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-03-27_0900,AAPL,2025-03-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-GOOGL_2025-03-27_0900,GOOGL,2025-03-27 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-03-27_0900,AMZN,2025-03-27 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-META_2025-03-27_0900,META,2025-03-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-03-28_0900,AAPL,2025-03-28 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-03-28_0900,GOOGL,2025-03-28 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AMZN_2025-03-28_0900,AMZN,2025-03-28 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-03-28_0900,META,2025-03-28 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-AAPL_2025-03-31_0900,AAPL,2025-03-31 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-GOOGL_2025-03-31_0900,GOOGL,2025-03-31 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-03-31_0900,AMZN,2025-03-31 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-META_2025-03-31_0900,META,2025-03-31 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-04-01_0900,AAPL,2025-04-01 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-04-01_0900,GOOGL,2025-04-01 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-AMZN_2025-04-01_0900,AMZN,2025-04-01 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-04-01_0900,META,2025-04-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AAPL_2025-04-02_0900,AAPL,2025-04-02 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-04-02_0900,GOOGL,2025-04-02 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-04-02_0900,AMZN,2025-04-02 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-04-02_0900,META,2025-04-02 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-AAPL_2025-04-03_0900,AAPL,2025-04-03 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-GOOGL_2025-04-03_0900,GOOGL,2025-04-03 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-04-03_0900,AMZN,2025-04-03 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-04-03_0900,META,2025-04-03 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-04-04_0900,AAPL,2025-04-04 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-GOOGL_2025-04-04_0900,GOOGL,2025-04-04 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AMZN_2025-04-04_0900,AMZN,2025-04-04 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (0).,1,1,0
-META_2025-04-04_0900,META,2025-04-04 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-04-07_0900,AAPL,2025-04-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-GOOGL_2025-04-07_0900,GOOGL,2025-04-07 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-04-07_0900,AMZN,2025-04-07 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-META_2025-04-07_0900,META,2025-04-07 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
-AAPL_2025-04-08_0900,AAPL,2025-04-08 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (3) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-04-08_0900,GOOGL,2025-04-08 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-04-08_0900,AMZN,2025-04-08 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-04-08_0900,META,2025-04-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AAPL_2025-04-09_0900,AAPL,2025-04-09 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (2) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-04-09_0900,GOOGL,2025-04-09 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AMZN_2025-04-09_0900,AMZN,2025-04-09 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-04-09_0900,META,2025-04-09 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-04-10_0900,AAPL,2025-04-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-GOOGL_2025-04-10_0900,GOOGL,2025-04-10 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-04-10_0900,AMZN,2025-04-10 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-META_2025-04-10_0900,META,2025-04-10 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AAPL_2025-04-11_0900,AAPL,2025-04-11 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-GOOGL_2025-04-11_0900,GOOGL,2025-04-11 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-AMZN_2025-04-11_0900,AMZN,2025-04-11 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-04-11_0900,META,2025-04-11 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-04-14_0900,AAPL,2025-04-14 09:00,UP,0.7,2,UP,True,Prediction UP because positive evidence count (3) is greater than negative evidence count (1).,3,3,0
-GOOGL_2025-04-14_0900,GOOGL,2025-04-14 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (2) is greater than positive evidence count (1).,3,3,0
-AMZN_2025-04-14_0900,AMZN,2025-04-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
-META_2025-04-14_0900,META,2025-04-14 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-AAPL_2025-04-15_0900,AAPL,2025-04-15 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
-GOOGL_2025-04-15_0900,GOOGL,2025-04-15 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-AMZN_2025-04-15_0900,AMZN,2025-04-15 09:00,UP,0.6,1,UP,True,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
-META_2025-04-15_0900,META,2025-04-15 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,0,0,1
+AAPL_2022-06-06_0900,AAPL,2022-06-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-06-09_0900,AAPL,2022-06-09 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-06-15_0900,AAPL,2022-06-15 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-06-21_0900,AAPL,2022-06-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-06-27_0900,AAPL,2022-06-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-07-05_0900,AAPL,2022-07-05 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-07-08_0900,AAPL,2022-07-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-07-14_0900,AAPL,2022-07-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-07-20_0900,AAPL,2022-07-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-07-26_0900,AAPL,2022-07-26 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-08-01_0900,AAPL,2022-08-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-08-08_0900,AAPL,2022-08-08 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-08-11_0900,AAPL,2022-08-11 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-08-17_0900,AAPL,2022-08-17 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-08-22_0900,AAPL,2022-08-22 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-08-29_0900,AAPL,2022-08-29 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-09-06_0900,AAPL,2022-09-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-09-08_0900,AAPL,2022-09-08 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-09-14_0900,AAPL,2022-09-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-09-19_0900,AAPL,2022-09-19 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-09-27_0900,AAPL,2022-09-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-10-03_0900,AAPL,2022-10-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-10-10_0900,AAPL,2022-10-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-10-17_0900,AAPL,2022-10-17 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-10-20_0900,AAPL,2022-10-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-10-26_0900,AAPL,2022-10-26 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-10-31_0900,AAPL,2022-10-31 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-11-07_0900,AAPL,2022-11-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-11-14_0900,AAPL,2022-11-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-11-18_0900,AAPL,2022-11-18 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-11-25_0900,AAPL,2022-11-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-11-30_0900,AAPL,2022-11-30 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-12-06_0900,AAPL,2022-12-06 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-12-12_0900,AAPL,2022-12-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-12-19_0900,AAPL,2022-12-19 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-12-23_0900,AAPL,2022-12-23 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2022-12-29_0900,AAPL,2022-12-29 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-01-03_0900,AAPL,2023-01-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-01-09_0900,AAPL,2023-01-09 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-01-17_0900,AAPL,2023-01-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-01-19_0900,AAPL,2023-01-19 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-01-26_0900,AAPL,2023-01-26 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-01-31_0900,AAPL,2023-01-31 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-02-06_0900,AAPL,2023-02-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-02-13_0900,AAPL,2023-02-13 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-02-17_0900,AAPL,2023-02-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-02-22_0900,AAPL,2023-02-22 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-02-27_0900,AAPL,2023-02-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-03-06_0900,AAPL,2023-03-06 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-03-13_0900,AAPL,2023-03-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-03-20_0900,AAPL,2023-03-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-03-23_0900,AAPL,2023-03-23 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-03-29_0900,AAPL,2023-03-29 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-04-03_0900,AAPL,2023-04-03 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-04-10_0900,AAPL,2023-04-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-04-14_0900,AAPL,2023-04-14 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-04-19_0900,AAPL,2023-04-19 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-04-25_0900,AAPL,2023-04-25 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-05-01_0900,AAPL,2023-05-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-05-08_0900,AAPL,2023-05-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-05-12_0900,AAPL,2023-05-12 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-05-17_0900,AAPL,2023-05-17 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-05-23_0900,AAPL,2023-05-23 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-05-30_0900,AAPL,2023-05-30 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-06-05_0900,AAPL,2023-06-05 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-06-12_0900,AAPL,2023-06-12 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-06-20_0900,AAPL,2023-06-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-06-26_0900,AAPL,2023-06-26 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-06-30_0900,AAPL,2023-06-30 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-07-05_0900,AAPL,2023-07-05 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-07-10_0900,AAPL,2023-07-10 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-07-17_0900,AAPL,2023-07-17 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-07-21_0900,AAPL,2023-07-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-07-27_0900,AAPL,2023-07-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-08-01_0900,AAPL,2023-08-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-08-07_0900,AAPL,2023-08-07 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-08-14_0900,AAPL,2023-08-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-08-17_0900,AAPL,2023-08-17 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-08-23_0900,AAPL,2023-08-23 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-08-28_0900,AAPL,2023-08-28 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-09-05_0900,AAPL,2023-09-05 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-09-08_0900,AAPL,2023-09-08 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-09-14_0900,AAPL,2023-09-14 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-09-19_0900,AAPL,2023-09-19 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-09-25_0900,AAPL,2023-09-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-10-02_0900,AAPL,2023-10-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-10-05_0900,AAPL,2023-10-05 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-10-11_0900,AAPL,2023-10-11 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-10-16_0900,AAPL,2023-10-16 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-10-23_0900,AAPL,2023-10-23 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-10-27_0900,AAPL,2023-10-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-11-02_0900,AAPL,2023-11-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-11-07_0900,AAPL,2023-11-07 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-11-13_0900,AAPL,2023-11-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-11-20_0900,AAPL,2023-11-20 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-11-24_0900,AAPL,2023-11-24 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-11-29_0900,AAPL,2023-11-29 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-12-05_0900,AAPL,2023-12-05 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-12-12_0900,AAPL,2023-12-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AAPL_2023-12-18_0900,AAPL,2023-12-18 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-10_0900,AMZN,2023-03-10 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-14_0900,AMZN,2023-03-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-16_0900,AMZN,2023-03-16 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-20_0900,AMZN,2023-03-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-22_0900,AMZN,2023-03-22 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-24_0900,AMZN,2023-03-24 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-27_0900,AMZN,2023-03-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-03-30_0900,AMZN,2023-03-30 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-04-03_0900,AMZN,2023-04-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-04-04_0900,AMZN,2023-04-04 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-04-10_0900,AMZN,2023-04-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,2,2,0
+AMZN_2023-04-12_0900,AMZN,2023-04-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-04-17_0900,AMZN,2023-04-17 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,2,2,0
+AMZN_2023-04-20_0900,AMZN,2023-04-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-04-24_0900,AMZN,2023-04-24 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-04-27_0900,AMZN,2023-04-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-01_0900,AMZN,2023-05-01 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-02_0900,AMZN,2023-05-02 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-08_0900,AMZN,2023-05-08 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-09_0900,AMZN,2023-05-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-12_0900,AMZN,2023-05-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-15_0900,AMZN,2023-05-15 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-17_0900,AMZN,2023-05-17 09:00,DOWN,0.6,-1,UP,False,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
+AMZN_2023-05-22_0900,AMZN,2023-05-22 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-23_0900,AMZN,2023-05-23 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-25_0900,AMZN,2023-05-25 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-30_0900,AMZN,2023-05-30 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-05-31_0900,AMZN,2023-05-31 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-02_0900,AMZN,2023-06-02 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-05_0900,AMZN,2023-06-05 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-09_0900,AMZN,2023-06-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-12_0900,AMZN,2023-06-12 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-14_0900,AMZN,2023-06-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-20_0900,AMZN,2023-06-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,2,2,0
+AMZN_2023-06-23_0900,AMZN,2023-06-23 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-27_0900,AMZN,2023-06-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-06-29_0900,AMZN,2023-06-29 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-03_0900,AMZN,2023-07-03 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-05_0900,AMZN,2023-07-05 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-07_0900,AMZN,2023-07-07 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-10_0900,AMZN,2023-07-10 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-13_0900,AMZN,2023-07-13 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-17_0900,AMZN,2023-07-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-18_0900,AMZN,2023-07-18 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-21_0900,AMZN,2023-07-21 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-24_0900,AMZN,2023-07-24 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-26_0900,AMZN,2023-07-26 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-07-31_0900,AMZN,2023-07-31 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-01_0900,AMZN,2023-08-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-03_0900,AMZN,2023-08-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-07_0900,AMZN,2023-08-07 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-10_0900,AMZN,2023-08-10 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-14_0900,AMZN,2023-08-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-15_0900,AMZN,2023-08-15 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-18_0900,AMZN,2023-08-18 09:00,DOWN,0.6,-1,UP,False,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
+AMZN_2023-08-21_0900,AMZN,2023-08-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-23_0900,AMZN,2023-08-23 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-08-28_0900,AMZN,2023-08-28 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,2,2,0
+AMZN_2023-08-31_0900,AMZN,2023-08-31 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-05_0900,AMZN,2023-09-05 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,2,2,0
+AMZN_2023-09-08_0900,AMZN,2023-09-08 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-11_0900,AMZN,2023-09-11 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-13_0900,AMZN,2023-09-13 09:00,DOWN,0.6,-1,HOLD,False,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
+AMZN_2023-09-18_0900,AMZN,2023-09-18 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-19_0900,AMZN,2023-09-19 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-21_0900,AMZN,2023-09-21 09:00,DOWN,0.6,-1,HOLD,False,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
+AMZN_2023-09-25_0900,AMZN,2023-09-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-27_0900,AMZN,2023-09-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-09-29_0900,AMZN,2023-09-29 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-02_0900,AMZN,2023-10-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-05_0900,AMZN,2023-10-05 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-09_0900,AMZN,2023-10-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-10_0900,AMZN,2023-10-10 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-13_0900,AMZN,2023-10-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-16_0900,AMZN,2023-10-16 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-18_0900,AMZN,2023-10-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-27_0900,AMZN,2023-10-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-10-31_0900,AMZN,2023-10-31 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-03_0900,AMZN,2023-11-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-06_0900,AMZN,2023-11-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-09_0900,AMZN,2023-11-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-13_0900,AMZN,2023-11-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-14_0900,AMZN,2023-11-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-17_0900,AMZN,2023-11-17 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-20_0900,AMZN,2023-11-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-22_0900,AMZN,2023-11-22 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-27_0900,AMZN,2023-11-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-11-28_0900,AMZN,2023-11-28 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-01_0900,AMZN,2023-12-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-04_0900,AMZN,2023-12-04 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-06_0900,AMZN,2023-12-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-11_0900,AMZN,2023-12-11 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-12_0900,AMZN,2023-12-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-14_0900,AMZN,2023-12-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+AMZN_2023-12-18_0900,AMZN,2023-12-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-01-03_0900,GOOGL,2022-01-03 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-01-12_0900,GOOGL,2022-01-12 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-01-19_0900,GOOGL,2022-01-19 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-01-26_0900,GOOGL,2022-01-26 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-02-02_0900,GOOGL,2022-02-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-02-09_0900,GOOGL,2022-02-09 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-02-16_0900,GOOGL,2022-02-16 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-02-24_0900,GOOGL,2022-02-24 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-03-03_0900,GOOGL,2022-03-03 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-03-14_0900,GOOGL,2022-03-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-03-21_0900,GOOGL,2022-03-21 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-03-28_0900,GOOGL,2022-03-28 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-04-04_0900,GOOGL,2022-04-04 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-04-11_0900,GOOGL,2022-04-11 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-04-18_0900,GOOGL,2022-04-18 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-04-25_0900,GOOGL,2022-04-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-05-02_0900,GOOGL,2022-05-02 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-05-09_0900,GOOGL,2022-05-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-05-16_0900,GOOGL,2022-05-16 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-05-24_0900,GOOGL,2022-05-24 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-06-01_0900,GOOGL,2022-06-01 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-06-09_0900,GOOGL,2022-06-09 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-06-16_0900,GOOGL,2022-06-16 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-06-23_0900,GOOGL,2022-06-23 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-07-01_0900,GOOGL,2022-07-01 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-07-07_0900,GOOGL,2022-07-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-07-14_0900,GOOGL,2022-07-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-07-21_0900,GOOGL,2022-07-21 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-07-28_0900,GOOGL,2022-07-28 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-08-04_0900,GOOGL,2022-08-04 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-08-11_0900,GOOGL,2022-08-11 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-08-18_0900,GOOGL,2022-08-18 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-08-26_0900,GOOGL,2022-08-26 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-09-02_0900,GOOGL,2022-09-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-09-09_0900,GOOGL,2022-09-09 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-09-16_0900,GOOGL,2022-09-16 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-09-26_0900,GOOGL,2022-09-26 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-10-03_0900,GOOGL,2022-10-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-10-10_0900,GOOGL,2022-10-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-10-17_0900,GOOGL,2022-10-17 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-10-24_0900,GOOGL,2022-10-24 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-10-31_0900,GOOGL,2022-10-31 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-11-07_0900,GOOGL,2022-11-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-11-14_0900,GOOGL,2022-11-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-11-21_0900,GOOGL,2022-11-21 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-11-28_0900,GOOGL,2022-11-28 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-12-05_0900,GOOGL,2022-12-05 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-12-12_0900,GOOGL,2022-12-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-12-19_0900,GOOGL,2022-12-19 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2022-12-27_0900,GOOGL,2022-12-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-01-03_0900,GOOGL,2023-01-03 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-01-09_0900,GOOGL,2023-01-09 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-01-17_0900,GOOGL,2023-01-17 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-01-23_0900,GOOGL,2023-01-23 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-01-30_0900,GOOGL,2023-01-30 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-02-06_0900,GOOGL,2023-02-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-02-13_0900,GOOGL,2023-02-13 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-02-21_0900,GOOGL,2023-02-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-02-28_0900,GOOGL,2023-02-28 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-03-08_0900,GOOGL,2023-03-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-03-15_0900,GOOGL,2023-03-15 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-03-22_0900,GOOGL,2023-03-22 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-03-30_0900,GOOGL,2023-03-30 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-04-06_0900,GOOGL,2023-04-06 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-04-13_0900,GOOGL,2023-04-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-04-20_0900,GOOGL,2023-04-20 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-04-27_0900,GOOGL,2023-04-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-05-04_0900,GOOGL,2023-05-04 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-05-11_0900,GOOGL,2023-05-11 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-05-18_0900,GOOGL,2023-05-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-05-25_0900,GOOGL,2023-05-25 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-06-01_0900,GOOGL,2023-06-01 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-06-09_0900,GOOGL,2023-06-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-06-20_0900,GOOGL,2023-06-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-06-26_0900,GOOGL,2023-06-26 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-06-30_0900,GOOGL,2023-06-30 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-07-07_0900,GOOGL,2023-07-07 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-07-17_0900,GOOGL,2023-07-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-07-24_0900,GOOGL,2023-07-24 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-07-31_0900,GOOGL,2023-07-31 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-08-07_0900,GOOGL,2023-08-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-08-14_0900,GOOGL,2023-08-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-08-21_0900,GOOGL,2023-08-21 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-08-28_0900,GOOGL,2023-08-28 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-09-05_0900,GOOGL,2023-09-05 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-09-11_0900,GOOGL,2023-09-11 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-09-18_0900,GOOGL,2023-09-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-09-25_0900,GOOGL,2023-09-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-10-02_0900,GOOGL,2023-10-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-10-09_0900,GOOGL,2023-10-09 09:00,UP,0.6,1,HOLD,False,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
+GOOGL_2023-10-16_0900,GOOGL,2023-10-16 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-10-23_0900,GOOGL,2023-10-23 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-10-30_0900,GOOGL,2023-10-30 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-11-06_0900,GOOGL,2023-11-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-11-13_0900,GOOGL,2023-11-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-11-20_0900,GOOGL,2023-11-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-11-27_0900,GOOGL,2023-11-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-12-04_0900,GOOGL,2023-12-04 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-12-11_0900,GOOGL,2023-12-11 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+GOOGL_2023-12-18_0900,GOOGL,2023-12-18 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-04-27_0900,MSFT,2022-04-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-05-03_0900,MSFT,2022-05-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-05-10_0900,MSFT,2022-05-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-05-16_0900,MSFT,2022-05-16 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-05-23_0900,MSFT,2022-05-23 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-05-27_0900,MSFT,2022-05-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-06-03_0900,MSFT,2022-06-03 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-06-09_0900,MSFT,2022-06-09 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-06-15_0900,MSFT,2022-06-15 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-06-21_0900,MSFT,2022-06-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-06-27_0900,MSFT,2022-06-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-07-05_0900,MSFT,2022-07-05 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-07-11_0900,MSFT,2022-07-11 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-07-15_0900,MSFT,2022-07-15 09:00,UP,0.6,1,DOWN,False,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
+MSFT_2022-07-21_0900,MSFT,2022-07-21 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-07-27_0900,MSFT,2022-07-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-08-03_0900,MSFT,2022-08-03 09:00,DOWN,0.6,-1,HOLD,False,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
+MSFT_2022-08-09_0900,MSFT,2022-08-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-08-15_0900,MSFT,2022-08-15 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-08-22_0900,MSFT,2022-08-22 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-08-29_0900,MSFT,2022-08-29 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-09-01_0900,MSFT,2022-09-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-09-07_0900,MSFT,2022-09-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-09-13_0900,MSFT,2022-09-13 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-09-20_0900,MSFT,2022-09-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-09-26_0900,MSFT,2022-09-26 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-10-03_0900,MSFT,2022-10-03 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-10-10_0900,MSFT,2022-10-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-10-14_0900,MSFT,2022-10-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-10-20_0900,MSFT,2022-10-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-10-26_0900,MSFT,2022-10-26 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-11-01_0900,MSFT,2022-11-01 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-11-07_0900,MSFT,2022-11-07 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-11-14_0900,MSFT,2022-11-14 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-11-21_0900,MSFT,2022-11-21 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-11-25_0900,MSFT,2022-11-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-12-01_0900,MSFT,2022-12-01 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-12-07_0900,MSFT,2022-12-07 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-12-12_0900,MSFT,2022-12-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-12-19_0900,MSFT,2022-12-19 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-12-27_0900,MSFT,2022-12-27 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2022-12-30_0900,MSFT,2022-12-30 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-01-06_0900,MSFT,2023-01-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-01-12_0900,MSFT,2023-01-12 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-01-18_0900,MSFT,2023-01-18 09:00,DOWN,0.6,-1,DOWN,True,Prediction DOWN because negative evidence count (1) is greater than positive evidence count (0).,1,1,0
+MSFT_2023-01-24_0900,MSFT,2023-01-24 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-01-30_0900,MSFT,2023-01-30 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-02-06_0900,MSFT,2023-02-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-02-13_0900,MSFT,2023-02-13 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-02-17_0900,MSFT,2023-02-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-02-23_0900,MSFT,2023-02-23 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-03-02_0900,MSFT,2023-03-02 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-03-08_0900,MSFT,2023-03-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-03-14_0900,MSFT,2023-03-14 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-03-20_0900,MSFT,2023-03-20 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-03-27_0900,MSFT,2023-03-27 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-03-31_0900,MSFT,2023-03-31 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-04-10_0900,MSFT,2023-04-10 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-04-13_0900,MSFT,2023-04-13 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-04-19_0900,MSFT,2023-04-19 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-04-25_0900,MSFT,2023-04-25 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-05-01_0900,MSFT,2023-05-01 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-05-08_0900,MSFT,2023-05-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-05-15_0900,MSFT,2023-05-15 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-05-22_0900,MSFT,2023-05-22 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-05-30_0900,MSFT,2023-05-30 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-06-02_0900,MSFT,2023-06-02 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-06-09_0900,MSFT,2023-06-09 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-06-16_0900,MSFT,2023-06-16 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-06-22_0900,MSFT,2023-06-22 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-06-28_0900,MSFT,2023-06-28 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-07-03_0900,MSFT,2023-07-03 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-07-10_0900,MSFT,2023-07-10 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-07-17_0900,MSFT,2023-07-17 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-07-21_0900,MSFT,2023-07-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-07-27_0900,MSFT,2023-07-27 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-08-02_0900,MSFT,2023-08-02 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-08-08_0900,MSFT,2023-08-08 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-08-14_0900,MSFT,2023-08-14 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-08-21_0900,MSFT,2023-08-21 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-08-25_0900,MSFT,2023-08-25 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-08-31_0900,MSFT,2023-08-31 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-09-06_0900,MSFT,2023-09-06 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-09-12_0900,MSFT,2023-09-12 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-09-18_0900,MSFT,2023-09-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-09-25_0900,MSFT,2023-09-25 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-10-02_0900,MSFT,2023-10-02 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-10-05_0900,MSFT,2023-10-05 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-10-11_0900,MSFT,2023-10-11 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-10-17_0900,MSFT,2023-10-17 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-10-23_0900,MSFT,2023-10-23 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-10-30_0900,MSFT,2023-10-30 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-11-06_0900,MSFT,2023-11-06 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-11-13_0900,MSFT,2023-11-13 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-11-20_0900,MSFT,2023-11-20 09:00,HOLD,0.5,0,DOWN,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-11-24_0900,MSFT,2023-11-24 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-11-29_0900,MSFT,2023-11-29 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-12-05_0900,MSFT,2023-12-05 09:00,UP,0.6,1,DOWN,False,Prediction UP because positive evidence count (1) is greater than negative evidence count (0).,1,1,0
+MSFT_2023-12-11_0900,MSFT,2023-12-11 09:00,HOLD,0.5,0,UP,False,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0
+MSFT_2023-12-18_0900,MSFT,2023-12-18 09:00,HOLD,0.5,0,HOLD,True,Prediction HOLD because positive and negative evidence are balanced or no valid directional evidence is available.,1,1,0

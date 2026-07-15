@@ -1,0 +1,401 @@
+news_id,ticker,forecast_time,news_time,news_text,label,next_day_return,price_5d_return,volume_change
+R0000,AAPL,2022-06-06 09:00,2022-06-03 00:00,"4 Top Stock Trades for Monday: SPY, AAPL, LULU, MU",UP,0.0176,-0.0234,-0.1916
+R0001,AAPL,2022-06-09 09:00,2022-06-08 00:00,"Top Stock Market News For Today June 8, 2022",DOWN,-0.0386,-0.0567,0.2877
+R0002,AAPL,2022-06-15 09:00,2022-06-14 00:00,Tech Turbulence: 1 Growth Stock to Buy on the Dip and Hold,DOWN,-0.0397,-0.0847,0.0796
+R0003,AAPL,2022-06-21 09:00,2022-06-20 00:00,Should iShares Russell Top 200 ETF (IWL) Be on Your Investing Radar?,HOLD,-0.0038,0.0303,-0.3979
+R0004,AAPL,2022-06-27 09:00,2022-06-26 00:00,Market Plunge 2022: 3 Absolute Bargains Begging to Be Bought,DOWN,-0.0298,0.0768,-0.2122
+R0005,AAPL,2022-07-05 09:00,2022-07-01 00:00,"Berkshire Hathaway buys 9.9 mln more Occidental shares, has 17.4% stake",UP,0.0096,-0.0007,0.0324
+R0006,AAPL,2022-07-08 09:00,2022-07-07 00:00,Is There Any Hope for Bed Bath & Beyond?,DOWN,-0.0148,0.0755,-0.0257
+R0007,AAPL,2022-07-14 09:00,2022-07-13 00:00,Stay Focused on the $180 Price Target for Apple Stock,UP,0.0115,0.0145,0.0977
+R0008,AAPL,2022-07-20 09:00,2022-07-19 00:00,JPMorgan adds former J&J chief Gorsky to board,UP,0.0151,0.0519,-0.2188
+R0009,AAPL,2022-07-26 09:00,2022-07-25 00:00,Tech investors may be overvaluing moats,UP,0.0342,0.004,0.0282
+R0010,AAPL,2022-08-01 09:00,2022-07-30 00:00,2 Leading Tech Stocks to Buy in 2022 and Beyond,DOWN,-0.0093,0.056,-0.3336
+R0011,AAPL,2022-08-08 09:00,2022-08-05 00:00,Why I Own Qualcomm Stock,HOLD,0.0003,0.0208,0.0631
+R0012,AAPL,2022-08-11 09:00,2022-08-10 00:00,3 Stocks That Could Help Make You Richer,UP,0.0214,0.0162,-0.1856
+R0013,AAPL,2022-08-17 09:00,2022-08-16 00:00,3 Painfully Common Investing Mistakes to Avoid Right Now,HOLD,-0.0023,0.0314,0.4109
+R0014,AAPL,2022-08-22 09:00,2022-08-21 00:00,2 Reasons Why Skyworks Solutions Is Due to Outperform,HOLD,-0.002,-0.0324,-0.0188
+R0015,AAPL,2022-08-29 09:00,2022-08-28 00:00,My Top FAANG Stock to Buy for the Second Half of 2022 (and Beyond),DOWN,-0.0153,-0.0369,-0.0715
+R0016,AAPL,2022-09-06 09:00,2022-09-02 00:00,US STOCKS-Wall Street rises after mixed August jobs report,UP,0.0093,-0.0424,-0.0421
+R0017,AAPL,2022-09-08 09:00,2022-09-07 00:00,Here's My Favorite Warren Buffett Stock (It May Surprise You),UP,0.0188,-0.0176,-0.0289
+R0018,AAPL,2022-09-14 09:00,2022-09-13 00:00,"HBO reclaims its Emmy crown with 'Succession,' 'White Lotus' wins",DOWN,-0.0189,-0.0042,-0.2828
+R0019,AAPL,2022-09-19 09:00,2022-09-18 00:00,Meta Platforms Stock: Bear vs. Bull,UP,0.0157,-0.0548,-0.4979
+R0020,AAPL,2022-09-27 09:00,2022-09-26 00:00,"Technology Sector Update for 09/26/2022: PLTK, INTC, AAPL, XLK, SOXX",DOWN,-0.0127,-0.0328,-0.0953
+R0021,AAPL,2022-10-03 09:00,2022-10-01 00:00,Amazon's Second Selling Bonanza of 2022: Who Benefits?,UP,0.0256,-0.0552,-0.085
+R0022,AAPL,2022-10-10 09:00,2022-10-08 00:00,Poshmark Gets Bought Out; Chipotle Roars Ahead,DOWN,-0.0103,-0.0143,-0.1283
+R0023,AAPL,2022-10-17 09:00,2022-10-14 00:00,"Banks Are Now as Leveraged as They Were Before the Great Recession, but Don't Panic",UP,0.0094,0.0142,-0.0378
+R0024,AAPL,2022-10-20 09:00,2022-10-19 00:00,"1 Growth Stock Set to Soar 1,000%, According to Cathie Wood",UP,0.0271,0.0028,0.0448
+R0025,AAPL,2022-10-26 09:00,2022-10-25 00:00,Why Is Everyone Talking About Apple?,DOWN,-0.0305,0.0382,0.1801
+R0026,AAPL,2022-10-31 09:00,2022-10-30 00:00,Chinese cities brace for wave of Foxconn workers from COVID-hit Zhengzhou,DOWN,-0.0175,0.026,-0.4055
+R0027,AAPL,2022-11-07 09:00,2022-11-06 00:00,"GLOBAL MARKETS-Asia stocks resilient as Wall St slips, China trade disappoints",HOLD,0.0042,-0.094,-0.4079
+R0028,AAPL,2022-11-14 09:00,2022-11-11 00:00,"Nasdaq, S&P 500 end sharply higher, fueled by inflation optimism",UP,0.0119,0.0674,-0.2193
+R0029,AAPL,2022-11-18 09:00,2022-11-17 00:00,Better Buy After Earnings: Target (TGT) Vs. Walmart (WMT) Stock,DOWN,-0.0217,0.0106,-0.0692
+R0030,AAPL,2022-11-25 09:00,2022-11-23 00:00,Should SPDR Portfolio S&P 500 Growth ETF (SPYG) Be on Your Investing Radar?,DOWN,-0.0263,-0.0173,-0.3963
+R0031,AAPL,2022-11-30 09:00,2022-11-29 00:00,Is Apple a Must-Own Stock in 2023?,HOLD,0.0019,-0.0143,0.3297
+R0032,AAPL,2022-12-06 09:00,2022-12-05 00:00,Apple explores moving some iPad production to India - CNBC,DOWN,-0.0138,0.0123,-0.0596
+R0033,AAPL,2022-12-12 09:00,2022-12-10 00:00,Twitter to relaunch Twitter Blue at higher price for Apple users,UP,0.0068,-0.0146,-0.074
+R0034,AAPL,2022-12-19 09:00,2022-12-16 00:00,"U.S. Intensifies Crackdown on Chinese Firms, Blacklists Chipmaker YMTC",HOLD,-0.0005,-0.0839,-0.503
+R0035,AAPL,2022-12-23 09:00,2022-12-22 00:00,5 Surprising Strategies for Building Wealth in the Stock Market,DOWN,-0.0139,-0.0197,-0.1803
+R0036,AAPL,2022-12-29 09:00,2022-12-28 00:00,5 Unstoppable Metaverse Stocks to Buy in 2023,HOLD,0.0025,-0.0431,-0.1139
+R0037,AAPL,2023-01-03 09:00,2023-01-02 00:00,3 Dividend-Paying Tech Stocks to Buy in January,UP,0.0103,-0.0515,0.4554
+R0038,AAPL,2023-01-09 09:00,2023-01-08 00:00,Can Shiba Inu Reach $1 in 2023?,HOLD,0.0045,0.0017,-0.1933
+R0039,AAPL,2023-01-17 09:00,2023-01-13 00:00,Is It the Right Time to Buy Apple Stock?,DOWN,-0.0054,0.0445,0.101
+R0040,AAPL,2023-01-19 09:00,2023-01-18 00:00,Better Buy in 2023: Apple Stock vs. Amazon Stock,UP,0.0192,0.0133,-0.1635
+R0041,AAPL,2023-01-26 09:00,2023-01-25 00:00,The Coming AI Revolution: 5 Companies at the Forefront,UP,0.0137,0.0642,-0.1777
+R0042,AAPL,2023-01-31 09:00,2023-01-30 00:00,"Amazon, Alphabet, Apple, Intel and Microsoft are part of Zacks Earnings Preview",UP,0.0079,0.0123,0.029
+R0043,AAPL,2023-02-06 09:00,2023-02-05 00:00,Foxconn's January sales surge as China COVID disruption shaken off,UP,0.0192,0.061,-0.5474
+R0044,AAPL,2023-02-13 09:00,2023-02-10 00:00,US STOCKS-Futures fall amid rising yields; Lyft sinks on dour profit outlook,HOLD,-0.0042,0.014,0.0826
+R0045,AAPL,2023-02-17 09:00,2023-02-16 00:00,Grading Berkshire Hathaway's Q4 Trades,DOWN,-0.0267,0.0102,-0.1324
+R0046,AAPL,2023-02-22 09:00,2023-02-21 00:00,What Tech Crash? 5 Tech ETFs Up Double-Digit Past Month,HOLD,0.0033,-0.028,-0.1335
+R0047,AAPL,2023-02-27 09:00,2023-02-26 00:00,"Warren Buffett's, Bill Ackman's, and Michael Burry's Portfolios All Have 1 Thing In Common",HOLD,-0.0034,-0.0304,-0.1888
+R0048,AAPL,2023-03-06 09:00,2023-03-04 00:00,Validea Guru Fundamental Report for AAPL - 3/4/2023,DOWN,-0.0145,0.04,0.2379
+R0049,AAPL,2023-03-13 09:00,2023-03-11 00:00,What Will Change at Berkshire Hathaway Once Warren Buffett Is No Longer in Charge?,UP,0.0141,-0.0218,0.2316
+R0050,AAPL,2023-03-20 09:00,2023-03-17 00:00,Better Growth Stock: Nvidia vs. Apple,UP,0.0119,0.0461,-0.2557
+R0051,AAPL,2023-03-23 09:00,2023-03-22 00:00,3 Blue-Chip Dividend Stocks That Generate Gobs of Shareholder Value,UP,0.0083,0.0198,-0.1067
+R0052,AAPL,2023-03-29 09:00,2023-03-28 00:00,Wall Street ends down with fall in tech shares,UP,0.0099,0.0186,0.1155
+R0053,AAPL,2023-04-03 09:00,2023-04-02 00:00,3 Tech Stocks I Love Right Now,HOLD,-0.0032,0.0498,-0.1713
+R0054,AAPL,2023-04-10 09:00,2023-04-07 00:00,Stock Split Watch: Is Costco Next?,DOWN,-0.0076,-0.0174,0.0513
+R0055,AAPL,2023-04-14 09:00,2023-04-13 00:00,"Dow Movers: TRV, AAPL",HOLD,0.0001,0.0033,-0.2785
+R0056,AAPL,2023-04-19 09:00,2023-04-18 00:00,Apple craze draws long queues at opening of first India store,DOWN,-0.0058,0.047,-0.0441
+R0057,AAPL,2023-04-25 09:00,2023-04-24 00:00,Prediction: These 3 Tech Stocks Will Be Worth More Than $3 Trillion by 2030,HOLD,-0.0001,-0.0162,0.1613
+R0058,AAPL,2023-05-01 09:00,2023-04-29 00:00,The 3 Best Vanguard ETFs for May 2023,DOWN,-0.0062,0.0258,-0.0507
+R0059,AAPL,2023-05-08 09:00,2023-05-05 00:00,This Company Grew Revenue for Shareholders More Than Apple or Microsoft Over the Last Decade,DOWN,-0.01,0.0231,-0.5067
+R0060,AAPL,2023-05-12 09:00,2023-05-11 00:00,My Top 3 Growth Stock Picks for May 2023,HOLD,-0.0029,-0.0058,-0.0804
+R0061,AAPL,2023-05-17 09:00,2023-05-16 00:00,This Stock Market Indicator Has Never Been Worse. Here's What Could Be Coming.,UP,0.0137,-0.005,0.3762
+R0062,AAPL,2023-05-23 09:00,2023-05-22 00:00,Warren Buffett's Portfolio Is More Concentrated Than Ever: 3 Stocks Make Up 63% of Invested Assets,HOLD,0.0016,-0.003,0.1647
+R0063,AAPL,2023-05-30 09:00,2023-05-27 00:00,Walmart's Grocery Success and Other Retail News,HOLD,-0.0003,0.0178,0.0206
+R0064,AAPL,2023-06-05 09:00,2023-06-03 00:00,Two Dow Stocks to Buy in June and Hold for the Next Decade,HOLD,-0.0021,0.0237,0.967
+R0065,AAPL,2023-06-12 09:00,2023-06-09 00:00,"Apple's Headset: A Stock Price Catalyst or a $3,500 Tech Toy?",HOLD,-0.0026,0.0234,0.1099
+R0066,AAPL,2023-06-20 09:00,2023-06-17 00:00,Japan to open up Apple- and Google-dominated phone apps to competition,DOWN,-0.0057,0.0066,-0.5082
+R0067,AAPL,2023-06-26 09:00,2023-06-23 00:00,"If You Invested $10,000 in Berkshire Hathaway in 1997, This Is How Much You Would Have Today",UP,0.0151,0.0019,-0.0947
+R0068,AAPL,2023-06-30 09:00,2023-06-29 00:00,Apple's Bull Run And Why It's Different,DOWN,-0.0078,0.0391,0.8386
+R0069,AAPL,2023-07-05 09:00,2023-07-04 00:00,Meta to launch Twitter challenger app Threads,HOLD,0.0025,0.0174,0.4915
+R0070,AAPL,2023-07-10 09:00,2023-07-09 00:00,Can Shiba Inu Reach $1?,HOLD,-0.0028,-0.0276,0.28
+R0071,AAPL,2023-07-17 09:00,2023-07-15 00:00,"Tesla Isn't Leading Autonomous Driving, This Company Is",HOLD,-0.0013,0.0285,0.214
+R0072,AAPL,2023-07-21 09:00,2023-07-20 00:00,Guru Fundamental Report for AAPL - Warren Buffett,HOLD,0.0042,0.0066,0.2076
+R0073,AAPL,2023-07-27 09:00,2023-07-26 00:00,Toast Sets New Standard in Restaurant Management Platforms,UP,0.0135,0.0005,-0.0002
+R0074,AAPL,2023-08-01 09:00,2023-07-31 00:00,Foxconn unit to sign $194 mln components plant deal with India's Tamil Nadu-source,DOWN,-0.0155,0.0103,-0.094
+R0075,AAPL,2023-08-07 09:00,2023-08-06 00:00,2 Warren Buffett Stocks to Hold Forever,UP,0.0053,-0.0896,-0.1585
+R0076,AAPL,2023-08-14 09:00,2023-08-11 00:00,"GQG Partners adds Nvidia, Amazon, Apple in Q2",DOWN,-0.0112,0.0034,-0.1607
+R0077,AAPL,2023-08-17 09:00,2023-08-16 00:00,7 Stocks to Buy as Back to School Spending Increases,HOLD,0.0028,-0.0223,0.4066
+R0078,AAPL,2023-08-23 09:00,2023-08-22 00:00,Is SPDR MSCI USA StrategicFactors ETF (QUS) a Strong ETF Right Now?,DOWN,-0.0262,0.0258,0.2541
+R0079,AAPL,2023-08-28 09:00,2023-08-27 00:00,Better Growth Stock: Apple vs. AMD,UP,0.0218,0.0247,-0.1483
+R0080,AAPL,2023-09-05 09:00,2023-09-02 00:00,EXCLUSIVE-SoftBank's Arm to ask for $47 to $51 per share in IPO -sources,DOWN,-0.0358,0.0528,-0.0106
+R0081,AAPL,2023-09-08 09:00,2023-09-07 00:00,Why Intel Rose Today Even as Chip Stocks Were Down,UP,0.0066,-0.0516,-0.4173
+R0082,AAPL,2023-09-14 09:00,2023-09-13 00:00,Better Growth Stock: Apple vs. Microsoft,HOLD,-0.0042,-0.0103,-0.2774
+R0083,AAPL,2023-09-19 09:00,2023-09-18 00:00,"Keep on Buying Apple Stock as Initial iPhone 15 Pre-Orders Look Strong, Says Top Analyst",DOWN,-0.02,0.0157,-0.2294
+R0084,AAPL,2023-09-25 09:00,2023-09-23 00:00,Tim Cook and Apple Are Running Circles Around Mark Zuckerberg's Metaverse Vision,DOWN,-0.0234,-0.0106,-0.186
+R0085,AAPL,2023-10-02 09:00,2023-09-29 00:00,Hopes rise for IPO recovery after September deal rush,DOWN,-0.0078,-0.0132,0.0059
+R0086,AAPL,2023-10-05 09:00,2023-10-04 00:00,Here's the Latest Must-See News From These 2 Dow Jones Stocks,UP,0.0148,0.0247,-0.0847
+R0087,AAPL,2023-10-11 09:00,2023-10-10 00:00,US STOCKS-Wall Street gains as Fed officials strike dovish tone,UP,0.0051,0.0354,0.0882
+R0088,AAPL,2023-10-16 09:00,2023-10-15 00:00,The ‘Millionaire Playbook’ for Easy Profits in the AI Boom,DOWN,-0.0088,-0.0015,0.0212
+R0089,AAPL,2023-10-23 09:00,2023-10-21 00:00,3 Top Stocks To Buy Now and Hold Forever,HOLD,0.0025,-0.032,-0.1286
+R0090,AAPL,2023-10-27 09:00,2023-10-26 00:00,Is WisdomTree U.S. Quality Dividend Growth ETF (DGRW) a Strong ETF Right Now?,UP,0.0123,-0.027,-0.1717
+R0091,AAPL,2023-11-02 09:00,2023-11-01 00:00,The Wealth Builder’s Toolkit: Top 3 Stocks to Supercharge Your Portfolio,DOWN,-0.0052,0.064,0.3583
+R0092,AAPL,2023-11-07 09:00,2023-11-06 00:00,"Analyzing the S&P 500 index, NASDAQ and the Russell 2000 charts",UP,0.0059,0.0647,0.1048
+R0093,AAPL,2023-11-13 09:00,2023-11-11 00:00,Firing on All Cylinders Indeed,UP,0.0143,0.0311,-0.3403
+R0094,AAPL,2023-11-20 09:00,2023-11-17 00:00,"After Hours Most Active for Nov 17, 2023 : MMM, QQQ, MATV, AAPL, NU, VCSH, MSFT, STRO, AMZN, KEY, VZ, BAC",HOLD,-0.0042,0.036,-0.0868
+R0095,AAPL,2023-11-24 09:00,2023-11-22 00:00,Apple Stock (NASDAQ:AAPL): Can Siri Keep Up in the ChatGPT Age?,HOLD,-0.0009,0.0014,-0.393
+R0096,AAPL,2023-11-29 09:00,2023-11-28 00:00,AAPL Quantitative Stock Analysis,HOLD,0.0031,-0.0067,0.1197
+R0097,AAPL,2023-12-05 09:00,2023-12-04 00:00,"US STOCKS-Wall St rally loses steam as data-heavy week looms, yields rise",DOWN,-0.0057,0.0159,0.5356
+R0098,AAPL,2023-12-12 09:00,2023-12-11 00:00,Can Shiba Inu Reach $0.01?,UP,0.0167,0.0067,-0.1353
+R0099,AAPL,2023-12-18 09:00,2023-12-16 04:00,Apple To Halt Sale Of Watch Series 9 And Ultra 2,UP,0.0054,0.014,-0.5663
+R0100,AMZN,2023-03-10 09:00,2023-03-09 00:00,The 7 Best Tech Stocks to Buy in March,UP,0.0187,-0.0439,0.2421
+R0101,AMZN,2023-03-14 09:00,2023-03-13 00:00,Prediction: These 3 Stocks Will Be in the Dow by 2030,UP,0.0139,0.0142,-0.1586
+R0102,AMZN,2023-03-16 09:00,2023-03-15 00:00,3 Stocks That Will Benefit Most From Cooling Inflation,DOWN,-0.0109,0.0844,0.1939
+R0103,AMZN,2023-03-20 09:00,2023-03-18 00:00,3 Incredible Growth Stocks You'll Regret Not Buying on the Dip,UP,0.0297,0.0571,-0.2854
+R0104,AMZN,2023-03-22 09:00,2023-03-21 00:00,Why Amazon Stock Rallied on Tuesday,HOLD,0.0001,0.026,-0.0191
+R0105,AMZN,2023-03-24 09:00,2023-03-23 00:00,Netflix (NFLX) Chooses Jon Spaihts to Pen Gears of War Movie,HOLD,-0.0009,-0.0083,-0.0254
+R0106,AMZN,2023-03-27 09:00,2023-03-26 00:00,"Amazon Layoffs: The Good, The Bad, and The Ugly",DOWN,-0.0082,0.0034,-0.1671
+R0107,AMZN,2023-03-30 09:00,2023-03-29 00:00,Why Amazon Stock Was Moving Higher Today,UP,0.0126,0.0333,0.0773
+R0108,AMZN,2023-04-03 09:00,2023-03-31 00:00,Top and Flop ETFs of March,UP,0.015,0.0446,-0.2751
+R0109,AMZN,2023-04-04 09:00,2023-04-03 00:00,Can These 2 Pet Stocks Escape the Doghouse?,DOWN,-0.0274,0.069,0.183
+R0110,AMZN,2023-04-10 09:00,2023-04-06 00:00,The 3 Best Bargain Stocks to Buy for April 2023,DOWN,-0.022,-0.0108,-0.1494
+R0111,AMZN,2023-04-10 09:00,2023-04-08 00:00,"This Warren Buffett ETF Could Take You From $5,000 to $87,000 With Next to No Effort",DOWN,-0.022,-0.0108,-0.1494
+R0112,AMZN,2023-04-12 09:00,2023-04-11 00:00,"Pinpoint 200% Gains in Six Months, Even in a Bear Market",UP,0.0467,-0.0589,-0.061
+R0113,AMZN,2023-04-17 09:00,2023-04-14 00:00,Upexi CEO Marshall Allan Was Buying Shares Ahead Of Latest Cygnet and Texas Wellness Deals,HOLD,-0.0043,0.0056,-0.2241
+R0114,AMZN,2023-04-17 09:00,2023-04-16 00:00,Warren Buffett Owns 2 Stocks in the $1 Trillion Club. Are They No-Brainer Buys Now?,HOLD,-0.0043,0.0056,-0.2241
+R0115,AMZN,2023-04-20 09:00,2023-04-19 00:00,JMP Securities Reiterates Amazon.com (AMZN) Market Outperform Recommendation,UP,0.0303,0.0138,-0.012
+R0116,AMZN,2023-04-24 09:00,2023-04-23 00:00,What To Expect From Microsoft Stock In Q3?,DOWN,-0.0343,0.0338,-0.1982
+R0117,AMZN,2023-04-27 09:00,2023-04-26 00:00,"US STOCKS-Nasdaq climbs as investors cheer Microsoft, Alphabet results",DOWN,-0.0398,0.0579,1.0319
+R0118,AMZN,2023-05-01 09:00,2023-04-28 00:00,US STOCKS-Wall St climbs as strong earnings offset Amazon drag,UP,0.0155,-0.0392,-0.4283
+R0119,AMZN,2023-05-02 09:00,2023-05-01 00:00,Here's the Most Shocking Thing About Amazon's Earnings Report,HOLD,0.0002,0.0103,-0.0168
+R0120,AMZN,2023-05-08 09:00,2023-05-05 00:00,Will Amazon's Profit Margins Ever Return to Pre-Pandemic Levels?,UP,0.0075,0.037,-0.1321
+R0121,AMZN,2023-05-09 09:00,2023-05-08 00:00,"Technology Sector Update for 05/08/2023: AAPL, AMZN, ZS",UP,0.0335,0.0289,-0.1081
+R0122,AMZN,2023-05-12 09:00,2023-05-11 00:00,2 Reasons to Buy Amazon Stock That You Don't Already Know About,UP,0.0085,0.0435,-0.3346
+R0123,AMZN,2023-05-15 09:00,2023-05-14 00:00,Validea's Top 5 Consumer Discretionary Stocks Based On Joel Greenblatt - 5/14/2023,UP,0.0198,0.0507,0.0634
+R0124,AMZN,2023-05-17 09:00,2023-05-16 00:00,"GLOBAL MARKETS-Wall St ends lower, Treasury yields climb as debt ceiling talks in spotlight",UP,0.0229,0.0482,-0.0814
+R0125,AMZN,2023-05-22 09:00,2023-05-19 00:00,Hedge Funds Are Buying These AI Stocks,HOLD,-0.0002,0.0343,0.2849
+R0126,AMZN,2023-05-23 09:00,2023-05-22 00:00,Meta hit with record $1.3 bln fine over data transfers,UP,0.0153,0.014,-0.0447
+R0127,AMZN,2023-05-25 09:00,2023-05-24 00:00,Should iShares S&P 100 ETF (OEF) Be on Your Investing Radar?,UP,0.0444,-0.0267,0.0474
+R0128,AMZN,2023-05-30 09:00,2023-05-27 00:00,I Tried Asking ChatGPT to Help Me Invest So You Don't Have to,DOWN,-0.0089,0.0578,-0.3355
+R0129,AMZN,2023-05-31 09:00,2023-05-30 00:00,Streaming's Stalwarts Are Losing Viewers to Newcomers. Here's What Investors Should Know.,UP,0.0182,0.0486,0.1319
+R0130,AMZN,2023-06-02 09:00,2023-06-01 00:00,Better Buy: Amazon Stock vs. Microsoft Stock,UP,0.0085,0.0804,0.1267
+R0131,AMZN,2023-06-05 09:00,2023-06-04 00:00,Is Buying Nvidia Stock a Sneaky Crypto Play?,UP,0.0105,0.0432,-0.2173
+R0132,AMZN,2023-06-09 09:00,2023-06-08 00:00,"S&P 500, Nasdaq set to edge up as yields slip after jobless claims data",UP,0.0254,-0.0066,-0.1732
+R0133,AMZN,2023-06-12 09:00,2023-06-10 00:00,"The Good News From Chewy, Five Below, MongoDB, and Lululemon",HOLD,0.0007,0.0101,-0.0011
+R0134,AMZN,2023-06-14 09:00,2023-06-13 00:00,"US STOCKS-S&P 500, Nasdaq hit fresh 1-yr highs as inflation data boosts rate pause hopes",UP,0.0055,0.0428,0.0367
+R0135,AMZN,2023-06-20 09:00,2023-06-17 00:00,4 Reasons to Buy This Tesla Rival Hand Over Fist,DOWN,-0.0076,-0.0062,-0.3242
+R0136,AMZN,2023-06-20 09:00,2023-06-19 00:00,Is the Bear Market Over? Big Tech Already Told You the Answer,DOWN,-0.0076,-0.0062,-0.3242
+R0137,AMZN,2023-06-23 09:00,2023-06-22 00:00,US STOCKS-Wall Street ends higher as Powell wraps up testimony,DOWN,-0.0155,0.0175,-0.2039
+R0138,AMZN,2023-06-27 09:00,2023-06-26 00:00,Is Amazon Stock a Buy?,HOLD,-0.0011,0.027,-0.2198
+R0139,AMZN,2023-06-29 09:00,2023-06-28 00:00,Looking for a Market-Beating Growth ETF? Check Out VUG,UP,0.0192,-0.0173,-0.2184
+R0140,AMZN,2023-07-03 09:00,2023-07-01 00:00,Don't Really Understand Microchips? Benefit From AI Trends Through These Other Top Stocks.,HOLD,0.0012,0.0227,-0.48
+R0141,AMZN,2023-07-05 09:00,2023-07-04 00:00,Amazon Begins Rolling Out Its Custom Electric Delivery Vans From Rivian In Europe,DOWN,-0.0155,0.0093,0.27
+R0142,AMZN,2023-07-07 09:00,2023-07-06 00:00,A Bull Market Is Coming: 1 Remarkable Growth Stock Has Billionaire Investors Betting Big,DOWN,-0.0204,0.0147,0.0333
+R0143,AMZN,2023-07-10 09:00,2023-07-09 00:00,My 1 Growth Stock to Buy and Hold in a Market Downturn,UP,0.013,-0.0248,0.4738
+R0144,AMZN,2023-07-13 09:00,2023-07-12 00:00,Will Target Stock Recover To Highs Seen Prior To Inflation Shock?,HOLD,0.0028,0.0463,0.1323
+R0145,AMZN,2023-07-17 09:00,2023-07-14 00:00,7 Hypergrowth Stocks That AI Is Loving in July,DOWN,-0.0055,0.0506,-0.1108
+R0146,AMZN,2023-07-18 09:00,2023-07-17 00:00,"This Important Economic Indicator Is Dropping Like a Rock, and It's Great News for These 2 Stocks",UP,0.019,0.0314,0.1328
+R0147,AMZN,2023-07-21 09:00,2023-07-20 00:00,3 AI Stocks for Getting Rich in 2023,DOWN,-0.0092,-0.0347,1.2285
+R0148,AMZN,2023-07-24 09:00,2023-07-22 00:00,"3 Reasons to Buy Amazon Stock, None of Which Are Related to AI",HOLD,0.0026,-0.0356,-0.658
+R0149,AMZN,2023-07-26 09:00,2023-07-25 00:00,3 AI Stocks Still Worth Buying for the Long Haul,HOLD,0.0008,-0.0533,0.374
+R0150,AMZN,2023-07-31 09:00,2023-07-28 00:00,"Got $1,000? 2 Warren Buffett Stocks to Buy Hand Over Fist",DOWN,-0.0149,0.0379,-0.0953
+R0151,AMZN,2023-08-01 09:00,2023-07-31 00:00,"US STOCKS-Wall St set to open higher, eyes monthly gain on U.S. soft landing hopes",DOWN,-0.0264,0.0198,0.0047
+R0152,AMZN,2023-08-03 09:00,2023-08-02 00:00,Apple Stock: Buy or Sell Ahead of This Week's Earnings Report?,UP,0.0827,0.0051,0.736
+R0153,AMZN,2023-08-07 09:00,2023-08-05 00:00,Baird Maintains Amazon.com (AMZN) Outperform Recommendation,DOWN,-0.016,0.0639,-0.5349
+R0154,AMZN,2023-08-10 09:00,2023-08-09 00:00,"This Nvidia-Backed Startup Is Ready to Take on Microsoft, Amazon, and Google",HOLD,-0.0011,0.0749,0.1782
+R0155,AMZN,2023-08-14 09:00,2023-08-11 00:00,ETF Lessons to Learn from Berkshire Earnings,DOWN,-0.0206,-0.0116,0.0989
+R0156,AMZN,2023-08-15 09:00,2023-08-14 00:00,Amazon's devices chief David Limp to retire after 13 years,DOWN,-0.0189,-0.0162,-0.0926
+R0157,AMZN,2023-08-18 09:00,2023-08-17 00:00,"US STOCKS-Wall Street ends lower on healthcare losses, interest rate jitters",UP,0.011,-0.0375,0.003
+R0158,AMZN,2023-08-21 09:00,2023-08-19 00:00,"1 Formerly High-Flying E-Commerce Stock That's a Terrific Value, or a Terrible Value Trap",HOLD,-0.0032,-0.0419,-0.1455
+R0159,AMZN,2023-08-23 09:00,2023-08-22 00:00,A Bull Market Is Coming: 2 Magnificent Stock-Split Growth Stocks to Buy Hand Over Fist and Never Sell,DOWN,-0.0272,0.0033,0.3007
+R0160,AMZN,2023-08-28 09:00,2023-08-25 00:00,"Notable Friday Option Activity: GOOGL, AMZN, MRNA",UP,0.0133,-0.0114,-0.2274
+R0161,AMZN,2023-08-28 09:00,2023-08-27 00:00,"The 1 Thing You Need to Know About China's 25,000-Satellite Space Project",UP,0.0133,-0.0114,-0.2274
+R0162,AMZN,2023-08-31 09:00,2023-08-30 00:00,A Bull Market is Coming. 2 Stocks You Won't Regret Buying Now.,HOLD,0.0008,0.0468,0.6266
+R0163,AMZN,2023-09-05 09:00,2023-09-02 00:00,3 Things About Amazon That Smart Investors Know,DOWN,-0.0139,0.031,-0.0087
+R0164,AMZN,2023-09-05 09:00,2023-09-04 00:00,3 Appealing AI Stocks to Snatch Up at Current Levels,DOWN,-0.0139,0.031,-0.0087
+R0165,AMZN,2023-09-08 09:00,2023-09-07 00:00,XLK ETF: This Long-Term Winner Still Looks Attractive,UP,0.0352,0.0016,-0.2093
+R0166,AMZN,2023-09-11 09:00,2023-09-10 00:00,A Bull Market Is (Still) Coming: Here Are 3 Spectacular Stocks to Buy Sooner Rather Than Later,DOWN,-0.0131,0.0361,0.4802
+R0167,AMZN,2023-09-13 09:00,2023-09-12 00:00,"US STOCKS-Wall St inches lower as Oracle slides, investors await inflation data",HOLD,-0.0009,0.0701,0.4171
+R0168,AMZN,2023-09-18 09:00,2023-09-15 00:00,The 3 Most Undervalued Sleeper Stocks to Buy in September 2023,DOWN,-0.0168,-0.0218,-0.5839
+R0169,AMZN,2023-09-19 09:00,2023-09-18 00:00,Get a 48% Dividend from TSLA Stock — Here’s How,DOWN,-0.017,-0.0255,0.4357
+R0170,AMZN,2023-09-21 09:00,2023-09-20 00:00,"AstraZeneca refused to pay full bonus to US remote worker, lawsuit claims",HOLD,-0.0016,-0.1063,0.5205
+R0171,AMZN,2023-09-25 09:00,2023-09-23 00:00,3 Reasons This Sleeping Giant Is About To Wake Up,DOWN,-0.0403,-0.0622,-0.2318
+R0172,AMZN,2023-09-27 09:00,2023-09-26 00:00,"Technology Sector Update for 09/26/2023: SOUN, AMZN, TSLA, HPE",HOLD,0.0,-0.0688,-0.0889
+R0173,AMZN,2023-09-29 09:00,2023-09-28 00:00,Wedbush Reiterates Amazon.com (AMZN) Outperform Recommendation,UP,0.0184,-0.0155,0.144
+R0174,AMZN,2023-10-02 09:00,2023-10-01 00:00,This Segment You Didn't Know About Is Amazon's Secret Weapon,DOWN,-0.0366,-0.0138,-0.2304
+R0175,AMZN,2023-10-05 09:00,2023-10-04 00:00,"US STOCKS-Wall St gains after fresh jobs data, Treasury yields retreat",UP,0.0159,-0.0002,-0.1028
+R0176,AMZN,2023-10-09 09:00,2023-10-06 00:00,"5 Top Growth Stocks to Buy Now, According to Analysts – October 2023",UP,0.0095,-0.0093,-0.1722
+R0177,AMZN,2023-10-10 09:00,2023-10-09 00:00,2 Buffett Stocks to Buy and Hold Forever,UP,0.0181,0.0382,0.0878
+R0178,AMZN,2023-10-13 09:00,2023-10-12 00:00,US STOCKS-Futures rise as Treasury yields retreat ahead of inflation data,UP,0.0213,0.0143,-0.1754
+R0179,AMZN,2023-10-16 09:00,2023-10-14 00:00,The FTC Is Suing Amazon: Here's What Investors Need to Know,DOWN,-0.0081,0.0334,-0.0645
+R0180,AMZN,2023-10-18 09:00,2023-10-17 00:00,Truist Securities Maintains Amazon.com (AMZN) Buy Recommendation,HOLD,0.0021,-0.0281,-0.1347
+R0181,AMZN,2023-10-27 09:00,2023-10-26 00:00,Should iShares Russell 1000 Growth ETF (IWF) Be on Your Investing Radar?,UP,0.0389,0.0205,0.2479
+R0182,AMZN,2023-10-31 09:00,2023-10-30 00:00,2 fallen cybersecurity stocks for patient bargain hunters,UP,0.0294,0.0352,-0.2883
+R0183,AMZN,2023-11-03 09:00,2023-11-02 00:00,"1 Green Flag for Amazon in 2023, and 1 Red Flag",UP,0.0082,0.085,-0.1565
+R0184,AMZN,2023-11-06 09:00,2023-11-05 00:00,"Artificial Intelligence (AI) Executive Order: These 2 Points in the White House's Plan Could Affect Amazon, Microsoft, and Alphabet the Most",UP,0.0213,0.053,0.0207
+R0185,AMZN,2023-11-09 09:00,2023-11-08 00:00,The S&P 500 Soared 5.9% Last Week -- But These 2 Stocks Absolutely Crushed It,UP,0.0211,0.0183,-0.1861
+R0186,AMZN,2023-11-13 09:00,2023-11-10 00:00,Booking.com settles Italian tax dispute with 94-million euro payment,UP,0.0225,0.0204,-0.2761
+R0187,AMZN,2023-11-14 09:00,2023-11-13 00:00,"Walmart, Target's and Amazon are part of Zacks Earnings Preview",DOWN,-0.0178,0.0217,0.5884
+R0188,AMZN,2023-11-17 09:00,2023-11-16 00:00,Disney (DIS) Partners With Dapper Labs to Launch NFT Platform,UP,0.0065,0.0113,-0.0003
+R0189,AMZN,2023-11-20 09:00,2023-11-18 00:00,Beat the Nasdaq? This Dividend Stock Has Actually Done It,DOWN,-0.0153,0.0248,-0.1548
+R0190,AMZN,2023-11-22 09:00,2023-11-21 00:00,Walmart bets on parcel stations for quick deliveries to propel holiday sales,HOLD,0.0002,0.0245,-0.3588
+R0191,AMZN,2023-11-27 09:00,2023-11-24 00:00,Is This The Best Time to Buy C3.ai Stock?,HOLD,-0.0047,0.0176,1.4024
+R0192,AMZN,2023-11-28 09:00,2023-11-27 00:00,"Is Amazon (AMZN) a Solid Growth Stock? 3 Reasons to Think ""Yes""",HOLD,-0.0048,0.0062,-0.2055
+R0193,AMZN,2023-12-01 09:00,2023-11-30 00:00,"Pre-Market Most Active for Nov 30, 2023 : IMGN, VFS, SQQQ, INCY, AMZN, TQQQ",DOWN,-0.0149,0.002,-0.393
+R0194,AMZN,2023-12-04 09:00,2023-12-03 00:00,2 Phenomenal Growth Stocks to Buy Right Now,UP,0.0141,-0.0196,0.2088
+R0195,AMZN,2023-12-06 09:00,2023-12-05 00:00,EU clears up to 1.2 bln euros of aid for cloud computing,UP,0.0163,-0.0123,-0.1526
+R0196,AMZN,2023-12-11 09:00,2023-12-08 00:00,3 Warren Buffett Stocks You Can Buy in December and Hold Forever,UP,0.0109,0.0072,0.2148
+R0197,AMZN,2023-12-12 09:00,2023-12-11 00:00,The Top 5 Tech Stocks for Millennials,UP,0.0092,0.0041,-0.1171
+R0198,AMZN,2023-12-14 09:00,2023-12-13 00:00,Is Amazon Stock a Buy Now?,UP,0.0173,0.0037,0.1068
+R0199,AMZN,2023-12-18 09:00,2023-12-16 00:00,"3 ""Magnificent Seven"" Artificial Intelligence (AI) Stocks Will Leapfrog Apple to Join the $3 Trillion Club, According to 1 Wall Street Analyst",HOLD,-0.0018,0.0561,-0.4322
+R0200,GOOGL,2022-01-03 09:00,2022-01-01 00:00,2 No-Brainer Stocks Down 27% to 35% to Buy for 2022,HOLD,-0.0041,-0.0197,0.5795
+R0201,GOOGL,2022-01-12 09:00,2022-01-11 00:00,Will Investors See a Tech Sector Market Top in 2022?,DOWN,-0.0201,0.0265,-0.0913
+R0202,GOOGL,2022-01-19 09:00,2022-01-18 00:00,Once Top-Ranked IBM’s Been Relegated Among the Second-Tier Outsourcers,DOWN,-0.0134,-0.0331,-0.1785
+R0203,GOOGL,2022-01-26 09:00,2022-01-25 00:00,Skillz Could Benefit From Falling Ad Prices,HOLD,-0.0018,-0.0435,0.0462
+R0204,GOOGL,2022-02-02 09:00,2022-02-01 00:00,Why We Are Raising Our Price Estimate For Apple Stock,DOWN,-0.0332,0.1452,0.7948
+R0205,GOOGL,2022-02-09 09:00,2022-02-08 00:00,3 Top Cryptocurrencies to Watch in February,DOWN,-0.021,-0.0433,-0.2605
+R0206,GOOGL,2022-02-16 09:00,2022-02-15 00:00,5 Leading Tech Stocks to Buy in 2022 and Beyond,DOWN,-0.0377,-0.0272,-0.0621
+R0207,GOOGL,2022-02-24 09:00,2022-02-23 00:00,3 Top Stocks That Just Went on Sale,UP,0.0133,-0.0366,0.661
+R0208,GOOGL,2022-03-03 09:00,2022-03-02 00:00,Can Sundial Growers Get Back to $1 in 2022?,DOWN,-0.0149,0.0091,0.0461
+R0209,GOOGL,2022-03-14 09:00,2022-03-11 00:00,Pass on Alphabet Stock Trades for Now,UP,0.0258,-0.0034,0.2311
+R0210,GOOGL,2022-03-21 09:00,2022-03-19 00:00,Shareholders Shouldn't Worry: Netflix Is Still a Growth Stock,UP,0.0277,0.0806,-0.3979
+R0211,GOOGL,2022-03-28 09:00,2022-03-26 00:00,Apple vs. an S&P 500 ETF: Which Is the Better First Investment?,UP,0.0074,0.0393,0.4528
+R0212,GOOGL,2022-04-04 09:00,2022-04-03 00:00,"Tesla, Amazon, and Alphabet Stock Splits: Which 3 Companies Could Split Next?",DOWN,-0.0167,0.0107,0.0
+R0213,GOOGL,2022-04-11 09:00,2022-04-10 00:00,Why Alphabet's Acquisition of Mandiant Is a Smart Move,DOWN,-0.0086,-0.099,0.467
+R0214,GOOGL,2022-04-18 09:00,2022-04-17 00:00,Is Alphabet Stock a Buy Right Now?,UP,0.0183,-0.0421,-0.3415
+R0215,GOOGL,2022-04-25 09:00,2022-04-24 00:00,"Weekly Preview: Earnings To Watch This Week (AAPL, AMZN, FB, GOOG, MSFT)",DOWN,-0.0359,-0.036,-0.1891
+R0216,GOOGL,2022-05-02 09:00,2022-05-01 00:00,Better Buy: Microsoft vs. Alphabet,UP,0.0064,-0.0527,-0.1674
+R0217,GOOGL,2022-05-09 09:00,2022-05-08 00:00,Apple's Services Business Has Never Been More Important,UP,0.0167,-0.0349,0.0275
+R0218,GOOGL,2022-05-16 09:00,2022-05-15 00:00,1 Investment I'm Stocking Up On if the Market Crashes,UP,0.0177,0.0172,-0.2582
+R0219,GOOGL,2022-05-24 09:00,2022-05-23 00:00,Buy This FAANG Stock During the Tech Sell-Off,HOLD,-0.0016,-0.0902,1.0649
+R0220,GOOGL,2022-06-01 09:00,2022-05-31 00:00,"Alphabet, Amazon, and Tesla Are Doing Stock Splits: What That Means for Investors",UP,0.0328,0.0748,-0.2681
+R0221,GOOGL,2022-06-09 09:00,2022-06-08 00:00,Cash Is King for These 2 Big Tech Companies,DOWN,-0.032,-0.0237,-0.0119
+R0222,GOOGL,2022-06-16 09:00,2022-06-15 00:00,"Apple Stock Is Worth Buying, Regardless of the WWDC Event",UP,0.0105,-0.0766,0.3019
+R0223,GOOGL,2022-06-23 09:00,2022-06-22 00:00,Why Are All These Top Stocks Splitting Their Stocks?,UP,0.0511,0.0226,-0.0784
+R0224,GOOGL,2022-07-01 09:00,2022-06-30 00:00,"Why Pinterest, Roku, and Etsy Plunged Today",UP,0.0416,-0.0783,-0.1782
+R0225,GOOGL,2022-07-07 09:00,2022-07-06 00:00,"Down 65%, Is This Cloud Provider a Screaming Buy?",HOLD,0.0048,0.0634,0.0936
+R0226,GOOGL,2022-07-14 09:00,2022-07-13 00:00,"Wall Street Says Not to Buy These Stocks, But Here's Why I Am",UP,0.0128,-0.0708,-0.1537
+R0227,GOOGL,2022-07-21 09:00,2022-07-20 00:00,Shopify (SHOP) Expected to Beat Earnings Estimates: Can the Stock Move Higher?,DOWN,-0.0563,0.036,-0.0821
+R0228,GOOGL,2022-07-28 09:00,2022-07-27 00:00,2 Types of Tech Stocks to Buy After Google and Microsoft Save the Market,UP,0.0184,-0.001,-0.4518
+R0229,GOOGL,2022-08-04 09:00,2022-08-03 00:00,3 Nasdaq 100 Stocks to Buy Hand Over Fist in August,DOWN,-0.0061,0.0348,-0.242
+R0230,GOOGL,2022-08-11 09:00,2022-08-10 00:00,Starbucks' Success With Cold Drinks Is Just the Tip of the Iceberg in Market News,UP,0.0239,0.0055,-0.2146
+R0231,GOOGL,2022-08-18 09:00,2022-08-17 00:00,Inflation and Market News,DOWN,-0.0246,0.0112,-0.2127
+R0232,GOOGL,2022-08-26 09:00,2022-08-25 00:00,"Got $5,000? 3 Tech Stocks to Buy and Hold for the Long Term",DOWN,-0.0083,-0.0586,1.1965
+R0233,GOOGL,2022-09-02 09:00,2022-09-01 00:00,5 Best Stocks to Buy Now in September,DOWN,-0.0096,-0.0226,-0.1481
+R0234,GOOGL,2022-09-09 09:00,2022-09-08 00:00,1 High-Conviction Growth Stock Down Over 46% to Buy Now,HOLD,0.0019,0.0083,-0.0429
+R0235,GOOGL,2022-09-16 09:00,2022-09-15 00:00,7 Stocks to Buy for Safety in This Volatile Market,HOLD,0.0026,-0.0709,0.2518
+R0236,GOOGL,2022-09-26 09:00,2022-09-23 00:00,Has Netflix Stock Bottomed Out?,DOWN,-0.0068,-0.0475,-0.144
+R0237,GOOGL,2022-10-03 09:00,2022-09-30 00:00,The Next Big Thing in Tech? 7 Quantum Computing Stocks to Bet On.,UP,0.0304,0.0048,-0.1506
+R0238,GOOGL,2022-10-10 09:00,2022-10-07 00:00,"XLC, GOOG, VZ, NFLX: Large Inflows Detected at ETF",DOWN,-0.0069,-0.0079,-0.3373
+R0239,GOOGL,2022-10-17 09:00,2022-10-14 00:00,"Have $1,000? These 2 Stocks Could Be Bargain Buys for 2022 and Beyond",UP,0.008,0.0216,0.1184
+R0240,GOOGL,2022-10-24 09:00,2022-10-22 00:00,Dividend Stocks That Do More Than Just Boost Their Payout,UP,0.0191,0.0255,-0.1627
+R0241,GOOGL,2022-10-31 09:00,2022-10-29 00:00,What to Watch as the Big Tech Companies Report Earnings,DOWN,-0.0427,-0.0781,-0.2751
+R0242,GOOGL,2022-11-07 09:00,2022-11-05 00:00,2 FAANG Stocks to Buy Like There's No Tomorrow,HOLD,0.0046,-0.0637,-0.3334
+R0243,GOOGL,2022-11-14 09:00,2022-11-12 00:00,3 Stocks You'll Be Glad You Bought at These Prices,UP,0.0286,0.0815,-0.088
+R0244,GOOGL,2022-11-21 09:00,2022-11-19 00:00,Is DigitalOcean Stock a Buy Now?,UP,0.0152,-0.001,-0.2362
+R0245,GOOGL,2022-11-28 09:00,2022-11-26 00:00,2 Stocks Under $100 You Can Buy and Hold Forever,DOWN,-0.009,-0.0142,1.7045
+R0246,GOOGL,2022-12-05 09:00,2022-12-03 00:00,Stock Split Watch: Is Chipotle Next?,DOWN,-0.0251,0.0357,0.1361
+R0247,GOOGL,2022-12-12 09:00,2022-12-10 00:00,"Fintel's 10 Biggest Short Positions for December, Revealed Here",UP,0.0249,-0.062,0.0423
+R0248,GOOGL,2022-12-19 09:00,2022-12-17 00:00,"Big Tech is Designing Chips Too, Should Semiconductor Investors Worry?",UP,0.0066,-0.0522,-0.4916
+R0249,GOOGL,2022-12-27 09:00,2022-12-24 00:00,Talking About Top Stocks,DOWN,-0.0157,-0.0119,-0.1263
+R0250,GOOGL,2023-01-03 09:00,2022-12-31 00:00,7 Nuclear Fusion Stocks to Buy Before the Next Breakthrough,DOWN,-0.0117,-0.0012,0.1728
+R0251,GOOGL,2023-01-09 09:00,2023-01-07 00:00,A Fresh Face-Off on the Market Cap Game Show,HOLD,0.0045,-0.0024,-0.2991
+R0252,GOOGL,2023-01-17 09:00,2023-01-15 00:00,3 Fantastic Stocks That Could Soar in the Coming Bull Market,HOLD,-0.0019,0.0372,0.2383
+R0253,GOOGL,2023-01-23 09:00,2023-01-22 00:00,10 Top AI Stocks to Buy Now for the Next 10 Years,DOWN,-0.0209,0.0833,-0.3669
+R0254,GOOGL,2023-01-30 09:00,2023-01-29 00:00,2 FAANG Stocks Investors Should Buy Hand Over Fist for 2023,UP,0.0196,-0.0286,-0.1964
+R0255,GOOGL,2023-02-06 09:00,2023-02-05 00:00,The 7 Most Promising AI Stocks to Buy in February,UP,0.0461,0.0615,-0.51
+R0256,GOOGL,2023-02-13 09:00,2023-02-12 00:00,"Wall St Week Ahead-Last year's laggards lead U.S. stocks' 2023 rebound, for now",HOLD,0.0007,-0.0806,-0.0892
+R0257,GOOGL,2023-02-21 09:00,2023-02-20 00:00,2 Reddit Stocks to Buy and Hold for Years,HOLD,-0.0015,-0.0298,-0.0191
+R0258,GOOGL,2023-02-28 09:00,2023-02-27 00:00,"Is Dell Technologies (DELL) a Buy, Sell, or Hold?",HOLD,0.0033,-0.0188,0.096
+R0259,GOOGL,2023-03-08 09:00,2023-03-07 00:00,Better Ad Tech Stock: The Trade Desk vs. Magnite,DOWN,-0.0205,0.0431,0.2252
+R0260,GOOGL,2023-03-15 09:00,2023-03-14 00:00,"Why Alphabet, Shopify, and Meta Platforms Stocks All Rallied on Tuesday",UP,0.0438,0.0197,0.4042
+R0261,GOOGL,2023-03-22 09:00,2023-03-21 00:00,7 Best Stocks to Buy After the Market Crashes,UP,0.0216,0.0755,0.0313
+R0262,GOOGL,2023-03-30 09:00,2023-03-29 00:00,7 Growth Stocks That Are Crushing the Market in 2023,UP,0.0281,-0.0446,0.1496
+R0263,GOOGL,2023-04-06 09:00,2023-04-05 00:00,Why Amazon Stock Tumbled Wednesday Morning,DOWN,-0.0183,0.0746,0.7218
+R0264,GOOGL,2023-04-13 09:00,2023-04-12 00:00,Alphabet vs. Microsoft: Which Is the Better AI Stock to Buy Right Now?,UP,0.0134,0.0283,0.0194
+R0265,GOOGL,2023-04-20 09:00,2023-04-19 00:00,"Technology Sector Update for 04/19/2023: META, GOOG, GOOGL, AAPL, GFS, IBM",HOLD,0.0011,-0.0199,0.3308
+R0266,GOOGL,2023-04-27 09:00,2023-04-26 00:00,Why Do Tech Stocks Go Down When Interest Rates Rise?,HOLD,-0.0023,0.0218,-0.0611
+R0267,GOOGL,2023-05-04 09:00,2023-05-03 00:00,"UBER Q1 Earnings & Revenues Exceed Expectations, Improve Y/Y",UP,0.0084,-0.027,0.0745
+R0268,GOOGL,2023-05-11 09:00,2023-05-10 00:00,Crypto vs Stocks: Which is the Better Investment in 2023? We Compare 3 of Each,UP,0.0081,0.1135,0.2493
+R0269,GOOGL,2023-05-18 09:00,2023-05-17 00:00,Google CEO Sundar Pichai Predicts That This Profession Will Be Most Revolutionized By AI,HOLD,-0.0006,0.0537,0.0573
+R0270,GOOGL,2023-05-25 09:00,2023-05-24 00:00,This ETF Is a Good Buy If You Believe in the Future of Artificial Intelligence,UP,0.0092,0.0053,0.238
+R0271,GOOGL,2023-06-01 09:00,2023-05-31 00:00,"Apple, Alphabet, Meta, and Microsoft Have All Done Major Share Buybacks This Year -- Should You Join Them?",UP,0.0077,0.0233,-0.1756
+R0272,GOOGL,2023-06-09 09:00,2023-06-08 00:00,Why Zuck’s AI Strategy May Be the Secret Sauce That META Stock Needs,UP,0.0115,-0.0196,-0.1909
+R0273,GOOGL,2023-06-20 09:00,2023-06-16 00:00,Is It Too Late to Buy C3.ai (NYSE:AI) Stock?,DOWN,-0.0207,-0.0044,-0.4269
+R0274,GOOGL,2023-06-26 09:00,2023-06-23 00:00,Does Generative AI Finally Make GitLab Stock a Buy?,HOLD,-0.0001,-0.042,-0.027
+R0275,GOOGL,2023-06-30 09:00,2023-06-29 00:00,BIDU vs. GOOG: Which Stock Should Value Investors Buy Now?,HOLD,0.0017,-0.0216,0.2259
+R0276,GOOGL,2023-07-07 09:00,2023-07-06 00:00,"The ""Motley Fool Money"" Half-Year Review",DOWN,-0.0254,0.0032,-0.1227
+R0277,GOOGL,2023-07-17 09:00,2023-07-14 00:00,How to Simplify the AI Investment Thesis,DOWN,-0.0071,0.0704,-0.2273
+R0278,GOOGL,2023-07-24 09:00,2023-07-21 00:00,Better Bull Market Buy: Microsoft vs. Alphabet Stock,UP,0.0056,-0.025,-0.593
+R0279,GOOGL,2023-07-31 09:00,2023-07-28 00:00,Google Unveils Advanced AI Model To Train Robots For Real-World Tasks,DOWN,-0.0088,0.0921,-0.2333
+R0280,GOOGL,2023-08-07 09:00,2023-08-04 00:00,The Big Risk Facing AI Stocks That Investors Can't Afford to Ignore,HOLD,-0.001,-0.009,-0.1301
+R0281,GOOGL,2023-08-14 09:00,2023-08-12 00:00,Elon Musk's Bold Move: Betting Tesla's Future on Artificial Intelligence,DOWN,-0.0118,-0.0015,0.2606
+R0282,GOOGL,2023-08-21 09:00,2023-08-19 00:00,2 Artificial Intelligence (AI) Growth Stocks That Could Join Apple Stock in the $3 Trillion Club by 2030,UP,0.0055,-0.0225,-0.1723
+R0283,GOOGL,2023-08-28 09:00,2023-08-26 00:00,4 Premier Growth Stocks You'll Regret Not Buying in the Wake of the Nasdaq Bear Market Dip,UP,0.0272,0.0206,-0.2324
+R0284,GOOGL,2023-09-05 09:00,2023-09-02 00:00,6 Spectacular Growth Stocks to Buy Now in September and Hold for the Long Term,DOWN,-0.0096,0.0363,-0.0994
+R0285,GOOGL,2023-09-11 09:00,2023-09-09 00:00,"Google CEO Sundar Pichai Says AI Could Be ""Bigger Than the Internet"": 3 Stocks to Buy and Hold If He's Right",DOWN,-0.0115,0.0093,-0.1186
+R0286,GOOGL,2023-09-18 09:00,2023-09-16 00:00,These 2 Dividend Stocks Are Investing in This Niche Industry. Should You Do the Same?,HOLD,-0.0012,0.0094,-0.4383
+R0287,GOOGL,2023-09-25 09:00,2023-09-23 00:00,Google's Startling Admission Confirms What Investors Have Long Suspected,DOWN,-0.0194,-0.0514,-0.2388
+R0288,GOOGL,2023-10-02 09:00,2023-09-30 00:00,Why YouTube Is the Real Threat to Disney,DOWN,-0.013,0.0233,-0.2778
+R0289,GOOGL,2023-10-09 09:00,2023-10-07 00:00,The Future of Work: 3 Ways Automation and AI Will Change the Job Market,HOLD,-0.0026,0.0317,-0.3015
+R0290,GOOGL,2023-10-16 09:00,2023-10-14 00:00,Amazon Stock: Bear vs. Bull,HOLD,0.0045,0.0049,0.217
+R0291,GOOGL,2023-10-23 09:00,2023-10-21 00:00,Why Tesla's Quarter Was Worse Than You Think,UP,0.0169,-0.0187,-0.0007
+R0292,GOOGL,2023-10-30 09:00,2023-10-28 00:00,2 Incredible Growth Stocks to Buy for the Dawning Artificial Intelligence (AI) Revolution,HOLD,-0.0031,-0.0882,-0.3506
+R0293,GOOGL,2023-11-06 09:00,2023-11-04 00:00,4 Unique Growth Stocks You'll Regret Not Buying in the Wake of the Nasdaq Bear Market Dip,UP,0.0055,0.0465,-0.2781
+R0294,GOOGL,2023-11-13 09:00,2023-11-11 00:00,The 3 Priciest Magnificent Seven Stocks: Worth the Splurge?,UP,0.0116,0.0141,-0.3191
+R0295,GOOGL,2023-11-20 09:00,2023-11-18 00:00,2 Top Tech Stocks Ready for a Bull Run,UP,0.0053,0.0315,-0.2531
+R0296,GOOGL,2023-11-27 09:00,2023-11-25 00:00,Earnings Winners: 3 Stocks Gaining Momentum After Smashing Q3 Results,UP,0.0058,0.0081,0.8728
+R0297,GOOGL,2023-12-04 09:00,2023-12-02 00:00,"2 Reasons to Buy Alphabet, and 1 Reason to Sell",UP,0.0133,-0.0523,0.1663
+R0298,GOOGL,2023-12-11 09:00,2023-12-09 00:00,Is C3.ai Stock a Buy Right Now?,DOWN,-0.0058,0.0311,-0.0348
+R0299,GOOGL,2023-12-18 09:00,2023-12-16 00:00,3 Top Stocks of 2023 That Will Shine Again in 2024,UP,0.0063,0.0188,-0.3656
+R0300,MSFT,2022-04-27 09:00,2022-04-26 00:00,"Stock Market News for Apr 26, 2022",UP,0.0226,-0.011,0.3646
+R0301,MSFT,2022-05-03 09:00,2022-05-02 00:00,Activision shares rise after Buffett reveals Berkshire's 9.5% stake,UP,0.0291,0.0428,-0.2609
+R0302,MSFT,2022-05-10 09:00,2022-05-09 00:00,US STOCKS-S&P 500 hits one-year low as higher bond yields pressure growth stocks,DOWN,-0.0332,-0.0436,-0.1758
+R0303,MSFT,2022-05-16 09:00,2022-05-15 00:00,Why Zoom Stock Can Rebound Despite a Recent Slide,UP,0.0203,-0.0116,-0.068
+R0304,MSFT,2022-05-23 09:00,2022-05-21 00:00,Want to Get Richer? 5 Top Stocks to Buy Now and Hold Forever,HOLD,-0.004,-0.0033,-0.1537
+R0305,MSFT,2022-05-27 09:00,2022-05-26 00:00,Nasdaq Bear Market: 3 Stock-Split Stocks to Buy Even as the Market Sinks,DOWN,-0.005,0.0819,0.0763
+R0306,MSFT,2022-06-03 09:00,2022-06-02 00:00,Microsoft (MSFT) Releases Surface Laptop Go 2 Starting at $599,HOLD,-0.0047,0.0155,-0.3624
+R0307,MSFT,2022-06-09 09:00,2022-06-08 00:00,Microsoft cuts Russia operations due to Ukraine invasion - Bloomberg News,DOWN,-0.0446,-0.0357,0.5219
+R0308,MSFT,2022-06-15 09:00,2022-06-14 00:00,Microsoft (MSFT) Gains As Market Dips: What You Should Know,DOWN,-0.027,-0.069,0.1557
+R0309,MSFT,2022-06-21 09:00,2022-06-20 00:00,Tencent forms 'extended reality' unit as metaverse race gathers steam - sources,HOLD,-0.0024,0.0474,-0.3054
+R0310,MSFT,2022-06-27 09:00,2022-06-26 00:00,Tech Rebound: 2 Growth Stocks You'll Wish You'd Bought on the Dip,DOWN,-0.0317,0.0696,-0.2744
+R0311,MSFT,2022-07-05 09:00,2022-07-02 00:00,The 3 Best Warren Buffett Stocks in the First Half of 2022: Are They Buys Now?,UP,0.0128,-0.0077,0.0045
+R0312,MSFT,2022-07-11 09:00,2022-07-09 00:00,Why Are Billionaire Investors Pouring Into This Tiny Tech Stock?,DOWN,-0.041,0.019,-0.0104
+R0313,MSFT,2022-07-15 09:00,2022-07-14 00:00,Everbridge (EVBG) Launches Digital Operations Platform Module,DOWN,-0.0096,-0.0409,0.1861
+R0314,MSFT,2022-07-21 09:00,2022-07-20 00:00,Microsoft Teams down for thousands of users,DOWN,-0.0169,0.0423,-0.0168
+R0315,MSFT,2022-07-27 09:00,2022-07-26 00:00,US STOCKS-Wall Street falls as Walmart warning rattles retail sector,UP,0.0285,0.0247,0.1689
+R0316,MSFT,2022-08-03 09:00,2022-08-02 00:00,S&P 500 ends see-saw session lower as Pelosi visits Taiwan,HOLD,0.0042,0.0511,0.0336
+R0317,MSFT,2022-08-09 09:00,2022-08-08 00:00,3 Reasons You Should Own Individual Stocks Over ETFs,UP,0.0243,0.0272,0.249
+R0318,MSFT,2022-08-15 09:00,2022-08-14 00:00,INSIGHT-Caste in California: Tech giants confront ancient Indian hierarchy,HOLD,-0.0026,0.0469,-0.2004
+R0319,MSFT,2022-08-22 09:00,2022-08-20 00:00,Things Just Got Tougher for Peloton,HOLD,-0.0047,-0.0536,0.2183
+R0320,MSFT,2022-08-29 09:00,2022-08-26 00:00,Why Okta Stock Was Down on Friday,DOWN,-0.0085,-0.0451,-0.2617
+R0321,MSFT,2022-09-01 09:00,2022-08-31 00:00,"The Zacks Analyst Blog Highlights General Motors, Ford , Honda, Toyota and Stellantis",DOWN,-0.0167,-0.0662,-0.0616
+R0322,MSFT,2022-09-07 09:00,2022-09-06 00:00,Should You Invest in the iShares Expanded TechSoftware Sector ETF (IGV)?,HOLD,0.0017,-0.0186,0.1312
+R0323,MSFT,2022-09-13 09:00,2022-09-12 00:00,"US STOCKS-Wall Street hits more than two-week high on energy, tech gains",HOLD,0.0009,-0.005,0.7791
+R0324,MSFT,2022-09-20 09:00,2022-09-19 00:00,Uber says hacker working with Lapsus$ responsible for cybersecurity incident,DOWN,-0.0144,-0.0379,-0.0062
+R0325,MSFT,2022-09-26 09:00,2022-09-25 00:00,This Stock Market Investment Strategy Made Money 100% of the Time Over the Last Century,HOLD,-0.0044,-0.0289,-0.1897
+R0326,MSFT,2022-10-03 09:00,2022-10-01 00:00,"FOCUS-Tencent shifts focus to majority deals, overseas gaming assets for growth-sources",UP,0.0338,0.0139,-0.1909
+R0327,MSFT,2022-10-10 09:00,2022-10-07 00:00,3 Nasdaq 100 Stocks to Buy Hand Over Fist in October,DOWN,-0.0168,-0.0477,-0.2125
+R0328,MSFT,2022-10-14 09:00,2022-10-13 00:00,Like Dividends? 3 Tech Titans Paying Investors Handsomely,UP,0.0392,-0.0242,-0.2903
+R0329,MSFT,2022-10-20 09:00,2022-10-19 00:00,"US STOCKS-Rise in yields weighs on stocks, overshadows earnings",UP,0.0253,0.0082,0.0913
+R0330,MSFT,2022-10-26 09:00,2022-10-25 00:00,"The Zacks Analyst Blog Highlights Alphabet, Microsoft, Apple and Amazon",DOWN,-0.0198,-0.0218,1.3736
+R0331,MSFT,2022-11-01 09:00,2022-10-31 00:00,Earnings Erase $350B From Big Tech: 5 ETFs With Strength,DOWN,-0.0354,-0.0897,0.0788
+R0332,MSFT,2022-11-07 09:00,2022-11-06 00:00,Wall Street Still Mad for Microsoft Stock (NASDAQ: MSFT),HOLD,0.0044,-0.0184,-0.0895
+R0333,MSFT,2022-11-14 09:00,2022-11-12 00:00,7 No-Brainer Blue-Chip Stocks to Buy for 2023 and Beyond,HOLD,0.0017,0.06,-0.101
+R0334,MSFT,2022-11-21 09:00,2022-11-18 00:00,10 Best Tech Stocks to Buy Now in November (High Conviction),UP,0.0123,0.0021,-0.0441
+R0335,MSFT,2022-11-25 09:00,2022-11-24 00:00,Why Is Microsoft (MSFT) Up 7% Since Last Earnings Report?,DOWN,-0.0232,0.024,-0.5284
+R0336,MSFT,2022-12-01 09:00,2022-11-30 00:00,"After Hours Most Active for Nov 30, 2022 : SABR, NYCB, PBF, LUMN, FHN, T, AAPL, INTC, AQN, MSFT, LYFT, CMCSA",HOLD,0.0013,0.0287,-0.4528
+R0337,MSFT,2022-12-07 09:00,2022-12-06 00:00,Time to Buy These 2 Blue Chip Stocks Going into 2023?,UP,0.0124,-0.0422,-0.0882
+R0338,MSFT,2022-12-12 09:00,2022-12-11 00:00,1 Super Stock Down 91% You'll Wish You'd Bought on the Dip,UP,0.0175,0.0092,0.4879
+R0339,MSFT,2022-12-19 09:00,2022-12-17 00:00,Cheap Stocks To Buy Now? 2 Tech Stocks To Know,UP,0.0056,-0.0478,-0.6551
+R0340,MSFT,2022-12-27 09:00,2022-12-23 00:00,Better Buy: Microsoft Stock vs. Apple Stock,DOWN,-0.0103,-0.0145,-0.2131
+R0341,MSFT,2022-12-30 09:00,2022-12-29 00:00,BC Partners to acquire account-based marketing firm Madison Logic,HOLD,-0.001,0.0068,0.1096
+R0342,MSFT,2023-01-06 09:00,2023-01-05 00:00,Better Software Stock: Zoom vs. Microsoft,UP,0.0097,-0.0667,0.1018
+R0343,MSFT,2023-01-12 09:00,2023-01-11 00:00,5 Tech ETFs Riding High on Sectors' Comeback to Start 2023,HOLD,0.003,0.0729,-0.0488
+R0344,MSFT,2023-01-18 09:00,2023-01-17 00:00,Analysts Estimate Microsoft (MSFT) to Report a Decline in Earnings: What to Look Out for,DOWN,-0.0165,0.0304,0.0066
+R0345,MSFT,2023-01-24 09:00,2023-01-23 00:00,Investors Are Betting on Tech Again,DOWN,-0.0059,0.007,0.2599
+R0346,MSFT,2023-01-30 09:00,2023-01-28 00:00,Nasdaq Bear Market: 3 Reasons to Buy Alphabet in 2023,UP,0.021,0.0005,-0.0238
+R0347,MSFT,2023-02-06 09:00,2023-02-03 00:00,"Noteworthy Friday Option Activity: CLX, MSFT, COP",UP,0.042,0.0579,-0.2256
+R0348,MSFT,2023-02-13 09:00,2023-02-10 00:00,Steer Clear of GOOG Stock Following AI Event Flop,HOLD,0.0031,0.0567,0.7286
+R0349,MSFT,2023-02-17 09:00,2023-02-16 00:00,Alphabet Stock: Bull vs. Bear,DOWN,-0.0209,-0.0192,0.0134
+R0350,MSFT,2023-02-23 09:00,2023-02-22 00:00,7 Dividend-Paying Tech Stocks for Long-Term Growth,DOWN,-0.0218,-0.054,0.2991
+R0351,MSFT,2023-03-02 09:00,2023-03-01 00:00,3 AI Stocks That Are Revolutionizing Agriculture,UP,0.0166,-0.0144,-0.1
+R0352,MSFT,2023-03-08 09:00,2023-03-07 00:00,CrowdStrike (CRWD) Rides on Growing Cyber Security Demand,DOWN,-0.0054,0.0302,-0.1925
+R0353,MSFT,2023-03-14 09:00,2023-03-13 00:00,Twitter rival Koo integrates ChatGPT to help users create content,UP,0.0178,0.0261,0.0084
+R0354,MSFT,2023-03-20 09:00,2023-03-18 00:00,7 Best Stocks to Buy for a Sideways Market,UP,0.0057,0.0721,-0.3748
+R0355,MSFT,2023-03-27 09:00,2023-03-24 00:00,3 Reasons Microsoft Stock Is a No-Brainer to Buy and Hold,HOLD,-0.0042,0.0152,-0.0473
+R0356,MSFT,2023-03-31 09:00,2023-03-30 00:00,"US STOCKS-Futures rise as bank fears ebb, focus shifts to key inflation data",HOLD,-0.0037,0.0276,0.3078
+R0357,MSFT,2023-04-10 09:00,2023-04-06 00:00,Oppenheimer Maintains Microsoft (MSFT) Outperform Recommendation,DOWN,-0.0227,0.0038,-0.224
+R0358,MSFT,2023-04-13 09:00,2023-04-12 00:00,4 Generative AI Tech Stocks to Buy as ChatGPT Gains Momentum,DOWN,-0.0128,0.0193,-0.1161
+R0359,MSFT,2023-04-19 09:00,2023-04-18 00:00,How the Top Names and Concentration in the S&P 500 Evolved Over 20 Years,DOWN,-0.0081,0.0175,-0.1494
+R0360,MSFT,2023-04-25 09:00,2023-04-24 00:00,Russia's Sberbank releases ChatGPT rival GigaChat,UP,0.0724,-0.0449,0.72
+R0361,MSFT,2023-05-01 09:00,2023-04-30 00:00,AI Winners Aren't Who You Think,HOLD,-0.0005,0.0844,-0.4161
+R0362,MSFT,2023-05-08 09:00,2023-05-05 00:00,Microsoft Is the Clear Leader in the AI Space -- Will Alphabet Ever Catch Up?,DOWN,-0.0053,0.0101,-0.2439
+R0363,MSFT,2023-05-15 09:00,2023-05-12 00:00,IRBO: This Diversified AI ETF Gives Investors Many Shots on Goal,UP,0.0074,0.0026,-0.1739
+R0364,MSFT,2023-05-22 09:00,2023-05-20 00:00,Is It Time to Buy Golf Stocks?,DOWN,-0.0184,0.0379,-0.1246
+R0365,MSFT,2023-05-30 09:00,2023-05-26 00:00,"Alphabet CEO Sundar Pichai Commits to ""AI Pact"": What Does This Really Mean?",DOWN,-0.0085,0.0312,-0.1946
+R0366,MSFT,2023-06-02 09:00,2023-06-01 00:00,"Time to Buy These ""Trillion Dollar"" Stocks for More Upside",HOLD,0.0016,0.0291,-0.0336
+R0367,MSFT,2023-06-09 09:00,2023-06-08 00:00,Big Tech Is Outpacing Small-Caps Amid Market Rally,UP,0.0155,-0.0257,-0.0322
+R0368,MSFT,2023-06-16 09:00,2023-06-15 00:00,Navigating Risks in AI Small Cap Investments: Beyond the Hype,DOWN,-0.0125,0.0476,0.1967
+R0369,MSFT,2023-06-22 09:00,2023-06-21 00:00,3 Semiconductor Stocks to Invest in as Demand for AI Chips Surges,DOWN,-0.0138,0.007,-0.0621
+R0370,MSFT,2023-06-28 09:00,2023-06-27 00:00,Microsoft Stock: Bear vs. Bull,HOLD,-0.0024,0.0069,-0.1681
+R0371,MSFT,2023-07-03 09:00,2023-07-02 00:00,7 High-Profit Stocks to Buy to Cash in on Inflation,HOLD,0.0005,0.0286,-0.5338
+R0372,MSFT,2023-07-10 09:00,2023-07-08 00:00,Is the DoorDash Wage Change Good for the Company?,HOLD,0.0019,-0.0256,0.5457
+R0373,MSFT,2023-07-17 09:00,2023-07-14 00:00,Warren Buffett May Have Just Scored a Cool $1 Billion Profit From a Single Stock. Here's How.,UP,0.0398,0.0419,-0.2818
+R0374,MSFT,2023-07-21 09:00,2023-07-20 00:00,7 Long-Term Stocks That Are Screaming Buys Right Now: July 2023,HOLD,0.0039,-0.0043,1.0547
+R0375,MSFT,2023-07-27 09:00,2023-07-26 00:00,"Stock Market News for Jul 26, 2023",UP,0.0231,-0.0466,-0.3211
+R0376,MSFT,2023-08-02 09:00,2023-08-01 00:00,PREVIEW-Apple heads for largest Q3 revenue drop since 2016 as iPhone sales slow,HOLD,-0.0026,-0.0304,0.516
+R0377,MSFT,2023-08-08 09:00,2023-08-07 00:00,Bull of the Day: NVIDIA (NVDA),DOWN,-0.0117,-0.0306,0.2585
+R0378,MSFT,2023-08-14 09:00,2023-08-13 00:00,Guru Fundamental Report for MSFT - Warren Buffett,DOWN,-0.0067,-0.0184,-0.2266
+R0379,MSFT,2023-08-21 09:00,2023-08-18 00:00,Should WisdomTree U.S. Total Dividend ETF (DTD) Be on Your Investing Radar?,HOLD,0.0018,-0.0067,-0.0289
+R0380,MSFT,2023-08-25 09:00,2023-08-24 00:00,"US STOCKS-S&P 500, Nasdaq set to open higher after Nvidia's blowout forecast",HOLD,0.0022,0.0205,-0.0686
+R0381,MSFT,2023-08-31 09:00,2023-08-30 00:00,Will Microsoft or Apple Win the Race to Be Worth $5 Trillion?,HOLD,0.0027,0.0243,0.735
+R0382,MSFT,2023-09-06 09:00,2023-09-05 00:00,Alphabet (GOOGL) Adds Latest Feature to Google Keep App,DOWN,-0.0089,0.0136,-0.0549
+R0383,MSFT,2023-09-12 09:00,2023-09-11 00:00,The 7 Best Tech Stocks to Buy to Capitalize on the AI Revolution,UP,0.0129,-0.0053,0.0592
+R0384,MSFT,2023-09-18 09:00,2023-09-17 00:00,2 Growth Stocks I'm Buying Till I'm Blue in the Face,HOLD,-0.0012,-0.0263,-0.5532
+R0385,MSFT,2023-09-25 09:00,2023-09-23 00:00,"Got $3,000? 3 Tech Stocks to Buy and Hold for the Long Term",DOWN,-0.017,-0.035,-0.1684
+R0386,MSFT,2023-10-02 09:00,2023-09-29 00:00,AI Stocks To Buy In October 2023? 2 To Know,DOWN,-0.0261,0.0134,-0.1481
+R0387,MSFT,2023-10-05 09:00,2023-10-04 00:00,"US STOCKS-Futures subdued ahead of jobs data, Treasury yields surge",UP,0.0247,0.0182,-0.1812
+R0388,MSFT,2023-10-11 09:00,2023-10-10 00:00,Is John Hancock Multifactor Large Cap ETF (JHML) a Strong ETF Right Now?,HOLD,-0.0038,0.0422,-0.024
+R0389,MSFT,2023-10-17 09:00,2023-10-16 00:00,Stocks Gain on Diplomatic Efforts to Contain the Israeli-Hamas Conflict,DOWN,-0.0059,0.0112,-0.1724
+R0390,MSFT,2023-10-23 09:00,2023-10-22 00:00,GLOBAL MARKETS-Asia shares wary on Middle East as tech earnings loom,HOLD,0.0037,-0.01,-0.0261
+R0391,MSFT,2023-10-30 09:00,2023-10-28 00:00,MarketBeat Week in Review – 10/23 - 10/27,HOLD,0.0024,0.0243,-0.2354
+R0392,MSFT,2023-11-06 09:00,2023-11-04 00:00,"Is Microsoft, Amazon, or Alphabet the Best Stock in This $1.5 Trillion Industry?",UP,0.0112,0.057,0.0081
+R0393,MSFT,2023-11-13 09:00,2023-11-11 00:00,Apple Stock: Bull vs. Bear,UP,0.0098,0.0285,-0.2873
+R0394,MSFT,2023-11-20 09:00,2023-11-17 00:00,"After Hours Most Active for Nov 17, 2023 : MMM, QQQ, MATV, AAPL, NU, VCSH, MSFT, STRO, AMZN, KEY, VZ, BAC",DOWN,-0.0116,0.0293,0.3065
+R0395,MSFT,2023-11-24 09:00,2023-11-22 00:00,"US STOCKS-Wall St rises on peak rate bets, downbeat earnings cap gains",HOLD,0.0031,0.0033,-0.5641
+R0396,MSFT,2023-11-29 09:00,2023-11-28 00:00,MSFT Quantitative Stock Analysis,HOLD,0.0002,0.0155,0.4161
+R0397,MSFT,2023-12-05 09:00,2023-12-04 00:00,Amazon's (AMZN) Cloud Clientele Expands as Trip.com Picks AWS,DOWN,-0.01,-0.0266,-0.2806
+R0398,MSFT,2023-12-11 09:00,2023-12-10 00:00,Guru Fundamental Report for MSFT,UP,0.0083,0.0059,0.3748
+R0399,MSFT,2023-12-18 09:00,2023-12-16 02:00,"Some Potential 2024 Winners Reside in QQQ, QQQM",HOLD,0.0016,0.0036,-0.7223
